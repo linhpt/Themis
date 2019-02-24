@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { Routes, RouterModule } from '@angular/router';
+import { CoreModule } from './core/core.module';
 
 const appRoutes: Routes = [
   {
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     RouterModule,
+    CoreModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],

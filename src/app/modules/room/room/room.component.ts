@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomComponent implements OnInit {
 
+  title = 'Themis Editor';
   constructor() { }
 
   ngOnInit() {
+  }
+
+  loadFromExcel() {
+    
   }
 
 }
