@@ -1,4 +1,19 @@
 .header {
     background-color: #253b80;
-    height: 10rem;
+    height: 6.6rem;
+}
+
+.header__logo {
+    margin: 0.3rem;
+    height: 6rem;
+}
+
+.header__btn {
+    height: 6rem;
+}
+
+.header__home {
+    background-color: transparent;
+    font-size: 2rem;
+    color: white;
 }
