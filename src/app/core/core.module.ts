@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { ClassService } from './services/class.service';
+import { DexieService } from './services/dexie.service';
 
 @NgModule({
   imports: [
@@ -9,7 +11,11 @@ import { FooterComponent } from './footer/footer.component';
   ],
   exports: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+  ],
+  providers: [
+    ClassService,
+    DexieService
   ],
   declarations: [HeaderComponent, FooterComponent]
 })

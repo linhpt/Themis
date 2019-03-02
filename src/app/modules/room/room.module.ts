@@ -5,6 +5,7 @@ import { RoomListComponent } from './room-list/room-list.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
 import { RoomComponent } from './room.component';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CoreModule,
     RouterModule.forChild(routes)
   ],
   declarations: [RoomComponent, RoomListComponent, CreateRoomComponent]
