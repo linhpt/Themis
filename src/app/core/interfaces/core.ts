@@ -1,7 +1,7 @@
 
 export interface IClass {
-    id?: number;
-    name?: string;
-    description?: string;
-  }
-  
+  id?: number;
+  name?: string;
+  description?: string;
+  timeCreated?: string;
+}

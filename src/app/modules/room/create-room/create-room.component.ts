@@ -17,9 +17,11 @@ export class CreateRoomComponent {
     private classService: ClassService) { }
 
   onSubmit() {
+    var now = new Date();
     const newClass: IClass = {
       name: this.model.className,
-      description: this.model.classDescription
+      description: this.model.classDescription,
+      timeCreated: now.toString()
     }
     this.classService.add(newClass);
     this.router.navigate(['/']);

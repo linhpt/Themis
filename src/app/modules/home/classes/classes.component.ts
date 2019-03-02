@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { IClass } from 'src/app/core/interfaces/core';
+import { ClassService } from 'src/app/core/services/class.service';
 
 @Component({
   selector: 'classes',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ClassesComponent implements OnInit {
 
-  constructor() { }
+  private classList: IClass[] = [];
+
+  constructor(
+    private classService: ClassService
+  ) { }
 
   ngOnInit() {
+    this.classService.getAll().then((list: IClass[]) => {
+      this.classList.push(...list);
+    });
   }
 
 }
