@@ -6,6 +6,7 @@ import { CreateRoomComponent } from './create-room/create-room.component';
 import { RoomComponent } from './room.component';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from 'src/app/core/core.module';
+import { RoomDetailsComponent } from './room-details/room-details.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
       {
         path: 'create-class',
         component: CreateRoomComponent
+      },
+      {
+        path: 'room-details/:id',
+        component: RoomDetailsComponent
       }
     ]
   }
@@ -32,6 +37,6 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [RoomComponent, RoomListComponent, CreateRoomComponent]
+  declarations: [RoomComponent, RoomListComponent, CreateRoomComponent, RoomDetailsComponent]
 })
 export class RoomModule { }
