@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateRoomComponent implements OnInit {
 
+  model: any = {};
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSubmit() {
+    
   }
 
 }

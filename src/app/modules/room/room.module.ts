@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { RoomListComponent } from './room-list/room-list.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
 import { RoomComponent } from './room.component';
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
   {
@@ -26,6 +27,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule.forChild(routes)
   ],
   declarations: [RoomComponent, RoomListComponent, CreateRoomComponent]
