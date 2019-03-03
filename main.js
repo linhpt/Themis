@@ -7,6 +7,7 @@ let win;
 function createWindow() {
   win = new BrowserWindow({ width: 1200, height: 800 });
 
+  win.maximize();
   win.loadURL(
     url.format({
       pathname: path.join(__dirname, `/dist/index.html`),
