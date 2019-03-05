@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClassService } from 'src/app/core/services/class.service';
-import { IClass } from 'test-win32-x64/resources/app/src/app/core/interfaces/core';
+import { IClass } from 'src/app/core/interfaces/core';
+import { UtilsService } from 'src/app/core/services/utils.service';
 
 @Component({
   selector: 'room-list',
@@ -13,10 +14,12 @@ export class RoomListComponent implements OnInit {
   private emptyMessage: string = 'There is no class for now!';
 
   constructor(
+    private utilsSerivce: UtilsService,
     private classService: ClassService
   ) { }
 
   ngOnInit() {
+    this.utilsSerivce.toggle(false);
     this.classService.getAll().then((list: IClass[]) => {
       this.classList.push(...list);
     });

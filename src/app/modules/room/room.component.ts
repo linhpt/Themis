@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UtilsService } from 'src/app/core/services/utils.service';
 
 @Component({
   selector: 'app-room',
@@ -7,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RoomComponent implements OnInit {
   
-  title = 'Themis Editor';
-  constructor() { }
+  private roomDetailsOpen: boolean = false;
+  private title = 'Themis Editor';
+
+  constructor(
+    private utilsService: UtilsService
+  ) { }
 
   ngOnInit() {
+    this.utilsService.change.subscribe((isOpen: boolean) => {
+      this.roomDetailsOpen = isOpen;
+    })
   }
 
   loadFromExcel() {

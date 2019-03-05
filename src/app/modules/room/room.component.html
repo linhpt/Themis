@@ -1,10 +1,10 @@
 <div class="container-fluid">
   <div class="mt-3"></div>
   <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-3" *ngIf="!roomDetailsOpen">
       <room-list></room-list>
     </div>
-    <div class="col-sm-9">
+    <div [ngClass]="!roomDetailsOpen ? 'col-sm-9' : 'col-sm'">
       <router-outlet></router-outlet>
     </div>
   </div>
