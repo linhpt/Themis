@@ -28,6 +28,7 @@
     "font-awesome": "^4.7.0",
     "lodash": "^4.17.11",
     "rxjs": "6.0.0",
+    "xlsx": "^0.14.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
