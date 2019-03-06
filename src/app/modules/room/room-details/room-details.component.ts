@@ -16,6 +16,7 @@ export class RoomDetailsComponent implements OnInit {
 
   arrayBuffer: any;
   file: File;
+  dsmssv: any = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -53,13 +54,18 @@ export class RoomDetailsComponent implements OnInit {
       var first_sheet_name = workbook.SheetNames[0];
       var worksheet = workbook.Sheets[first_sheet_name];
       var datajson = XLSX.utils.sheet_to_json(worksheet, { raw: true });
-      //console.log(datajson);
-      var dsmssv = _.map(datajson, data => data.__EMPTY);
-      console.log('filesystem', fs);
-      _.forEach(dsmssv, mssv => {
-        if (typeof mssv == 'number'){
+      this.dsmssv = _.map(datajson, data => {
+        return {
+          mssv: data.__EMPTY,
+          hodem: data.__EMPTY_1,
+          ten: data.__EMPTY_2
+        }
+      });
+      console.log(this.dsmssv);
+      _.forEach(this.dsmssv, mssv => {
+        if (typeof mssv == 'number') {
           let dir = `C:\\Users\\linhp\\Documents\\personal\\test\\${mssv}`;
-          if (!fs.existsSync(dir)){
+          if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
           }
         }
