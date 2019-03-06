@@ -1,9 +1,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <button class="btn btn-primary">
-        Load from Excel
-      </button>
+      <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
+      <button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
     </div>
   </div>
   <div class="row">
