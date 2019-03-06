@@ -12,4 +12,9 @@ export class CreateTaskComponent implements OnInit {
   ngOnInit() {
   }
 
+  model: any = {};
+
+  onSubmit() {
+   console.log('model', this.model);
+  }
 }
