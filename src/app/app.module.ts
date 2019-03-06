@@ -14,6 +14,10 @@ const appRoutes: Routes = [
   {
     path: 'room',
     loadChildren: './modules/room/room.module#RoomModule',
+  },
+  {
+    path: 'task',
+    loadChildren: './modules/task/task.module#TaskModule',
   }
 ];
 
