@@ -5,6 +5,7 @@ import { IClass } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import * as XLSX from 'xlsx';
+const fs = (<any>window).require("fs");
 
 @Component({
   selector: 'app-room-details',
@@ -41,13 +42,29 @@ export class RoomDetailsComponent implements OnInit {
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
       var data = new Uint8Array(this.arrayBuffer);
-      var arr = new Array();
-      for (var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+      var arr = [];
+
+      for (var i = 0; i != data.length; ++i) {
+        arr[i] = String.fromCharCode(data[i]);
+      }
+
       var bstr = arr.join("");
       var workbook = XLSX.read(bstr, { type: "binary" });
       var first_sheet_name = workbook.SheetNames[0];
       var worksheet = workbook.Sheets[first_sheet_name];
-      console.log(XLSX.utils.sheet_to_json(worksheet, { raw: true }));
+      var datajson = XLSX.utils.sheet_to_json(worksheet, { raw: true });
+      //console.log(datajson);
+      var dsmssv = _.map(datajson, data => data.__EMPTY);
+      console.log('filesystem', fs);
+      _.forEach(dsmssv, mssv => {
+        if (typeof mssv == 'number'){
+          let dir = `C:\\Users\\linhp\\Documents\\personal\\test\\${mssv}`;
+          if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+          }
+        }
+      });
+
     }
     fileReader.readAsArrayBuffer(this.file);
   }
