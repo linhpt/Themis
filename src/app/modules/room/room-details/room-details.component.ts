@@ -61,13 +61,11 @@ export class RoomDetailsComponent implements OnInit {
           ten: data.__EMPTY_2
         }
       });
-      console.log(this.dsmssv);
-      _.forEach(this.dsmssv, mssv => {
-        if (typeof mssv == 'number') {
-          let dir = `C:\\Users\\linhp\\Documents\\personal\\test\\${mssv}`;
-          if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-          }
+      this.dsmssv = _.filter(this.dsmssv, sv => typeof sv.mssv == 'number');
+      _.forEach(this.dsmssv, sv => {
+        let dir = `C:\\Users\\linhp\\Documents\\personal\\test\\${sv.mssv}`;
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
         }
       });
 
