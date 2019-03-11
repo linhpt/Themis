@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { WatcherService } from './core/services/watcher.service';
 var chokidar = (<any>window).require('chokidar');
 
 @Component({
@@ -9,20 +10,13 @@ var chokidar = (<any>window).require('chokidar');
 export class AppComponent  implements OnInit{
   
   title = 'Themis Editor';
+  private folder = `C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\weLinh`;
+
+  constructor(
+    private watcherService: WatcherService
+  ) { }
 
   ngOnInit(): void {
-    var watcher = chokidar.watch(`C:\\Users\\linhp\\Documents\\personal\\testFolder`, {
-      ignored: /(^|[\/\\])\../,
-      persistent: true
-    });
-    
-    // Something to use when events are received.
-    var log = console.log.bind(console);
-    // Add event listeners.
-    watcher
-      .on('add', path => log(`File ${path} has been added`))
-      .on('change', path => log(`File ${path} has been changed`))
-      .on('unlink', path => log(`File ${path} has been removed`));
-    
+    this.watcherService.watchFolder(this.folder);
   }
 }
