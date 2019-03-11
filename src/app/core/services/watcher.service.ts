@@ -1,5 +1,13 @@
 import { Injectable } from '@angular/core';
-var chokidar = (<any>window).require('chokidar');
+import * as _ from 'lodash';
+
+const chokidar = (<any>window).require('chokidar');
+const path = (<any>window).require('path');
+const fs = (<any>window).require('fs');
+
+const { remote } = (<any>window).require('electron');
+const appPath = remote.app.getAppPath();
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +32,12 @@ export class WatcherService {
       .on('unlink', this.onUnlinked);
   }
 
-  private onAdded = (path: any) => {
-    this.log(`File ${path} has been added`);
+  private onAdded = (absolutePath: any) => {
+    this.log(`File ${absolutePath} has been added`);
+    const fname = _.last(path.normalize(absolutePath).split('\\'));
+    const dataPath = `C:\\Users\\linhp\\Documents\\personal\\testFolder\\${fname}`;
+    fs.createReadStream(absolutePath)
+        .pipe(fs.createWriteStream(dataPath));
   }
 
   private onChanged = (path: any) => {
