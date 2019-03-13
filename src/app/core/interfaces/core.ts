@@ -5,3 +5,13 @@ export interface IClass {
   description?: string;
   timeCreated?: string;
 }
+
+
+export interface IStudent {
+  id?: number;
+  mssv?: string;
+  lop?: number;
+  hodem?: string;
+  ten?: string;
+  diem?: string;
+}
