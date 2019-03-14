@@ -5,6 +5,7 @@ import { IClass } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import * as XLSX from 'xlsx';
+import { StudentService } from 'src/app/core/services/student.service';
 const fs = (<any>window).require("fs");
 
 @Component({
@@ -17,11 +18,14 @@ export class RoomDetailsComponent implements OnInit {
   arrayBuffer: any;
   file: File;
   dsmssv: any = [];
+  lop: any;
+  canUpload = false;
 
   constructor(
     private route: ActivatedRoute,
     private classService: ClassService,
-    private utilsService: UtilsService
+    private utilsService: UtilsService,
+    private studentService: StudentService
   ) { }
 
   ngOnInit() {
@@ -29,7 +33,7 @@ export class RoomDetailsComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       const id = params['id'];
       this.classService.getAll().then((classList: IClass[]) => {
-        const viewClass = _.find(classList, (cls: IClass) => cls.id == id);
+        this.lop = _.find(classList, (cls: IClass) => cls.id == id);
       });
     });
   }
@@ -39,6 +43,7 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   Upload() {
+    let folder = (mssv) => `C:\\Users\\Admin\\Documents\\personal\\${mssv}`;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -56,16 +61,25 @@ export class RoomDetailsComponent implements OnInit {
       var datajson = XLSX.utils.sheet_to_json(worksheet, { raw: true });
       this.dsmssv = _.map(datajson, data => {
         return {
+          lop: this.lop.id,
           mssv: data.__EMPTY,
           hodem: data.__EMPTY_1,
-          ten: data.__EMPTY_2
+          ten: data.__EMPTY_2,
+          diem: null
         }
       });
       this.dsmssv = _.filter(this.dsmssv, sv => typeof sv.mssv == 'number');
       _.forEach(this.dsmssv, sv => {
-        let dir = `C:\\Users\\linhp\\Documents\\personal\\test\\${sv.mssv}`;
+        let dir = folder(sv.mssv);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
+          this.studentService.add({
+            lop: this.lop.id,
+            mssv: sv.mssv,
+            hodem: sv.hodem,
+            ten: sv.ten,
+            diem: ''
+          });
         }
       });
 
