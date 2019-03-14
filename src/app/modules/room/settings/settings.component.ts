@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UtilsService } from 'src/app/core/services/utils.service';
 
 @Component({
   selector: 'app-settings',
@@ -25,10 +26,18 @@ export class SettingsComponent implements OnInit {
   }
 
   constructor(
-    private router: Router
+    private router: Router,
+    private utilsService: UtilsService
   ) { }
 
   ngOnInit() {
+    this.utilsService.toggle(true);
+    for (var name in this.model) {
+      let itemSet = localStorage.getItem(name);
+      if (itemSet) {
+        this.model[name] = itemSet;
+      }
+    }
   }
 
   onSubmit() {
