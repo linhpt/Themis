@@ -22,6 +22,9 @@ export class RoomDetailsComponent implements OnInit {
   studentsInRoom: IStudent[] = [];
   canUpload = false;
 
+  static excelLocation = 'C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\ExcelFile.xlsx';
+  static folder = (mssv: string) => `C:\\Users\\linhp\\Documents\\personal\\Students\\${mssv}`;
+
   constructor(
     private route: ActivatedRoute,
     private utilsService: UtilsService,
@@ -44,6 +47,9 @@ export class RoomDetailsComponent implements OnInit {
           this.studentService.getAll().then((students: IStudent[]) => {
             this.studentsInRoom  = _.filter(students, student => student.roomId == roomId);
             this.canUpload = this.studentsInRoom.length == 0;
+            if (!fs.existsSync(RoomDetailsComponent.excelLocation)){
+              this.createExcel();
+            }
           });
         }
       });
@@ -64,16 +70,15 @@ export class RoomDetailsComponent implements OnInit {
       worksheet.cell(index + 1, 1).number(student.mssv).style(style);
       worksheet.cell(index + 1, 2).string(student.firstName).style(style);
       worksheet.cell(index + 1, 3).string(student.lastName).style(style);
-      worksheet.cell(index + 1, 4).number(student.roomId).style(style);
+      worksheet.cell(index + 1, 4).string(student.roomId).style(style);
       worksheet.cell(index + 1, 4).string(student.roomName).style(style);
       worksheet.cell(index + 1, 5).string(student.score).style(style);
     });
 
-    workbook.write('C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\ExcelFile.xlsx');
+    workbook.write(RoomDetailsComponent.excelLocation);
   }
 
   upload() {
-    let folder = (mssv: string) => `C:\\Users\\linhp\\Documents\\personal\\Students\\${mssv}`;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -104,7 +109,7 @@ export class RoomDetailsComponent implements OnInit {
       });
       this.studentsInRoom = _.filter(this.studentsInRoom, (student: IStudent) => typeof student.mssv == 'number');
       _.forEach(this.studentsInRoom, (student: IStudent) => {
-        let dir = folder(student.mssv);
+        let dir = RoomDetailsComponent.folder(student.mssv);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
           this.studentService.add(student);
