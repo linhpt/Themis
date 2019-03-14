@@ -1,0 +1,65 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+        <div class="form-group">
+          <label for="sourceFolder">Source Folder</label>
+          <input type="text" class="form-control" name="sourceFolder" [(ngModel)]="model.sourceFolder" #sourceFolder="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required />
+          <div *ngIf="f.submitted && sourceFolder.invalid" class="invalid-feedback">
+            <div *ngIf="sourceFolder.errors.required">Source Folder is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="destinationFolder">Destination Folder</label>
+          <input type="text" class="form-control" name="destinationFolder" [(ngModel)]="model.destinationFolder"
+            #destinationFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && destinationFolder.invalid }"
+            required />
+          <div *ngIf="f.submitted && destinationFolder.invalid" class="invalid-feedback">
+            <div *ngIf="destinationFolder.errors.required">Destination Folder is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="excelPath">Excel File absolute Path</label>
+          <input type="text" class="form-control" name="excelPath" [(ngModel)]="model.excelPath" #excelPath="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && excelPath.invalid }" required />
+          <div *ngIf="f.submitted && excelPath.invalid" class="invalid-feedback">
+            <div *ngIf="excelPath.errors.required">Excel Path is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="studentFolder">Student Folder</label>
+          <input type="text" class="form-control" name="studentFolder" [(ngModel)]="model.studentFolder" #studentFolder="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && studentFolder.invalid }" required />
+          <div *ngIf="f.submitted && studentFolder.invalid" class="invalid-feedback">
+            <div *ngIf="studentFolder.errors.required">Student Folder is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taskFolder">Task Folder</label>
+          <input type="text" class="form-control" name="taskFolder" [(ngModel)]="model.taskFolder" #rtaskFolder="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && taskFolder.invalid }" required />
+          <div *ngIf="f.submitted && taskFolder.invalid" class="invalid-feedback">
+            <div *ngIf="taskFolder.errors.required">Task Folder is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="logsFolder">Logs Folder</label>
+          <input type="text" class="form-control" name="logsFolder" [(ngModel)]="model.logsFolder" #logsFolder="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && logsFolder.invalid }" required />
+          <div *ngIf="f.submitted && logsFolder.invalid" class="invalid-feedback">
+            <div *ngIf="logsFolder.errors.required">Logs Folder is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

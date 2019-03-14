@@ -26,4 +26,8 @@ export class RoomListComponent implements OnInit {
   view(room: IRoom) {
     this.router.navigate(['/room/room-details', room.id]);
   }
+
+  settings() {
+    this.router.navigate(['/room/settings']);
+  }
 }
