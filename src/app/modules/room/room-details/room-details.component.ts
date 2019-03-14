@@ -4,7 +4,6 @@ import { RoomService } from 'src/app/core/services/room.service';
 import { IRoom, IStudent } from 'src/app/core/interfaces/core';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { StudentService } from 'src/app/core/services/student.service';
-import { excelFile, studentFolder } from 'src/app/core/interfaces/utils';
 import * as XLSX from 'xlsx';
 import * as _ from 'lodash';
 import { LogsWatcher } from 'src/app/core/services/logs.service';
@@ -58,7 +57,7 @@ export class RoomDetailsComponent implements OnInit {
           this.studentService.getAll().then((students: IStudent[]) => {
             this.studentsInRoom = _.filter(students, (student: IStudent) => student.roomId == roomId);
             this.canUpload = this.studentsInRoom.length == 0;
-            if (!fs.existsSync(excelFile())) {
+            if (!fs.existsSync(localStorage.getItem('excelPath'))) {
               this.createExcel();
             }
           });
@@ -86,7 +85,7 @@ export class RoomDetailsComponent implements OnInit {
       worksheet.cell(index + 1, 5).string(student.score).style(style);
     });
 
-    workbook.write(excelFile());
+    workbook.write(localStorage.getItem('excelPath'));
   }
 
   upload() {
@@ -120,7 +119,7 @@ export class RoomDetailsComponent implements OnInit {
       });
       this.studentsInRoom = _.filter(this.studentsInRoom, (student: IStudent) => typeof student.mssv == 'number');
       _.forEach(this.studentsInRoom, (student: IStudent) => {
-        let dir = studentFolder(student.mssv);
+        let dir = localStorage.getItem('studentFolder') + student.mssv;
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
           this.studentService.add(student);

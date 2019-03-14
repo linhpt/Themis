@@ -1,5 +1,4 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { logsFolder } from '../interfaces/utils';
 import { StudentService } from './student.service';
 import { IStudent } from '../interfaces/core';
 import * as _ from 'lodash';
@@ -21,7 +20,8 @@ export class LogsWatcher {
     }
 
     public initLogsWatcher() {
-        this.watcher = chokidar.watch(logsFolder(), {
+        let logsFolder = localStorage.getItem('logsFolder');
+        this.watcher = chokidar.watch(logsFolder, {
             ignored: /(^|[\/\\])\../,
             persistent: true
         });

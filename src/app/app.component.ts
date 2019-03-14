@@ -10,7 +10,7 @@ var chokidar = (<any>window).require('chokidar');
 export class AppComponent  implements OnInit{
   
   title = 'Themis Editor';
-  private folder = `C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\weLinh`;
+  private folder = localStorage.getItem('sourceFolder');
 
   constructor(
     private weLinhService: WatcherService,

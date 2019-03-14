@@ -19,7 +19,7 @@ export class CreateTaskComponent implements OnInit {
   model: any = {};
 
   onSubmit() {
-    let dir = `C:\\Users\\linhp\\Documents\\personal\\Tasks\\${this.model.taskName}`;
+    let dir =  localStorage.getItem('taskFolder') + this.model.taskName;
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
       this.router.navigate(['/']);

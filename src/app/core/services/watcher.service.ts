@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { absoluteDestinationPath } from '../interfaces/utils';
 import * as _ from 'lodash';
 
 const chokidar = (<any>window).require('chokidar');
@@ -25,7 +24,7 @@ export class WatcherService {
 
   private moveToDestinationPath = (absolutePath: any) => {
     const fileName = _.last(path.normalize(absolutePath).split('\\'));
-    const dataPath = absoluteDestinationPath(fileName);
+    const dataPath = localStorage.getItem('destinationPath') + fileName;
     fs.createReadStream(absolutePath)
         .pipe(fs.createWriteStream(dataPath));
   }
