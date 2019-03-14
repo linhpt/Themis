@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { ClassService } from 'src/app/core/services/class.service';
-import { IClass } from 'src/app/core/interfaces/core';
+import { IClass, IStudent } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import * as XLSX from 'xlsx';
@@ -34,6 +34,22 @@ export class RoomDetailsComponent implements OnInit {
       const id = params['id'];
       this.classService.getAll().then((classList: IClass[]) => {
         this.lop = _.find(classList, (cls: IClass) => cls.id == id);
+
+        if (this.lop) {
+          this.canUpload = false;
+          this.studentService.getAll().then((students: IStudent[]) => {
+            this.classService.getAll().then((classes: IClass[]) => {
+              this.dsmssv = students;
+              let klass = _.find(classes, klass => klass.id = this.lop.id);
+              _.forEach(this.dsmssv, sv => {
+                sv.tenLop = klass.name;
+              });
+            });
+            
+          });
+        } else {
+          this.canUpload = true;
+        }
       });
     });
   }
@@ -43,7 +59,7 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   Upload() {
-    let folder = (mssv) => `C:\\Users\\Admin\\Documents\\personal\\${mssv}`;
+    let folder = (mssv) => `C:\\Users\\linhp\\Documents\\personal\\students\\${mssv}`;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       this.arrayBuffer = fileReader.result;
@@ -73,13 +89,14 @@ export class RoomDetailsComponent implements OnInit {
         let dir = folder(sv.mssv);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
-          this.studentService.add({
+          let student = {
             lop: this.lop.id,
             mssv: sv.mssv,
             hodem: sv.hodem,
             ten: sv.ten,
             diem: ''
-          });
+          };
+          this.studentService.add(student);
         }
       });
 

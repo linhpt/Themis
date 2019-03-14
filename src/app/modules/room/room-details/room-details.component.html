@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row" *ngIf="canUpload">
     <div class="col">
       <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
       <button type="button" class="btn btn-info" (click)="Upload()" >Upload</button>
@@ -25,7 +25,7 @@
             <th scope="row">{{ sv.mssv }}</th>
             <td>{{ sv.hodem }}</td>
             <td>{{ sv.ten }}</td>
-            <td>{{ sv.lop }}</td>
+            <td>{{ sv.tenLop }}</td>
             <td>{{ sv.diem }}</td>
           </tr>
         </tbody>

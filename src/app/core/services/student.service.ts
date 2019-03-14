@@ -11,7 +11,7 @@ export class StudentService {
   table: Dexie.Table<IStudent, number>;
 
   constructor(private dexieService: DexieService) {
-    this.table = this.dexieService.table('students');
+    this.table = this.dexieService.table('student');
   }
 
   getAll(): Promise<IStudent[]> {
