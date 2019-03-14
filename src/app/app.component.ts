@@ -13,10 +13,10 @@ export class AppComponent  implements OnInit{
   private folder = `C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\weLinh`;
 
   constructor(
-    private watcherService: WatcherService
+    private weLinhService: WatcherService,
   ) { }
 
   ngOnInit(): void {
-    this.watcherService.watchFolder(this.folder);
+    this.weLinhService.watchFolder(this.folder);
   }
 }

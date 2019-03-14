@@ -4,8 +4,10 @@ import { RoomService } from 'src/app/core/services/room.service';
 import { IRoom, IStudent } from 'src/app/core/interfaces/core';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { StudentService } from 'src/app/core/services/student.service';
+import { excelFile, studentFolder } from 'src/app/core/interfaces/utils';
 import * as XLSX from 'xlsx';
 import * as _ from 'lodash';
+import { LogsWatcher } from 'src/app/core/services/logs.service';
 const fs = (<any>window).require("fs");
 const excel = (<any>window).require('excel4node');
 
@@ -22,14 +24,12 @@ export class RoomDetailsComponent implements OnInit {
   studentsInRoom: IStudent[] = [];
   canUpload = false;
 
-  static excelLocation = 'C:\\Users\\linhp\\Google Drive (linhgando@gmail.com)\\ExcelFile.xlsx';
-  static folder = (mssv: string) => `C:\\Users\\linhp\\Documents\\personal\\Students\\${mssv}`;
-
   constructor(
     private route: ActivatedRoute,
     private utilsService: UtilsService,
     private roomService: RoomService,
-    private studentService: StudentService
+    private studentService: StudentService,
+    private logsWatcher: LogsWatcher
   ) { }
 
   incomingFile(event) {
@@ -37,17 +37,28 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.logsWatcher.initLogsWatcher();
+    this.logsWatcher.successEvent.subscribe((success: boolean) => {
+      if (success) {
+        this.studentService.getAll().then((students: IStudent[]) => {
+          this.studentsInRoom.length = 0;
+          this.studentsInRoom.push(...students);
+          this.createExcel();
+
+          console.log('Final Success');
+        });
+      }
+    })
     this.utilsService.toggle(true);
     this.route.params.subscribe((params: Params) => {
       const roomId = params['id'];
-
       this.roomService.getAll().then((roomList: IRoom[]) => {
-        this.currentRoom = _.find(roomList, room => room.id = roomId);
+        this.currentRoom = _.find(roomList, (room: IRoom) => room.id = roomId);
         if (this.currentRoom) {
           this.studentService.getAll().then((students: IStudent[]) => {
-            this.studentsInRoom  = _.filter(students, student => student.roomId == roomId);
+            this.studentsInRoom = _.filter(students, (student: IStudent) => student.roomId == roomId);
             this.canUpload = this.studentsInRoom.length == 0;
-            if (!fs.existsSync(RoomDetailsComponent.excelLocation)){
+            if (!fs.existsSync(excelFile())) {
               this.createExcel();
             }
           });
@@ -75,7 +86,7 @@ export class RoomDetailsComponent implements OnInit {
       worksheet.cell(index + 1, 5).string(student.score).style(style);
     });
 
-    workbook.write(RoomDetailsComponent.excelLocation);
+    workbook.write(excelFile());
   }
 
   upload() {
@@ -90,13 +101,13 @@ export class RoomDetailsComponent implements OnInit {
       }
 
       let bstr = arr.join('');
-      let workbook = XLSX.read(bstr, { 
-        type: "binary" 
+      let workbook = XLSX.read(bstr, {
+        type: "binary"
       });
       let firstSheetName = _.first(workbook.SheetNames);
       let worksheet = workbook.Sheets[firstSheetName];
-      let dataJson = XLSX.utils.sheet_to_json(worksheet, { 
-        raw: true 
+      let dataJson = XLSX.utils.sheet_to_json(worksheet, {
+        raw: true
       });
       this.studentsInRoom = _.map(dataJson, data => {
         return <IStudent>{
@@ -109,7 +120,7 @@ export class RoomDetailsComponent implements OnInit {
       });
       this.studentsInRoom = _.filter(this.studentsInRoom, (student: IStudent) => typeof student.mssv == 'number');
       _.forEach(this.studentsInRoom, (student: IStudent) => {
-        let dir = RoomDetailsComponent.folder(student.mssv);
+        let dir = studentFolder(student.mssv);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
           this.studentService.add(student);

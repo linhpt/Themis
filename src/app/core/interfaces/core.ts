@@ -1,15 +1,12 @@
-
 export interface IRoom {
   id?: number;
   name?: string;
   description?: string;
   timeCreated?: string;
 }
-
-
 export interface IStudent {
   id?: number;
-  mssv?: string;
+  mssv?: number;
   roomId?: number;
   roomName?: string;
   firstName?: string;
