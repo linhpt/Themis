@@ -28,6 +28,10 @@ export class RoomDetailsComponent implements OnInit {
     private studentService: StudentService
   ) { }
 
+  incomingfile(event) {
+    this.file = event.target.files[0];
+  }
+
   ngOnInit() {
     this.utilsService.toggle(true);
     this.route.params.subscribe((params: Params) => {
@@ -54,11 +58,7 @@ export class RoomDetailsComponent implements OnInit {
     });
   }
 
-  incomingfile(event) {
-    this.file = event.target.files[0];
-  }
-
-  Upload() {
+  upload() {
     let folder = (mssv) => `C:\\Users\\linhp\\Documents\\personal\\students\\${mssv}`;
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
