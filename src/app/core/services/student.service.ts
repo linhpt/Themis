@@ -18,12 +18,16 @@ export class StudentService {
     return this.table.toArray();
   }
 
-  add(data: IStudent): Promise<number> {
-    return this.table.add(data);
+  getByRoomId(roomId: string): Promise<IStudent[]> {
+    return this.table.where({roomId: roomId}).toArray();
   }
 
-  update(id: number, data: IStudent): Promise<number> {
-    return this.table.update(id, data);
+  add(student: IStudent): Promise<number> {
+    return this.table.add(student);
+  }
+
+  update(id: number, student: IStudent): Promise<number> {
+    return this.table.update(id, student);
   }
 
   remove(id: number): Promise<void> {

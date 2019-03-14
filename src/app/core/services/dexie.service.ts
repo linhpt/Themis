@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 })
 export class DexieService extends Dexie{
   constructor() {
-    super('ThemisDatabase');
-    this.version(6).stores({
-      class: '++id',
+    super('MyThemisDatabase');
+    this.version(7).stores({
+      room: '++id',
       student: '++id',
       submition: '++id'
     });

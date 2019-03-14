@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import { InstructionsComponent } from './instructions/instructions.component';
-import { ClassesComponent } from './classes/classes.component';
+import { RoomListComponent } from './room-list/room-list.component';
 import { HomeComponent } from './home.component';
 
 
@@ -14,12 +14,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'classes',
+        redirectTo: 'room-list',
         pathMatch: 'full'
       },
       {
-        path: 'classes',
-        component: ClassesComponent
+        path: 'room-list',
+        component: RoomListComponent
       }
     ]
   }
@@ -31,6 +31,6 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, AboutComponent, InstructionsComponent, ClassesComponent]
+  declarations: [HomeComponent, AboutComponent, InstructionsComponent, RoomListComponent]
 })
 export class HomeModule { }

@@ -1,13 +1,13 @@
 <div class="list-group">
-  <div *ngIf="!classList.length" class="alert alert-danger" role="alert">
+  <div *ngIf="!roomList.length" class="alert alert-danger" role="alert">
     {{ emptyMessage }}
   </div>
-  <a href="#" *ngFor="let class of classList" class="list-group-item list-group-item-action flex-column align-items-start">
+  <a href="#" *ngFor="let room of roomList" class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
-      <h5 class="mb-1">{{ class.name }}</h5>
+      <h5 class="mb-1">{{ room.name }}</h5>
       <small>3 days ago</small>
     </div>
-    <p class="mb-1">{{ class.description }}</p>
+    <p class="mb-1">{{ room.description }}</p>
     <small>Donec id elit non mi porta.</small>
   </a>
 </div>

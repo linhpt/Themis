@@ -15,11 +15,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'create-class',
+        redirectTo: 'create-room',
         pathMatch: 'full'
       },
       {
-        path: 'create-class',
+        path: 'create-room',
         component: CreateRoomComponent
       },
       {

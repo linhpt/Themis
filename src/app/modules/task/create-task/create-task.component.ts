@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 const fs = (<any>window).require("fs");
+
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.component.html',
@@ -7,7 +9,9 @@ const fs = (<any>window).require("fs");
 })
 export class CreateTaskComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
@@ -15,9 +19,10 @@ export class CreateTaskComponent implements OnInit {
   model: any = {};
 
   onSubmit() {
-    let dir = `C:\\Users\\linhp\\Documents\\personal\\testTask\\${this.model.taskName}`;
+    let dir = `C:\\Users\\linhp\\Documents\\personal\\Tasks\\${this.model.taskName}`;
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
+      this.router.navigate(['/']);
     }
   }
 }

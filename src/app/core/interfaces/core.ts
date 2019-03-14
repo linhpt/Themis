@@ -1,5 +1,5 @@
 
-export interface IClass {
+export interface IRoom {
   id?: number;
   name?: string;
   description?: string;
@@ -10,8 +10,9 @@ export interface IClass {
 export interface IStudent {
   id?: number;
   mssv?: string;
-  lop?: number;
-  hodem?: string;
-  ten?: string;
-  diem?: string;
+  roomId?: number;
+  roomName?: string;
+  firstName?: string;
+  lastName?: string;
+  score?: string;
 }

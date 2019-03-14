@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { IClass } from 'src/app/core/interfaces/core';
-import { ClassService } from 'src/app/core/services/class.service';
+import { IRoom } from 'src/app/core/interfaces/core';
+import { RoomService } from 'src/app/core/services/room.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,16 +14,16 @@ export class CreateRoomComponent {
 
   constructor(
     private router: Router,
-    private classService: ClassService) { }
+    private roomService: RoomService) { }
 
   onSubmit() {
     var now = new Date();
-    const newClass: IClass = {
-      name: this.model.className,
-      description: this.model.classDescription,
+    const room: IRoom = {
+      name: this.model.roomName,
+      description: this.model.roomDescription,
       timeCreated: now.toString()
     }
-    this.classService.add(newClass);
+    this.roomService.add(room);
     this.router.navigate(['/']);
   }
 

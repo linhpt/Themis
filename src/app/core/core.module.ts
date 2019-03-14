@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
-import { ClassService } from './services/class.service';
+import { RoomService } from './services/room.service';
 import { DexieService } from './services/dexie.service';
+import { StudentService } from './services/student.service';
+import { UtilsService } from './services/utils.service';
 
 @NgModule({
   imports: [
@@ -14,7 +16,9 @@ import { DexieService } from './services/dexie.service';
     FooterComponent,
   ],
   providers: [
-    ClassService,
+    UtilsService,
+    StudentService,
+    RoomService,
     DexieService
   ],
   declarations: [HeaderComponent, FooterComponent]

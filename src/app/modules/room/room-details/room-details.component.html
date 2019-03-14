@@ -1,8 +1,12 @@
 <div class="container-fluid">
   <div class="row" *ngIf="canUpload">
     <div class="col">
-      <input type="file" style="display: inline-block;" (change)="incomingfile($event)" placeholder="Upload file" accept=".xlsx">
-      <button type="button" class="btn btn-info" (click)="upload()" >Upload</button>
+      <input id="file-upload" type="file" (change)="incomingFile($event)">
+    </div>
+    <div class="col text-right">
+      <button type="button" class="btn btn-primary" (click)="upload()">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
   <div class="row">
@@ -14,19 +18,19 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Hodem</th>
-            <th scope="col">Ten</th>
-            <th scope="col">Lop</th>
-            <th scope="col">Diem</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Room</th>
+            <th scope="col">Score</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let sv of dsmssv">
-            <th scope="row">{{ sv.mssv }}</th>
-            <td>{{ sv.hodem }}</td>
-            <td>{{ sv.ten }}</td>
-            <td>{{ sv.tenLop }}</td>
-            <td>{{ sv.diem }}</td>
+          <tr *ngFor="let student of studentsInRoom">
+            <th scope="row">{{ student.mssv }}</th>
+            <td>{{ student.firstName }}</td>
+            <td>{{ student.lastName }}</td>
+            <td>{{ student.roomName }}</td>
+            <td>{{ student.score }}</td>
           </tr>
         </tbody>
       </table>

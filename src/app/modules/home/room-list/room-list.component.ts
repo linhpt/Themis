@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RoomService } from 'src/app/core/services/room.service';
 import { IRoom } from 'src/app/core/interfaces/core';
-import { UtilsService } from 'src/app/core/services/utils.service';
+import { RoomService } from 'src/app/core/services/room.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'room-list',
@@ -11,18 +11,19 @@ import { UtilsService } from 'src/app/core/services/utils.service';
 export class RoomListComponent implements OnInit {
 
   private roomList: IRoom[] = [];
-  private emptyMessage: string = 'There is no room for now!';
 
   constructor(
-    private utilsSerivce: UtilsService,
-    private classService: RoomService
+    private classService: RoomService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.utilsSerivce.toggle(false);
     this.classService.getAll().then((list: IRoom[]) => {
       this.roomList.push(...list);
     });
   }
 
+  view(room: IRoom) {
+    this.router.navigate(['/room/room-details', room.id]);
+  }
 }
