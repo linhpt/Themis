@@ -46,7 +46,6 @@ export class RoomDetailsComponent implements OnInit {
         this.studentService.getAll().then((students: IStudent[]) => {
           this.studentsInRoom.length = 0;
           this.studentsInRoom.push(...students);
-          //this.createExcel();
         });
       }
     })
@@ -58,53 +57,49 @@ export class RoomDetailsComponent implements OnInit {
           this.studentService.getAll().then((students: IStudent[]) => {
             this.studentsInRoom = _.filter(students, (student: IStudent) => student.roomId == roomId);
             this.canUpload = this.studentsInRoom.length == 0;
-            if (!fs.existsSync(localStorage.getItem('spreadsheetId'))) {
-              //this.createExcel();
-            }
           });
         }
       });
     });
   }
 
+  mapToStudents(data: {
+    Hodem: string
+    MSSV: number
+    NS: number
+    STT: number
+    Ten: string
+  }, room: IRoom) {
+    return <IStudent>{
+      roomId: room.id,
+      roomName: room.name,
+      mssv: data.MSSV,
+      firstName: data.Hodem,
+      lastName: data.Ten,
+    }
+  }
+
+  createFolders(students: IStudent[]) {
+    _.forEach(students, (student: IStudent) => {
+      let dir = localStorage.getItem('studentFolder') + student.mssv;
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+        this.studentService.add(student);
+      }
+    });
+  }
+
   upload() {
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
-      this.arrayBuffer = fileReader.result;
-      let data = new Uint8Array(this.arrayBuffer);
-      let arr = [];
-
-      for (let i = 0; i != data.length; ++i) {
-        arr[i] = String.fromCharCode(data[i]);
-      }
-
-      let bstr = arr.join('');
-      let workbook = XLSX.read(bstr, {
-        type: "binary"
-      });
-      let firstSheetName = _.first(workbook.SheetNames);
-      let worksheet = workbook.Sheets[firstSheetName];
-      let dataJson = XLSX.utils.sheet_to_json(worksheet, {
-        raw: true
-      });
-      this.studentsInRoom = _.map(dataJson, data => {
-        return <IStudent>{
-          roomId: this.currentRoom.id,
-          roomName: this.currentRoom.name,
-          mssv: data.__EMPTY,
-          firstName: data.__EMPTY_1,
-          lastName: data.__EMPTY_2,
-        }
-      });
-      this.studentsInRoom = _.filter(this.studentsInRoom, (student: IStudent) => typeof student.mssv == 'number');
-      _.forEach(this.studentsInRoom, (student: IStudent) => {
-        let dir = localStorage.getItem('studentFolder') + student.mssv;
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir);
-          this.studentService.add(student);
-        }
-      });
-      //this.createExcel();
+      let arrayBuffer = <ArrayBuffer>fileReader.result;
+      let buffer = new Uint8Array(arrayBuffer);
+      let workbook = XLSX.read(String.fromCharCode.apply(null, buffer), { type: "binary" });
+      let sheetNameList = workbook.SheetNames;
+      let worksheet = workbook.Sheets[sheetNameList[0]];
+      let data = XLSX.utils.sheet_to_json(worksheet);
+      this.studentsInRoom = _.map(data, item => this.mapToStudents(item, this.currentRoom));
+      this.createFolders(this.studentsInRoom);
     }
     fileReader.readAsArrayBuffer(this.file);
   }
@@ -114,7 +109,6 @@ export class RoomDetailsComponent implements OnInit {
     doc.useServiceAccountAuth(creds, function (err: any) {
 
       doc.getRows(1, function (err: any, rows) {
-        console.log('firstRow is', rows);
       });
     });
   }
