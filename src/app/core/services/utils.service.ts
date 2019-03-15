@@ -9,7 +9,7 @@ export class UtilsService {
 
   @Output() change: EventEmitter<boolean> = new EventEmitter();
 
-  toggle(open: boolean = false) {
+  setRoomDetailsOpen(open: boolean = false) {
     this.roomDetailsOpen = open;
     this.change.emit(this.roomDetailsOpen);
   }

@@ -11,7 +11,6 @@ import { UtilsService } from 'src/app/core/services/utils.service';
 export class RoomListComponent implements OnInit {
 
   private roomList: IRoom[] = [];
-  private emptyMessage: string = 'There is no room for now!';
 
   constructor(
     private utilsSerivce: UtilsService,
@@ -19,8 +18,14 @@ export class RoomListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.utilsSerivce.toggle(false);
+
     this.classService.getAll().then((list: IRoom[]) => {
+      console.log('roomList', list);
+      if (list.length > 0) {
+        this.utilsSerivce.setRoomDetailsOpen(true);
+      } else {
+        this.utilsSerivce.setRoomDetailsOpen(false);
+      }
       this.roomList.push(...list);
     });
   }

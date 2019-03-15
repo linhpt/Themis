@@ -1,7 +1,4 @@
 <div class="list-group">
-  <div *ngIf="!roomList.length" class="alert alert-danger" role="alert">
-    {{ emptyMessage }}
-  </div>
   <a href="#" *ngFor="let room of roomList" class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
       <h5 class="mb-1">{{ room.name }}</h5>

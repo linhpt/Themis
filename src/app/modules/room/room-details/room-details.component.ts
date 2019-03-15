@@ -37,18 +37,16 @@ export class RoomDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.logsWatcher.initLogsWatcher();
+    this.utilsService.setRoomDetailsOpen(false);
     this.logsWatcher.successEvent.subscribe((success: boolean) => {
       if (success) {
         this.studentService.getAll().then((students: IStudent[]) => {
           this.studentsInRoom.length = 0;
           this.studentsInRoom.push(...students);
           this.createExcel();
-
-          console.log('Final Success');
         });
       }
     })
-    this.utilsService.toggle(true);
     this.route.params.subscribe((params: Params) => {
       const roomId = params['id'];
       this.roomService.getAll().then((roomList: IRoom[]) => {

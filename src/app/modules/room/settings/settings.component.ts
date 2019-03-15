@@ -31,7 +31,7 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.utilsService.toggle(true);
+    this.utilsService.setRoomDetailsOpen(true);
     for (var name in this.model) {
       let itemSet = localStorage.getItem(name);
       if (itemSet) {
