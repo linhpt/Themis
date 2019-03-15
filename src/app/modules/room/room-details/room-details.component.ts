@@ -4,11 +4,13 @@ import { RoomService } from 'src/app/core/services/room.service';
 import { IRoom, IStudent } from 'src/app/core/interfaces/core';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { StudentService } from 'src/app/core/services/student.service';
+import { LogsWatcher } from 'src/app/core/services/logs.service';
 import * as XLSX from 'xlsx';
 import * as _ from 'lodash';
-import { LogsWatcher } from 'src/app/core/services/logs.service';
+import * as creds from 'src/app/core/credentials/client_secret.json';
 const fs = (<any>window).require("fs");
-const excel = (<any>window).require('excel4node');
+const GoogleSpreadsheet = (<any>window).require('google-spreadsheet');
+
 
 @Component({
   selector: 'app-room-details',
@@ -36,6 +38,7 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.createSpreadsheet();
     this.logsWatcher.initLogsWatcher();
     this.utilsService.setRoomDetailsOpen(false);
     this.logsWatcher.successEvent.subscribe((success: boolean) => {
@@ -43,7 +46,7 @@ export class RoomDetailsComponent implements OnInit {
         this.studentService.getAll().then((students: IStudent[]) => {
           this.studentsInRoom.length = 0;
           this.studentsInRoom.push(...students);
-          this.createExcel();
+          //this.createExcel();
         });
       }
     })
@@ -55,35 +58,13 @@ export class RoomDetailsComponent implements OnInit {
           this.studentService.getAll().then((students: IStudent[]) => {
             this.studentsInRoom = _.filter(students, (student: IStudent) => student.roomId == roomId);
             this.canUpload = this.studentsInRoom.length == 0;
-            if (!fs.existsSync(localStorage.getItem('excelPath'))) {
-              this.createExcel();
+            if (!fs.existsSync(localStorage.getItem('spreadsheetId'))) {
+              //this.createExcel();
             }
           });
         }
       });
     });
-  }
-
-  createExcel() {
-    let workbook = new excel.Workbook();
-    let worksheet = workbook.addWorksheet('Sheet 1');
-    let style = workbook.createStyle({
-      font: {
-        color: '#FF0800',
-        size: 12
-      },
-    });
-
-    _.forEach(this.studentsInRoom, (student: IStudent, index: number) => {
-      worksheet.cell(index + 1, 1).number(student.mssv).style(style);
-      worksheet.cell(index + 1, 2).string(student.firstName).style(style);
-      worksheet.cell(index + 1, 3).string(student.lastName).style(style);
-      worksheet.cell(index + 1, 4).string(student.roomId).style(style);
-      worksheet.cell(index + 1, 4).string(student.roomName).style(style);
-      worksheet.cell(index + 1, 5).string(student.score).style(style);
-    });
-
-    workbook.write(localStorage.getItem('excelPath'));
   }
 
   upload() {
@@ -123,9 +104,19 @@ export class RoomDetailsComponent implements OnInit {
           this.studentService.add(student);
         }
       });
-      this.createExcel();
+      //this.createExcel();
     }
     fileReader.readAsArrayBuffer(this.file);
+  }
+
+  createSpreadsheet() {
+    var doc = new GoogleSpreadsheet(localStorage.getItem('spreadsheetId'));
+    doc.useServiceAccountAuth(creds, function (err: any) {
+
+      doc.getRows(1, function (err: any, rows) {
+        console.log('firstRow is', rows);
+      });
+    });
   }
 
 }

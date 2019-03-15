@@ -22,11 +22,11 @@
         </div>
 
         <div class="form-group">
-          <label for="excelPath">Excel File absolute Path</label>
-          <input type="text" class="form-control" name="excelPath" [(ngModel)]="model.excelPath" #excelPath="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && excelPath.invalid }" required />
-          <div *ngIf="f.submitted && excelPath.invalid" class="invalid-feedback">
-            <div *ngIf="excelPath.errors.required">Excel Path is required</div>
+          <label for="spreadsheetId">Spreadsheet ID</label>
+          <input type="text" class="form-control" name="spreadsheetId" [(ngModel)]="model.spreadsheetId" #spreadsheetId="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && spreadsheetId.invalid }" required />
+          <div *ngIf="f.submitted && spreadsheetId.invalid" class="invalid-feedback">
+            <div *ngIf="spreadsheetId.errors.required">Spreadsheet ID is required</div>
           </div>
         </div>
 

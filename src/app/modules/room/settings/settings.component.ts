@@ -12,14 +12,14 @@ export class SettingsComponent implements OnInit {
   model: {
     sourceFolder: string;
     destinationFolder: string;
-    excelPath: string;
+    spreadsheetId: string;
     studentFolder: string;
     taskFolder: string;
     logsFolder: string;
   } = {
     sourceFolder: '',
     destinationFolder: '',
-    excelPath: '',
+    spreadsheetId: '',
     studentFolder: '',
     taskFolder: '',
     logsFolder: ''
