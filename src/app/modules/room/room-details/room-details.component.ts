@@ -8,6 +8,7 @@ import { LogsWatcher } from 'src/app/core/services/logs.service';
 import * as XLSX from 'xlsx';
 import * as _ from 'lodash';
 import * as creds from 'src/app/core/credentials/client_secret.json';
+import { StorageService } from 'src/app/core/services/storage.service';
 const fs = (<any>window).require("fs");
 const GoogleSpreadsheet = (<any>window).require('google-spreadsheet');
 
@@ -37,7 +38,8 @@ export class RoomDetailsComponent implements OnInit {
     private utilsService: UtilsService,
     private roomService: RoomService,
     private studentService: StudentService,
-    private logsWatcher: LogsWatcher
+    private logsWatcher: LogsWatcher,
+    private storageService: StorageService
   ) { }
 
   incomingFile(event) {
@@ -91,7 +93,7 @@ export class RoomDetailsComponent implements OnInit {
 
     let createFolders = (students: IStudent[]) => {
       _.forEach(students, (student: IStudent) => {
-        let dir = localStorage.getItem('studentFolder') + student.mssv;
+        let dir = this.storageService.studentFolder + student.mssv;
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir);
           this.studentService.add(student);
@@ -101,9 +103,8 @@ export class RoomDetailsComponent implements OnInit {
   }
 
   createSpreadsheet() {
-    var doc = new GoogleSpreadsheet(localStorage.getItem('spreadsheetId'));
+    var doc = new GoogleSpreadsheet(this.storageService.spreadsheetId);
     doc.useServiceAccountAuth(creds, function (err: any) {
-
       doc.getRows(1, function (err: any, rows) {
       });
     });
