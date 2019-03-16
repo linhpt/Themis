@@ -22,12 +22,8 @@ export class TaskComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      this.task.examId = params['id'];
+      this.task.examId = +params['id'];
     });
-  }
-
-  back() {
-    this.location.back();
   }
 
   onSubmit() {
@@ -37,5 +33,9 @@ export class TaskComponent implements OnInit {
       this.taskService.add(this.task);
       this.back();
     }
+  }
+
+  back() {
+    this.location.back();
   }
 }
