@@ -26,8 +26,6 @@ export interface ExcelColumn{
   styleUrls: ['./room-details.component.css']
 })
 export class RoomDetailsComponent implements OnInit {
-
-  arrayBuffer: any;
   file: File;
   currentRoom: IRoom;
   studentsInRoom: IStudent[] = [];
