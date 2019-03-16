@@ -1,10 +1,10 @@
 <div class="container-fluid mt-3">
   <div class="row" *ngIf="action == 'edit'">
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" (click)="load()">
-        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+      <button role="button" class="btn btn-primary text-white">
+          <i class="fa fa-play" aria-hidden="true"></i>
       </button>
-      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/contestants/create-contestant']">
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/contestants/create-contestant', exam.examId]">
         <i class="fa fa-users" aria-hidden="true"></i>
       </a>
       <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]">

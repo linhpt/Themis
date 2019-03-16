@@ -36,6 +36,10 @@ export class ExamComponent implements OnInit {
       this.taskService.getByExamId(id).then((tasks: ITask[]) =>{
         this.tasks.push(...tasks);
       });
+      this.contestantService.getByExamId(id).then((contestants: IContestant[]) => {
+        this.contestants.push(...contestants);
+      });
+
     });
     this.taskService.getAll().then((tasks: ITask[]) => {
       this.tasks = tasks;
@@ -56,9 +60,5 @@ export class ExamComponent implements OnInit {
 
   back() {
     this.location.back();
-  }
-
-  load() {
-
   }
 }

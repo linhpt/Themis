@@ -14,7 +14,7 @@ const routes: Routes = [
     component: ContestantsComponent,
     children: [
       {
-        path: 'create-contestant',
+        path: 'create-contestant/:id',
         component: CreateContestantComponent
       },
       {

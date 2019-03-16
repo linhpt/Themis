@@ -18,6 +18,10 @@ export class ContestantService {
     return this.table.toArray();
   }
 
+  getByExamId(examId: number): Promise<IContestant[]> {
+    return this.table.where({examId: examId}).toArray();
+  }
+
   add(contestant: IContestant): Promise<number> {
     return this.table.add(contestant);
   }
