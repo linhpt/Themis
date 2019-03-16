@@ -10,13 +10,9 @@ var chokidar = (<any>window).require('chokidar');
 export class AppComponent  implements OnInit{
   
   title = 'Themis Editor';
-  private folder = localStorage.getItem('sourceFolder');
 
-  constructor(
-    private weLinhService: WatcherService,
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.weLinhService.watchFolder(this.folder);
   }
 }
