@@ -12,18 +12,22 @@ const appRoutes: Routes = [
     loadChildren: './modules/home/home.module#HomeModule'
   },
   {
-    path: 'room',
-    loadChildren: './modules/room/room.module#RoomModule',
+    path: 'exams',
+    loadChildren: './modules/exams/exams.module#ExamsModule',
   },
   {
-    path: 'task',
-    loadChildren: './modules/task/task.module#TaskModule',
+    path: 'tasks',
+    loadChildren: './modules/tasks/tasks.module#TasksModule',
+  },
+  {
+    path: 'contestants',
+    loadChildren: './modules/contestants/contestants.module#ContestantsModule',
   }
 ];
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

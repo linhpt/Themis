@@ -1,0 +1,92 @@
+<div class="container-fluid mt-3">
+  <div class="row" *ngIf="action == 'edit'">
+    <div class="col text-right">
+      <button role="button" class="btn btn-primary text-white" (click)="load()">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+      </button>
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/contestants/create-contestant']">
+        <i class="fa fa-users" aria-hidden="true"></i>
+      </a>
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task']">
+        <i class="fa fa-tasks" aria-hidden="true"></i>
+      </a>
+      <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" [(ngModel)]="exam.name" #name="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'" />
+            <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
+              <div *ngIf="name.errors.required">Exam Name is required</div>
+            </div>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" name="description" [(ngModel)]="exam.description"
+              #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
+              [readonly]="action == 'edit'" />
+            <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
+              <div *ngIf="description.errors.required">Description is required</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="action == 'create'">
+          <button class="btn btn-primary">Create Exam</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row" *ngIf="action == 'edit'">
+    <div class="col">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Join date</th>
+            <th scope="col">DoB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let contestant of contestants">
+            <th scope="row">{{ contestant.contestantId }}</th>
+            <td>{{ contestant.firstName }}</td>
+            <td>{{ contestant.lastName }}</td>
+            <td>{{ contestant.joinDate }}</td>
+            <td>{{ contestant.dob }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Time Created</th>
+            <th scope="col">Description</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of tasks">
+            <th scope="row">{{ task.taskId }}</th>
+            <td>{{ task.timeCreated }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ exam.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

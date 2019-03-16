@@ -6,11 +6,12 @@ import { Injectable } from '@angular/core';
 })
 export class DexieService extends Dexie{
   constructor() {
-    super('MyThemisDatabase');
-    this.version(7).stores({
-      room: '++id',
-      student: '++id',
-      submition: '++id'
+    super('MyThemisDb');
+    this.version(8).stores({
+      exam: '++examId',
+      task: '++taskId,examId',
+      contestant: '++contestantId,examId',
+      submission: '++submissionId,examId,taskId,contestantId'
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { StudentService } from './student.service';
-import { IStudent } from '../interfaces/core';
+import { ContestantService } from './contestant.service';
+import { IContestant } from '../interfaces/core';
 import * as _ from 'lodash';
 
 const chokidar = (<any>window).require('chokidar');
@@ -15,7 +15,7 @@ export class LogsWatcher {
     public successEvent = new EventEmitter<boolean>();
 
     constructor(
-        private studentService: StudentService
+        private contestantService: ContestantService
     ) {
     }
 
@@ -44,14 +44,16 @@ export class LogsWatcher {
                     scoreLog
                 };
 
-                this.studentService.getAll().then((students: IStudent[]) => {
-                    let updateStudent = <IStudent>_.find(students, (student: IStudent) => student.mssv == result.mssv);
+                this.contestantService.getAll().then((students: IContestant[]) => {
+                    /*
+                    let con = <IContestant>_.find(students, (student: IContestant) => student.mssv == result.mssv);
                     if (updateStudent) {
                         updateStudent.score = scoreLog;
                     }
                     this.studentService.update(updateStudent.id, updateStudent).then(() => {
                         this.successEvent.emit(true);
                     });
+                    */
                 });
 
             } else {
