@@ -28,6 +28,7 @@
     "dexie": "^2.0.4",
     "file-system": "^2.2.2",
     "font-awesome": "^4.7.0",
+    "fs-extra": "^7.0.1",
     "google-spreadsheet": "^2.0.3",
     "lodash": "^4.17.11",
     "rxjs": "6.0.0",

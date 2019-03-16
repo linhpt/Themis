@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 const chokidar = (<any>window).require('chokidar');
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
+const fsExtra = (<any>window).require('fs-extra');
 
 @Injectable({
     providedIn: 'root'
@@ -19,11 +20,12 @@ export class SubmissionWatcher {
     ) {
         this.submissionFolder = localStorage.getItem('sourceFolder');
         this.destinationFolder = localStorage.getItem('destinationFolder');
-        // remove all file from submission folder
-        this.removeAllFiles();
     }
 
     watch() {
+        this.createLogs();
+        fsExtra.emptyDirSync(this.submissionFolder);
+
         this.watcher = chokidar.watch(this.submissionFolder, {
             ignored: /(^|[\/\\])\../,
             persistent: true
@@ -42,16 +44,10 @@ export class SubmissionWatcher {
             .pipe(fs.createWriteStream(dataPath));
     }
 
-    private removeAllFiles() {
-        fs.readdir(this.submissionFolder, (err, files) => {
-            if (err) {
-                throw err;
-            }
-            for (const file of files) {
-                fs.unlink(path.join(this.submissionFolder, file), err => {
-                    if (err) throw err;
-                });
-            }
-        });
+    private createLogs() {
+        let logsFolder = this.destinationFolder + 'Logs';
+        if (!fs.existsSync(logsFolder)) {
+            fs.mkdirSync(logsFolder);
+        }
     }
 }
