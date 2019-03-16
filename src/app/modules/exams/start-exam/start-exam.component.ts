@@ -32,9 +32,6 @@ export class StartExamComponent implements OnInit {
 
             let taskNames = tasks.map((task: ITask) => task.name);
             this.headers.push(...taskNames);
-            _.times(contestants.length, () => {
-
-            });
             for (var i = 0; i < contestants.length; i++) {
               let contestant = contestants[i];
               let row = [];
