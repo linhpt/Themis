@@ -19,7 +19,7 @@ export class FolderCreator {
 
     createContestants(contestantIds: Array<number>) {
         let contestantsFolder = this.examFolder + 'contestants';
-        if (!fs.existsSync()) {
+        if (!fs.existsSync(contestantsFolder)) {
             fs.mkdirSync(contestantsFolder);
         }
 
@@ -34,7 +34,7 @@ export class FolderCreator {
 
     createTasks(taskNames: Array<string>) {
         let tasksFolder = this.examFolder + 'tasks';
-        if (!fs.existsSync()) {
+        if (!fs.existsSync(tasksFolder)) {
             fs.mkdirSync(tasksFolder);
         }
 

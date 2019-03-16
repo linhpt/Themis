@@ -10,7 +10,7 @@ const fsExtra = (<any>window).require('fs-extra');
     providedIn: 'root'
 })
 export class LogsWatcher {
-    successEvent = new EventEmitter<boolean>();
+    successEvent = new EventEmitter<{}>();
     watcher: any;
     logsFolder: string;
 
@@ -33,5 +33,20 @@ export class LogsWatcher {
     }
 
     readLogs = (absolutePath: string) => {
+        let fileName = _.last(path.normalize(absolutePath).split('\\'));
+        fileName = fileName.replace(/\]|\[/g, ' ');
+        let tokens = fileName.split(/\s+/);
+
+        const contestantId = tokens[1];
+        const taskName = tokens[2];
+
+        fs.readFile(absolutePath, 'utf8', (err, content) => {
+            const data = {
+                contestantId,
+                taskName,
+                content
+            }
+            this.successEvent.emit(data);
+        });
     }
 }
