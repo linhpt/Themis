@@ -38,7 +38,7 @@ export class SubmissionWatcher {
     }
 
     moveToDestination = (absolutePath: any) => {
-        const fileName = path.normalize(absolutePath).split('\\')[0];
+        const fileName = _.last(path.normalize(absolutePath).split('\\'));
         const dataPath = this.destinationFolder + fileName;
         fs.createReadStream(absolutePath)
             .pipe(fs.createWriteStream(dataPath));
