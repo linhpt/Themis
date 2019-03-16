@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.service';
 import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
 import { FolderCreator } from 'src/app/core/services/folder-creator.service';
+import { SpreadsheetUtils } from 'src/app/core/services/spreadsheet.service';
 
 export interface IResult {
   contestantId: string;
@@ -31,6 +32,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
     private logsWatcher: LogsWatcher,
     private folderCreator: FolderCreator,
     private cd: ChangeDetectorRef,
+    private spreadsheetUtils: SpreadsheetUtils,
     private submissionWatcher: SubmissionWatcher
   ) { }
 
@@ -52,6 +54,8 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
             this.folderCreator.createContestants(contestantIds);
 
             this.headers.push(...taskNames);
+            this.spreadsheetUtils.headerRow = this.headers;
+            this.spreadsheetUtils.updateSheet();
             for (var i = 0; i < contestants.length; i++) {
               let contestant = contestants[i];
               let row = [];
