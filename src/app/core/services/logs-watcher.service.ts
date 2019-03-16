@@ -25,12 +25,13 @@ export class LogsWatcher {
             ignored: /(^|[\/\\])\../,
             persistent: true
         });
-        this.watcher.on('add', () => {
-            
-        });
+        this.watcher.on('add', this.readLogs);
     }
 
     unwatch() {
         this.watcher.unwatch(this.logsFolder);
+    }
+
+    readLogs = (absolutePath: string) => {
     }
 }

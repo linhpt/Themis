@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { SubmissionService } from 'src/app/core/services/submission.service';
 import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.service';
 import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
+import { FolderCreator } from 'src/app/core/services/folder-creator.service';
 
 @Component({
   selector: 'app-start-exam',
@@ -23,6 +24,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
     private taskService: TaskService,
     private contestantService: ContestantService,
     private logsWatcher: LogsWatcher,
+    private folderCreator: FolderCreator,
     private submissionWatcher: SubmissionWatcher
   ) { }
 
@@ -38,6 +40,11 @@ export class StartExamComponent implements OnInit, OnDestroy {
             && contestants.length) {
 
             let taskNames = tasks.map((task: ITask) => task.name);
+            let contestantIds = contestants.map((contestant: IContestant) => contestant.contestantId);
+            
+            this.folderCreator.createTasks(taskNames);
+            this.folderCreator.createContestants(contestantIds);
+
             this.headers.push(...taskNames);
             for (var i = 0; i < contestants.length; i++) {
               let contestant = contestants[i];
