@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { TaskService } from 'src/app/core/services/task.service';
 import { ContestantService } from 'src/app/core/services/contestant.service';
@@ -30,6 +30,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
     private contestantService: ContestantService,
     private logsWatcher: LogsWatcher,
     private folderCreator: FolderCreator,
+    private cd: ChangeDetectorRef,
     private submissionWatcher: SubmissionWatcher
   ) { }
 
@@ -85,6 +86,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
       row[taskIndex] = content.substr(0, 10);
+      this.cd.detectChanges();
     });
   }
 
