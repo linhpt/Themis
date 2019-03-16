@@ -15,8 +15,8 @@ export class ExamComponent implements OnInit {
 
   @Input() action: string;
   exam: IExam = {};
-  tasks: ITask[];
-  contestants: IContestant[];
+  tasks: ITask[] = [];
+  contestants: IContestant[] = [];
 
   constructor(
     private router: Router,
@@ -34,10 +34,14 @@ export class ExamComponent implements OnInit {
         Object.assign(this.exam, exams[0]);
       });
       this.taskService.getByExamId(id).then((tasks: ITask[]) =>{
-        this.tasks.push(...tasks);
+        if (tasks){
+          this.tasks.push(...tasks);
+        }
       });
       this.contestantService.getByExamId(id).then((contestants: IContestant[]) => {
-        this.contestants.push(...contestants);
+        if (contestants) {
+          this.contestants.push(...contestants);
+        }
       });
 
     });

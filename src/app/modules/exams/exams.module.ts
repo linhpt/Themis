@@ -6,6 +6,7 @@ import { CreateExamComponent } from './create-exam/create-exam.component';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { StartExamComponent } from './start-exam/start-exam.component';
 
 const routes: Routes = [
   {
@@ -19,7 +20,11 @@ const routes: Routes = [
       {
         path: 'edit-exam/:id',
         component: EditExamComponent
-      }
+      },
+      {
+        path: 'start-exam/:id',
+        component: StartExamComponent
+      },
     ]
   }
 ];
@@ -30,6 +35,6 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent]
+  declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent, StartExamComponent]
 })
 export class ExamsModule { }
