@@ -13,7 +13,7 @@ const routes: Routes = [
     component: TasksComponent,
     children: [
       {
-        path: 'create-task',
+        path: 'create-task/:id',
         component: CreateTaskComponent
       },
       {

@@ -29,9 +29,12 @@ export class ExamComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      this.exam.examId = params['id'];
-      this.examService.getById(this.exam.examId).then((exams: IExam[]) => {
-        console.log('exam', this.exam.examId, exams);
+      const id = +params['id'];
+      this.examService.getById(id).then((exams: IExam[]) => {
+        Object.assign(this.exam, exams[0]);
+      });
+      this.taskService.getByExamId(id).then((tasks: ITask[]) =>{
+        this.tasks.push(...tasks);
       });
     });
     this.taskService.getAll().then((tasks: ITask[]) => {

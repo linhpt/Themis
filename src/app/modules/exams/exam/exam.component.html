@@ -7,7 +7,7 @@
       <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/contestants/create-contestant']">
         <i class="fa fa-users" aria-hidden="true"></i>
       </a>
-      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task']">
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]">
         <i class="fa fa-tasks" aria-hidden="true"></i>
       </a>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
@@ -75,15 +75,14 @@
             <th scope="col">Name</th>
             <th scope="col">Time Created</th>
             <th scope="col">Description</th>
-            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let task of tasks">
             <th scope="row">{{ task.taskId }}</th>
-            <td>{{ task.timeCreated }}</td>
             <td>{{ task.name }}</td>
-            <td>{{ exam.description }}</td>
+            <td>{{ task.timeCreated }}</td>
+            <td>{{ task.description }}</td>
           </tr>
         </tbody>
       </table>
