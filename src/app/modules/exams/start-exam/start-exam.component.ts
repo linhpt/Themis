@@ -55,7 +55,6 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.headers.push(...taskNames);
             this.spreadsheetUtils.headerRow = this.headers;
-            this.spreadsheetUtils.updateSheet();
             for (var i = 0; i < contestants.length; i++) {
               let contestant = contestants[i];
               let row = [];
@@ -70,6 +69,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
               this.rows.push(row);
             }
+            this.spreadsheetUtils.updateSheet();
           }
         });
       });
