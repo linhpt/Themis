@@ -11,6 +11,13 @@ import * as creds from 'src/app/core/credentials/client_secret.json';
 const fs = (<any>window).require("fs");
 const GoogleSpreadsheet = (<any>window).require('google-spreadsheet');
 
+export interface ExcelColumn{
+  Hodem: string
+  MSSV: number
+  NS: number
+  STT: number
+  Ten: string
+}
 
 @Component({
   selector: 'app-room-details',
@@ -63,31 +70,6 @@ export class RoomDetailsComponent implements OnInit {
     });
   }
 
-  mapToStudents(data: {
-    Hodem: string
-    MSSV: number
-    NS: number
-    STT: number
-    Ten: string
-  }, room: IRoom) {
-    return <IStudent>{
-      roomId: room.id,
-      roomName: room.name,
-      mssv: data.MSSV,
-      firstName: data.Hodem,
-      lastName: data.Ten,
-    }
-  }
-
-  createFolders(students: IStudent[]) {
-    _.forEach(students, (student: IStudent) => {
-      let dir = localStorage.getItem('studentFolder') + student.mssv;
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
-        this.studentService.add(student);
-      }
-    });
-  }
 
   upload() {
     let fileReader = new FileReader();
@@ -98,10 +80,24 @@ export class RoomDetailsComponent implements OnInit {
       let sheetNameList = workbook.SheetNames;
       let worksheet = workbook.Sheets[sheetNameList[0]];
       let data = XLSX.utils.sheet_to_json(worksheet);
-      this.studentsInRoom = _.map(data, item => this.mapToStudents(item, this.currentRoom));
-      this.createFolders(this.studentsInRoom);
+      this.studentsInRoom = _.map(data, item => mapToStudents(item, this.currentRoom));
+      createFolders(this.studentsInRoom);
     }
     fileReader.readAsArrayBuffer(this.file);
+
+    let mapToStudents = (data: ExcelColumn, room: IRoom) => {
+      return <IStudent>{ roomId: room.id, roomName: room.name, mssv: data.MSSV, firstName: data.Hodem, lastName: data.Ten}
+    }
+
+    let createFolders = (students: IStudent[]) => {
+      _.forEach(students, (student: IStudent) => {
+        let dir = localStorage.getItem('studentFolder') + student.mssv;
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+          this.studentService.add(student);
+        }
+      });
+    }
   }
 
   createSpreadsheet() {
