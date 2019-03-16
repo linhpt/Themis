@@ -1,5 +1,4 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { IContestant } from '../interfaces/core';
 import * as _ from 'lodash';
 
 const chokidar = (<any>window).require('chokidar');

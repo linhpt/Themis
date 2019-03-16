@@ -6,6 +6,7 @@ import { IExam, IContestant, ITask } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
 import { SubmissionService } from 'src/app/core/services/submission.service';
 import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.service';
+import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
 
 @Component({
   selector: 'app-start-exam',
@@ -21,11 +22,13 @@ export class StartExamComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private taskService: TaskService,
     private contestantService: ContestantService,
+    private logsWatcher: LogsWatcher,
     private submissionWatcher: SubmissionWatcher
   ) { }
 
   ngOnInit() {
     this.submissionWatcher.watch();
+    this.logsWatcher.watch();
     this.route.params.subscribe((params: Params) => {
       const examId = +params['id'];
       this.taskService.getByExamId(examId).then((tasks: IExam[]) => {
@@ -58,5 +61,6 @@ export class StartExamComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.submissionWatcher.unwatch();
+    this.logsWatcher.unwatch();
   }
 }
