@@ -74,10 +74,15 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
           return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
         });
-        
+
         await this.updateLastStarted();
         this.spreadsheetUtils.rows = this.contestants;
         this.spreadsheetUtils.scoreBoard = this.scoreBoard;
+        if (!this.exam.started) {
+          this.exam.started = true;
+          this.examService.update(this.exam.examId, this.exam);
+        }
+        this.spreadsheetUtils.started = this.exam.started;
         this.spreadsheetUtils.updateSheet();
       }
 
