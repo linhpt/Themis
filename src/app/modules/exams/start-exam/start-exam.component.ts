@@ -55,7 +55,6 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
       const examId = +params['id'];
       let exams = await this.examService.getById(examId);
       this.exam = exams[0];
-      console.log('examp', this.exam);
       let tasks = await this.taskService.getByExamId(examId);
       let contestants = await this.contestantService.getByExamId(examId);
       if (tasks && tasks.length && contestants && contestants.length) {
@@ -78,9 +77,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         this.spreadsheetUtils.headers = this.headers;
         this.spreadsheetUtils.rows = this.contestants;
         this.spreadsheetUtils.scoreBoard = this.scoreBoard;
-        console.log('exam', this.exam);
         if (!this.exam.started) {
-          console.log('create sheet');
           this.spreadsheetUtils.createSheet();
         } else {
           await this.updateLastStarted();
