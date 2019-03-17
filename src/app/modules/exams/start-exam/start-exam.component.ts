@@ -8,6 +8,8 @@ import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.serv
 import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
 import { FolderCreator } from 'src/app/core/services/folder-creator.service';
 import { SpreadsheetUtils } from 'src/app/core/services/spreadsheet.service';
+import { Location } from '@angular/common';
+import { ExamService } from 'src/app/core/services/exam.service';
 
 export interface IResult {
   contestantId: string;
@@ -22,6 +24,7 @@ export interface IResult {
 })
 export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  exam: IExam = {};
   headers = ['#', 'First name', 'Last name', 'Join date'];
   rows = [];
 
@@ -32,6 +35,8 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
     private logsWatcher: LogsWatcher,
     private folderCreator: FolderCreator,
     private cd: ChangeDetectorRef,
+    private location: Location,
+    private examService: ExamService,
     private spreadsheetUtils: SpreadsheetUtils,
     private submissionWatcher: SubmissionWatcher
   ) { }
@@ -41,6 +46,9 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logsWatcher.watch();
     this.route.params.subscribe((params: Params) => {
       const examId = +params['id'];
+      this.examService.getById(examId).then((exams: IExam[]) => {
+        this.exam = exams[0];
+      });
       this.taskService.getByExamId(examId).then((tasks: IExam[]) => {
         this.contestantService.getByExamId(examId).then((contestants: IContestant[]) => {
           if (tasks && tasks.length
@@ -97,5 +105,9 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.submissionWatcher.unwatch();
     this.logsWatcher.unwatch();
+  }
+
+  back() {
+    this.location.back();
   }
 }

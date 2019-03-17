@@ -1,14 +1,16 @@
 <div class="container-fluid mt-3">
-  <div class="row" *ngIf="action == 'edit'">
+  <div class="row">
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" [routerLink]="['/exams/start-exam', exam.examId]">
+      <button role="button" class="btn btn-primary text-white" [routerLink]="['/exams/start-exam', exam.examId]"
+        *ngIf="action == 'edit'">
         <i class="fa fa-flag" aria-hidden="true"></i>
       </button>
       <a role="button" class="btn btn-primary text-white ml-1"
-        [routerLink]="['/contestants/create-contestant', exam.examId]">
+        [routerLink]="['/contestants/create-contestant', exam.examId]" *ngIf="action == 'edit'">
         <i class="fa fa-users" aria-hidden="true"></i>
       </a>
-      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]">
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]"
+        *ngIf="action == 'edit'">
         <i class="fa fa-tasks" aria-hidden="true"></i>
       </a>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">

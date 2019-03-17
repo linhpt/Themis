@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/core/services/sidebar.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-settings',
@@ -15,14 +16,15 @@ export class SettingsComponent implements OnInit {
     examFolder: string;
     spreadsheetId: string;
   } = {
-    sourceFolder: '',
-    destinationFolder: '',
-    examFolder: '',
-    spreadsheetId: ''
-  }
+      sourceFolder: '',
+      destinationFolder: '',
+      examFolder: '',
+      spreadsheetId: ''
+    }
 
   constructor(
     private router: Router,
+    private location: Location,
     private sidebarService: SidebarService
   ) { }
 
@@ -40,6 +42,10 @@ export class SettingsComponent implements OnInit {
     for (var name in this.settings) {
       localStorage.setItem(name, this.settings[name]);
     }
-    this.router.navigate(['/']);
+    this.back();
+  }
+
+  back() {
+    this.location.back();
   }
 }

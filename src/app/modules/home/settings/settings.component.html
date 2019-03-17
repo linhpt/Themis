@@ -1,11 +1,18 @@
 <div class="container-fluid">
   <div class="row">
+    <div class="col text-right">
+      <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row">
     <div class="col">
       <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
         <div class="form-group">
           <label for="sourceFolder">Source Folder</label>
-          <input type="text" class="form-control" name="sourceFolder" [(ngModel)]="settings.sourceFolder" #sourceFolder="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required />
+          <input type="text" class="form-control" name="sourceFolder" [(ngModel)]="settings.sourceFolder"
+            #sourceFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required />
           <div *ngIf="f.submitted && sourceFolder.invalid" class="invalid-feedback">
             <div *ngIf="sourceFolder.errors.required">Source Folder is required</div>
           </div>
@@ -22,18 +29,18 @@
         </div>
 
         <div class="form-group">
-            <label for="examFolder">Exam Folder</label>
-            <input type="text" class="form-control" name="examFolder" [(ngModel)]="settings.examFolder" #examFolder="ngModel"
-              [ngClass]="{ 'is-invalid': f.submitted && examFolder.invalid }" required />
-            <div *ngIf="f.submitted && examFolder.invalid" class="invalid-feedback">
-              <div *ngIf="examFolder.errors.required">Exam Folder is required</div>
-            </div>
+          <label for="examFolder">Exam Folder</label>
+          <input type="text" class="form-control" name="examFolder" [(ngModel)]="settings.examFolder"
+            #examFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && examFolder.invalid }" required />
+          <div *ngIf="f.submitted && examFolder.invalid" class="invalid-feedback">
+            <div *ngIf="examFolder.errors.required">Exam Folder is required</div>
           </div>
+        </div>
 
         <div class="form-group">
           <label for="spreadsheetId">Spreadsheet ID</label>
-          <input type="text" class="form-control" name="spreadsheetId" [(ngModel)]="settings.spreadsheetId" #spreadsheetId="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && spreadsheetId.invalid }" required />
+          <input type="text" class="form-control" name="spreadsheetId" [(ngModel)]="settings.spreadsheetId"
+            #spreadsheetId="ngModel" [ngClass]="{ 'is-invalid': f.submitted && spreadsheetId.invalid }" required />
           <div *ngIf="f.submitted && spreadsheetId.invalid" class="invalid-feedback">
             <div *ngIf="spreadsheetId.errors.required">Spreadsheet ID is required</div>
           </div>
