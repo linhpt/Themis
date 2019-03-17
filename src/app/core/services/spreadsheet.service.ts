@@ -8,6 +8,7 @@ const GoogleSpreadsheet = (<any>window).require('google-spreadsheet');
     providedIn: 'root'
 })
 export class SpreadsheetUtils {
+    SPREADSHEET_ID: string;
 
     document: any;
     sheet: any;
@@ -15,6 +16,12 @@ export class SpreadsheetUtils {
     _rows: Array<IContestant>;
     _scoreBoard: Array<Array<string>>;
     _started: boolean = false;
+
+    sheetRows: any;
+
+    constructor() {
+        this.SPREADSHEET_ID = localStorage.getItem('spreadsheetId');
+    }
 
     set started(started: boolean) {
         this._started = started;
@@ -32,20 +39,40 @@ export class SpreadsheetUtils {
         this._scoreBoard = scoreBoard;
     }
 
-    updateSheet() {
-        let spreadsheetId = localStorage.getItem('spreadsheetId');
-        this.document = new GoogleSpreadsheet(spreadsheetId);
-        this.document.useServiceAccountAuth(creds, (err) => {
-            this.document.getInfo((err, info) => {
+    createSheet() {
+        this.document = new GoogleSpreadsheet(this.SPREADSHEET_ID);
+        this.document.useServiceAccountAuth(creds, (err: any) => {
+            this.document.getInfo((err: any, info: any) => {
                 this.sheet = info.worksheets[0];
-                this.sheet.getRows((err, rows) => {
-                    console.log('rows', rows);
-                });
-                this.sheet.setHeaderRow(this._headers, (err) => {
-                    if (err) {
-                        console.log('Header error', err);
-                    }
-                });
+                if (!this._started) {
+                    this.createSpreadsheet();
+                }
+            });
+        });
+    }
+
+    updateSheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string}) {
+        if (this.sheetRows) {
+            this.updateSpreadsheet(info);
+        } else {
+            this.sheet.getRows({
+                offset: 1,
+                limit: this._scoreBoard.length
+            }, (err: any, rows: any) => {
+                this.sheetRows = rows;
+                this.updateSpreadsheet(info);
+            });
+        }
+    }
+
+    private updateSpreadsheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string}) {
+        this.sheetRows[info.contestantIndex][info.taskName.toLowerCase()] = info.score;
+        this.sheetRows[info.contestantIndex].save();
+    }
+
+    private createSpreadsheet() {
+        this.sheet.setHeaderRow(this._headers, (err: any) => {
+            if (!err) {
                 for (var i = 0; i < this._rows.length; i++) {
                     let rowValues = [
                         this._rows[i].contestantId,
@@ -56,17 +83,17 @@ export class SpreadsheetUtils {
                     ];
 
                     let row = {};
-                    for(var j = 0; j < this._headers.length; j++){
+                    for (var j = 0; j < this._headers.length; j++) {
                         row[this._headers[j]] = rowValues[j];
                     }
 
                     this.sheet.addRow(row, (err) => {
-                        if (err) {
-                            console.log('Row error', err);
+                        if (!err) {
+                            this._started = true;
                         }
                     });
                 }
-            });
+            }
         });
     }
 

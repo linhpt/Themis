@@ -32,7 +32,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   contestants: IContestant[] = [];
   contestantIds: Array<number>;
   headers = ['Sdudent ID', 'First Name', 'Last Name', 'Join Date'];
-  scoreBoard: Array<Array<string>>;
+  scoreBoard: Array<Array<string>> = [[]];
 
   constructor(
     private route: ActivatedRoute,
@@ -65,25 +65,26 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         this.taskNames = tasks.map((task: ITask) => task.name);
         this.contestantIds = contestants.map((contestant: IContestant) => +contestant.contestantId);
 
+        this.folderCreator.exam = this.exam;
         this.folderCreator.createTasks(this.taskNames);
         this.folderCreator.createContestants(this.contestantIds);
 
         this.headers.push(...this.taskNames);
-        this.spreadsheetUtils.headers = this.headers;
-
         this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
           return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
         });
 
-        await this.updateLastStarted();
-        this.spreadsheetUtils.rows = this.contestants;
-        this.spreadsheetUtils.scoreBoard = this.scoreBoard;
         if (!this.exam.started) {
+          this.spreadsheetUtils.started = false;
           this.exam.started = true;
           this.examService.update(this.exam.examId, this.exam);
+        } else {
+          await this.updateLastStarted();
         }
-        this.spreadsheetUtils.started = this.exam.started;
-        this.spreadsheetUtils.updateSheet();
+        this.spreadsheetUtils.headers = this.headers;
+        this.spreadsheetUtils.rows = this.contestants;
+        this.spreadsheetUtils.scoreBoard = this.scoreBoard;
+        this.spreadsheetUtils.createSheet();
       }
 
     });
@@ -104,6 +105,10 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         score: res.content
       };
       this.submissionService.add(submission);
+      this.spreadsheetUtils.updateSheet({contestantIndex, 
+        taskIndex, 
+        taskName: this.taskNames[taskIndex], 
+        score: res.content.substr(0, 10)});
       this.cd.detectChanges();
     });
   }

@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as _ from 'lodash';
+import { IExam } from '../interfaces/core';
 
 const chokidar = (<any>window).require('chokidar');
 const path = (<any>window).require('path');
@@ -11,18 +12,29 @@ const fsExtra = (<any>window).require('fs-extra');
 })
 export class FolderCreator {
     examFolder: string;
+    _exam: IExam;
 
     constructor(
     ) {
         this.examFolder = localStorage.getItem('examFolder');
     }
 
-    createContestants(contestantIds: Array<number>) {
-        let contestantsFolder = this.examFolder + 'contestants';
-        if (!fs.existsSync(contestantsFolder)) {
-            fs.mkdirSync(contestantsFolder);
-        }
+    set exam(exam: IExam) {
+        this._exam = exam;
+    }
 
+    private createIfNotExisted(filePath: string) {
+        if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(filePath);
+        }
+    }
+
+    createContestants(contestantIds: Array<number>) {
+
+        this.createIfNotExisted(this.examFolder + this._exam.examId);
+        this.createIfNotExisted(this.examFolder + this._exam.examId + '\\contestants');
+
+        let contestantsFolder = this.examFolder + this._exam.examId + '\\contestants';
         for (var i = 0; i < contestantIds.length; i++){
             let contestant = contestantsFolder + '\\' +  contestantIds[i];
             if (!fs.existsSync(contestant)) {
@@ -33,11 +45,10 @@ export class FolderCreator {
     }
 
     createTasks(taskNames: Array<string>) {
-        let tasksFolder = this.examFolder + 'tasks';
-        if (!fs.existsSync(tasksFolder)) {
-            fs.mkdirSync(tasksFolder);
-        }
-
+        this.createIfNotExisted(this.examFolder + this._exam.examId);
+        this.createIfNotExisted(this.examFolder + this._exam.examId + '\\tasks');
+        
+        let tasksFolder = this.examFolder + this._exam.examId + '\\tasks';
         for (var i = 0; i < taskNames.length; i++){
             let taskFolder = tasksFolder + '\\' +  taskNames[i];
             if (!fs.existsSync(taskFolder)) {
