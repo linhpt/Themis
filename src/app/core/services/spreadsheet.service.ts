@@ -14,6 +14,11 @@ export class SpreadsheetUtils {
     _headers: Array<string>;
     _rows: Array<IContestant>;
     _scoreBoard: Array<Array<string>>;
+    _started: boolean = false;
+
+    set started(started: boolean) {
+        this._started = started;
+    }
 
     set headers(headers: Array<string>) {
         this._headers = headers;

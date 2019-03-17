@@ -57,6 +57,7 @@ export class ExamComponent implements OnInit {
     if (this.action == 'create') {
       let now = new Date();
       this.exam.timeCreated = now.toString();
+      this.exam.started = false;
       this.examService.add(this.exam);
       this.router.navigate(['/']);  
     }

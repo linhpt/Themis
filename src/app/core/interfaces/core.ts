@@ -1,6 +1,7 @@
 export interface IExam {
   examId?: number;
   name?: string;
+  started?: boolean;
   description?: string;
   timeCreated?: string;
 }

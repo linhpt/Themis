@@ -51,40 +51,36 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit() {
     this.submissionWatcher.watch();
     this.logsWatcher.watch();
-    this.route.params.subscribe((params: Params) => {
+    this.route.params.subscribe(async (params: Params) => {
       const examId = +params['id'];
-      this.examService.getById(examId).then((exams: IExam[]) => {
-        this.exam = exams[0];
-      });
-      this.taskService.getByExamId(examId).then((tasks: IExam[]) => {
-        this.contestantService.getByExamId(examId).then((contestants: IContestant[]) => {
-          if (tasks && tasks.length
-            && contestants
-            && contestants.length) {
-            this.tasks.push(...tasks);
-            this.contestants.push(...contestants);
+      let exams = await this.examService.getById(examId);
+      this.exam = exams[0];
+      let tasks = await this.taskService.getByExamId(examId);
+      let contestants = await this.contestantService.getByExamId(examId);
+      if (tasks && tasks.length && contestants && contestants.length) {
+        this.tasks.push(...tasks);
+        this.contestants.push(...contestants);
 
-            this.taskIds = tasks.map((task: ITask) => task.taskId);
-            this.taskNames = tasks.map((task: ITask) => task.name);
-            this.contestantIds = contestants.map((contestant: IContestant) => +contestant.contestantId);
+        this.taskIds = tasks.map((task: ITask) => task.taskId);
+        this.taskNames = tasks.map((task: ITask) => task.name);
+        this.contestantIds = contestants.map((contestant: IContestant) => +contestant.contestantId);
 
-            this.folderCreator.createTasks(this.taskNames);
-            this.folderCreator.createContestants(this.contestantIds);
+        this.folderCreator.createTasks(this.taskNames);
+        this.folderCreator.createContestants(this.contestantIds);
 
-            this.headers.push(...this.taskNames);
-            this.spreadsheetUtils.headers = this.headers;
+        this.headers.push(...this.taskNames);
+        this.spreadsheetUtils.headers = this.headers;
 
-            this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
-              return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
-            });
-            this.updateLastStarted().then(() => {
-              this.spreadsheetUtils.rows = this.contestants;
-              this.spreadsheetUtils.scoreBoard = this.scoreBoard;
-              this.spreadsheetUtils.updateSheet();
-            });
-          }
+        this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
+          return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
         });
-      });
+        
+        await this.updateLastStarted();
+        this.spreadsheetUtils.rows = this.contestants;
+        this.spreadsheetUtils.scoreBoard = this.scoreBoard;
+        this.spreadsheetUtils.updateSheet();
+      }
+
     });
   }
 
