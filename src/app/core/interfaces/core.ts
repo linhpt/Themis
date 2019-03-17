@@ -10,8 +10,8 @@ export interface IExam {
 export interface IContestant {
   contestantId?: number;
   examId?: number;
-  firstName?: string;
-  lastName?: string;
+  fullName?: string;
+  aliasName?: string;
   joinDate?: string;
   dob?: string;
 }

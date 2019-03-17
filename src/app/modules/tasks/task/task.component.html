@@ -29,7 +29,7 @@
           <input type="text" class="form-control" name="description" [(ngModel)]="task.description"
             #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required />
           <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
-            <div *ngIf="description.errors.required">First Name is required</div>
+            <div *ngIf="description.errors.required">Task Description is required</div>
           </div>
         </div>
 

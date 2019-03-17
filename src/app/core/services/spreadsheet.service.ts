@@ -72,8 +72,8 @@ export class SpreadsheetUtils {
                 for (var i = 0; i < this._rows.length; i++) {
                     let rowValues = [
                         this._rows[i].contestantId,
-                        this._rows[i].firstName,
-                        this._rows[i].lastName,
+                        this._rows[i].fullName,
+                        this._rows[i].aliasName,
                         this._rows[i].dob,
                         ...this._scoreBoard[i]
                     ];

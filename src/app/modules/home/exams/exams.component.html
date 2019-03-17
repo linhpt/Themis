@@ -7,7 +7,7 @@
   </a>
 </div>
 <div class="mt-3">
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -28,6 +28,12 @@
             <i class="fa fa-eye" aria-hidden="true"></i>
           </a>
         </td>
+      </tr>
+      <tr *ngIf="examList.length == 0">
+        <td colspan="5" class="text-center">There is no Exam yet</td>
+      </tr>
+      <tr *ngIf="examList.length > 0">
+        <td colspan="5" class="text-center">Total {{ examList.length }} Exam</td>
       </tr>
     </tbody>
   </table>

@@ -12,8 +12,8 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Full Name</th>
+            <th>Alias Name</th>
             <th>Join Date</th>
             <th *ngFor="let task of taskNames" scope="col">{{ task }}</th>
           </tr>
@@ -21,8 +21,8 @@
         <tbody>
           <tr *ngFor="let contestant of contestants; let i = index">
             <td>{{ contestant.contestantId }}</td>
-            <td>{{ contestant.firstName }}</td>
-            <td>{{ contestant.lastName }}</td>
+            <td>{{ contestant.fullName }}</td>
+            <td>{{ contestant.aliasName }}</td>
             <td>{{ contestant.joinDate }}</td>
             <td *ngFor="let score of scoreBoard[i]">{{ score }}</td>
           </tr>

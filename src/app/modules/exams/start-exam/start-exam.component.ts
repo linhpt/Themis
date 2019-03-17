@@ -31,7 +31,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   taskNames: Array<string>;
   contestants: IContestant[] = [];
   contestantIds: Array<number>;
-  headers = ['Sdudent ID', 'First Name', 'Last Name', 'Join Date'];
+  headers = ['Sdudent ID', 'Full Name', 'Alias Name', 'Join Date'];
   scoreBoard: Array<Array<string>> = [[]];
 
   constructor(

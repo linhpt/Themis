@@ -62,8 +62,8 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">First name</th>
-            <th scope="col">Last name</th>
+            <th scope="col">Full name</th>
+            <th scope="col">Alias name</th>
             <th scope="col">Join date</th>
             <th scope="col">DoB</th>
           </tr>
@@ -71,8 +71,8 @@
         <tbody>
           <tr *ngFor="let contestant of contestants">
             <th scope="row">{{ contestant.contestantId }}</th>
-            <td>{{ contestant.firstName }}</td>
-            <td>{{ contestant.lastName }}</td>
+            <td>{{ contestant.fullName }}</td>
+            <td>{{ contestant.aliasName }}</td>
             <td>{{ contestant.joinDate }}</td>
             <td>{{ contestant.dob }}</td>
           </tr>
