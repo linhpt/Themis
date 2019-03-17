@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '
 import { ActivatedRoute, Params } from '@angular/router';
 import { TaskService } from 'src/app/core/services/task.service';
 import { ContestantService } from 'src/app/core/services/contestant.service';
-import { IExam, IContestant, ITask } from 'src/app/core/interfaces/core';
+import { IExam, IContestant, ITask, ISubmission } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
 import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.service';
 import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
@@ -10,9 +10,10 @@ import { FolderCreator } from 'src/app/core/services/folder-creator.service';
 import { SpreadsheetUtils } from 'src/app/core/services/spreadsheet.service';
 import { Location } from '@angular/common';
 import { ExamService } from 'src/app/core/services/exam.service';
+import { SubmissionService } from 'src/app/core/services/submission.service';
 
 export interface IResult {
-  contestantId: string;
+  contestantId: number;
   taskName: string;
   content: string;
 }
@@ -25,8 +26,12 @@ export interface IResult {
 export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
   exam: IExam = {};
-  headers = ['#', 'First name', 'Last name', 'Join date'];
-  rows = [];
+  tasks: ITask[] = [];
+  taskNames: Array<string>;
+  contestants: IContestant[] = [];
+  contestantIds: Array<number>;
+  headers = ['#', 'First Name', 'Last Name', 'Join Date'];
+  scoreBoard: Array<Array<string>>;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +42,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
     private cd: ChangeDetectorRef,
     private location: Location,
     private examService: ExamService,
+    private submissionService: SubmissionService,
     private spreadsheetUtils: SpreadsheetUtils,
     private submissionWatcher: SubmissionWatcher
   ) { }
@@ -54,30 +60,22 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
           if (tasks && tasks.length
             && contestants
             && contestants.length) {
+            this.tasks.push(...tasks);
+            this.contestants.push(...contestants);
 
-            let taskNames = tasks.map((task: ITask) => task.name);
-            let contestantIds = contestants.map((contestant: IContestant) => contestant.contestantId);
+            this.taskNames = tasks.map((task: ITask) => task.name);
+            this.contestantIds = contestants.map((contestant: IContestant) => +contestant.contestantId);
 
-            this.folderCreator.createTasks(taskNames);
-            this.folderCreator.createContestants(contestantIds);
+            this.folderCreator.createTasks(this.taskNames);
+            this.folderCreator.createContestants(this.contestantIds);
 
-            this.headers.push(...taskNames);
-            this.spreadsheetUtils.headerRow = this.headers;
-            for (var i = 0; i < contestants.length; i++) {
-              let contestant = contestants[i];
-              let row = [];
-              row.push(contestant.contestantId);
-              row.push(contestant.firstName);
-              row.push(contestant.lastName);
-              row.push(contestant.joinDate);
-
-              _.times(taskNames.length, () => {
-                row.push('-');
-              });
-
-              this.rows.push(row);
-            }
+            this.headers.push(...this.taskNames);
+            this.spreadsheetUtils.headers = this.headers;
             this.spreadsheetUtils.updateSheet();
+
+            this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
+              return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
+            });
           }
         });
       });
@@ -86,18 +84,9 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.logsWatcher.successEvent.subscribe((result: IResult) => {
-      const taskName = result.taskName;
-      const contestantId = +result.contestantId;
-      const content = result.content;
-      let taskIndex = this.headers.indexOf(taskName);
-      let row;
-      for (var i = 0; i < this.rows.length; i++) {
-        if (this.rows[i][0] == contestantId) {
-          row = this.rows[i];
-          break;
-        }
-      }
-      row[taskIndex] = content.substr(0, 10);
+      let taskIndex = this.taskNames.indexOf(result.taskName);
+      let contestantIndex = this.contestantIds.indexOf(result.contestantId);
+      this.scoreBoard[contestantIndex][taskIndex] = result.content.substr(0, 10);
       this.cd.detectChanges();
     });
   }

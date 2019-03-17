@@ -10,19 +10,15 @@ export class SpreadsheetUtils {
 
     document: any;
     sheet: any;
-    headers: Array<string>;
-    rows: Array<Array<string>>;
+    _headers: Array<string>;
+    _rows: Array<Array<string>>;
 
-    constructor(
-    ) {
+    set headers(headers: Array<string>) {
+        this._headers = headers;
     }
 
-    set headerRow(headers: Array<string>) {
-        this.headers = headers;
-    }
-
-    set spreadsheetRows(rows: Array<Array<string>>) {
-        this.rows = rows;
+    set rows(rows: Array<Array<string>>) {
+        this._rows = rows;
     }
 
     updateSheet() {
@@ -32,9 +28,9 @@ export class SpreadsheetUtils {
         this.document.useServiceAccountAuth(creds, (err) => {
             this.document.getInfo((err, info) => {
                 this.sheet = info.worksheets[0];
-                this.sheet.setHeaderRow(this.headers);
-                for (var i = 0; i < this.rows.length; i++) {
-                    let row = this.rows[i];
+                this.sheet.setHeaderRow(this._headers);
+                for (var i = 0; i < this._rows.length; i++) {
+                    let row = this._rows[i];
                 }
                 this.sheet.addRow({ last_name: 'Agnew', first_name: 'Samuel' }, function (err) {
                     if (err) {

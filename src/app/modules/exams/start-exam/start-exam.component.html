@@ -11,12 +11,20 @@
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th *ngFor="let header of headers" scope="col">{{ header }}</th>
+            <th>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Join Date</th>
+            <th *ngFor="let task of taskNames" scope="col">{{ task }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rows">
-            <td *ngFor="let cell of row">{{ cell }}</td>
+          <tr *ngFor="let contestant of contestants; let i = index">
+            <td>{{ contestant.contestantId }}</td>
+            <td>{{ contestant.firstName }}</td>
+            <td>{{ contestant.lastName }}</td>
+            <td>{{ contestant.joinDate }}</td>
+            <td *ngFor="let score of scoreBoard[i]">{{ score }}</td>
           </tr>
         </tbody>
       </table>

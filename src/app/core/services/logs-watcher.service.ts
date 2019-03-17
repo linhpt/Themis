@@ -37,7 +37,7 @@ export class LogsWatcher {
         fileName = fileName.replace(/\]|\[/g, ' ');
         let tokens = fileName.split(/\s+/);
 
-        const contestantId = tokens[1];
+        const contestantId = +tokens[1];
         const taskName = tokens[2];
 
         fs.readFile(absolutePath, 'utf8', (err, content) => {
