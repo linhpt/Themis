@@ -55,6 +55,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
       const examId = +params['id'];
       let exams = await this.examService.getById(examId);
       this.exam = exams[0];
+      this.spreadsheetUtils.spreadsheetId = this.exam.sheetId;
       let tasks = await this.taskService.getByExamId(examId);
       let contestants = await this.contestantService.getByExamId(examId);
       if (tasks && tasks.length && contestants && contestants.length) {

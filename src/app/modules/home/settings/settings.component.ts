@@ -14,12 +14,10 @@ export class SettingsComponent implements OnInit {
     sourceFolder: string;
     destinationFolder: string;
     examFolder: string;
-    spreadsheetId: string;
   } = {
       sourceFolder: '',
       destinationFolder: '',
-      examFolder: '',
-      spreadsheetId: ''
+      examFolder: ''
     }
 
   constructor(

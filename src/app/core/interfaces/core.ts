@@ -4,6 +4,7 @@ export interface IExam {
   started?: boolean;
   description?: string;
   timeCreated?: string;
+  sheetId?: string;
 }
 
 export interface IContestant {

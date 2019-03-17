@@ -19,7 +19,10 @@ export class SpreadsheetUtils {
     sheetRows: any;
 
     constructor() {
-        this.SPREADSHEET_ID = localStorage.getItem('spreadsheetId');
+    }
+
+    set spreadsheetId(spreadsheetId: string) {
+        this.SPREADSHEET_ID = spreadsheetId;
     }
 
     set headers(headers: Array<string>) {
@@ -80,7 +83,7 @@ export class SpreadsheetUtils {
                         row[this._headers[j]] = rowValues[j];
                     }
 
-                    this.sheet.addRow(row, (err: any) => {});
+                    this.sheet.addRow(row, (err: any) => { });
                 }
             }
         });

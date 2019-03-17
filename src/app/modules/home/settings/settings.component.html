@@ -30,15 +30,7 @@
       <div *ngIf="examFolder.errors.required">Exam Folder is required</div>
     </div>
   </div>
-
-  <div class="form-group">
-    <label for="spreadsheetId">Spreadsheet ID</label>
-    <input type="text" class="form-control" name="spreadsheetId" [(ngModel)]="settings.spreadsheetId"
-      #spreadsheetId="ngModel" [ngClass]="{ 'is-invalid': f.submitted && spreadsheetId.invalid }" required />
-    <div *ngIf="f.submitted && spreadsheetId.invalid" class="invalid-feedback">
-      <div *ngIf="spreadsheetId.errors.required">Spreadsheet ID is required</div>
-    </div>
-  </div>
+  
   <div class="form-group">
     <button class="btn btn-primary">Save Settings</button>
   </div>
