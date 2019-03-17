@@ -27,6 +27,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
   exam: IExam = {};
   tasks: ITask[] = [];
+  taskIds: Array<number>;
   taskNames: Array<string>;
   contestants: IContestant[] = [];
   contestantIds: Array<number>;
@@ -63,6 +64,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
             this.tasks.push(...tasks);
             this.contestants.push(...contestants);
 
+            this.taskIds = tasks.map((task: ITask) => task.taskId);
             this.taskNames = tasks.map((task: ITask) => task.name);
             this.contestantIds = contestants.map((contestant: IContestant) => +contestant.contestantId);
 
@@ -71,11 +73,12 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.headers.push(...this.taskNames);
             this.spreadsheetUtils.headers = this.headers;
-            this.spreadsheetUtils.updateSheet();
+            //this.spreadsheetUtils.updateSheet();
 
             this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
               return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
             });
+            this.updateLastStarted();
           }
         });
       });
@@ -83,10 +86,20 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.logsWatcher.successEvent.subscribe((result: IResult) => {
-      let taskIndex = this.taskNames.indexOf(result.taskName);
-      let contestantIndex = this.contestantIds.indexOf(result.contestantId);
-      this.scoreBoard[contestantIndex][taskIndex] = result.content.substr(0, 10);
+    this.logsWatcher.successEvent.subscribe((res: IResult) => {
+      let taskIndex = this.taskNames.indexOf(res.taskName);
+      let taskId = this.tasks[taskIndex].taskId;
+      let contestantIndex = this.contestantIds.indexOf(res.contestantId);
+      this.scoreBoard[contestantIndex][taskIndex] = res.content.substr(0, 10);
+      let submissionTime = new Date();
+      let submission: ISubmission = {
+        contestantId: res.contestantId,
+        examId: this.exam.examId,
+        taskId: taskId,
+        timeSubmission: submissionTime.toString(),
+        score: res.content
+      };
+      this.submissionService.add(submission);
       this.cd.detectChanges();
     });
   }
@@ -94,6 +107,17 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.submissionWatcher.unwatch();
     this.logsWatcher.unwatch();
+  }
+
+  async updateLastStarted() {
+    for (var i = 0; i < this.contestantIds.length; i++) {
+      for (var j = 0; j < this.taskIds.length; j++) {
+        let submission = await this.submissionService.getByCondition(this.exam.examId, this.taskIds[j], this.contestantIds[i]);
+        if (submission && submission.length) {
+          this.scoreBoard[i][j] = submission[0].score.substr(0, 14);
+        }
+      }
+    }
   }
 
   back() {

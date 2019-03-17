@@ -33,6 +33,9 @@ export class LogsWatcher {
     }
 
     readLogs = (absolutePath: string) => {
+        if (this.checkIfTemp(absolutePath)) {
+            return;
+        }
         let fileName = _.last(path.normalize(absolutePath).split('\\'));
         fileName = fileName.replace(/\]|\[/g, ' ');
         let tokens = fileName.split(/\s+/);
@@ -48,5 +51,9 @@ export class LogsWatcher {
             }
             this.successEvent.emit(data);
         });
+    }
+
+    checkIfTemp(fileName: string) {
+        return _.last(fileName.split('.')) == 'tmp';
     }
 }

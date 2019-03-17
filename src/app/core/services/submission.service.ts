@@ -18,6 +18,26 @@ export class SubmissionService {
     return this.table.toArray();
   }
 
+  getByExamId(examId: number): Promise<ISubmission[]> {
+    return this.table.where({examId: examId}).toArray();
+  }
+
+  getByTaskId(taskId: number): Promise<ISubmission[]> {
+    return this.table.where({taskId: taskId}).toArray();
+  }
+
+  getByContestantId(contestantId: number): Promise<ISubmission[]> {
+    return this.table.where({contestantId: contestantId}).toArray();
+  }
+
+  getByCondition(examId: number, taskId: number, contestantId: number): Promise<ISubmission[]> {
+    return this.table.where({
+      examId: examId,
+      taskId: taskId,
+      contestantId: contestantId
+    }).toArray();
+  }
+
   add(submission: ISubmission): Promise<number> {
     return this.table.add(submission);
   }
