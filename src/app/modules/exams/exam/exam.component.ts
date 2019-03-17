@@ -28,28 +28,20 @@ export class ExamComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
+    this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
-      this.examService.getById(id).then((exams: IExam[]) => {
-        Object.assign(this.exam, exams[0]);
-      });
-      this.taskService.getByExamId(id).then((tasks: ITask[]) =>{
-        if (tasks){
-          this.tasks.push(...tasks);
-        }
-      });
-      this.contestantService.getByExamId(id).then((contestants: IContestant[]) => {
-        if (contestants) {
-          this.contestants.push(...contestants);
-        }
-      });
+      let exams = await this.examService.getById(id);
+      Object.assign(this.exam, exams[0]);
 
-    });
-    this.taskService.getAll().then((tasks: ITask[]) => {
-      this.tasks = tasks;
-    });
-    this.contestantService.getAll().then((contestants: IContestant[]) => {
-      this.contestants = contestants;
+      let tasks = await this.taskService.getByExamId(id);
+      if (tasks) {
+        this.tasks.push(...tasks);
+      }
+
+      let contestants = await this.contestantService.getByExamId(id);
+      if (contestants) {
+        this.contestants.push(...contestants);
+      }
     });
   }
 
@@ -59,7 +51,7 @@ export class ExamComponent implements OnInit {
       this.exam.timeCreated = now.toString();
       this.exam.started = false;
       this.examService.add(this.exam);
-      this.router.navigate(['/']);  
+      this.router.navigate(['/']);
     }
   }
 

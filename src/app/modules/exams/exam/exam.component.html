@@ -67,6 +67,12 @@
             <td>{{ contestant.joinDate }}</td>
             <td>{{ contestant.dob }}</td>
           </tr>
+          <tr *ngIf="contestants.length == 0">
+            <td colspan="5" class="text-center">There is no contestants in this Exam</td>
+          </tr>
+          <tr *ngIf="contestants.length > 0">
+            <td colspan="5" class="text-center">Total {{ contestants.length }} contestants in this Exam</td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -86,6 +92,12 @@
             <td>{{ task.name }}</td>
             <td>{{ task.timeCreated }}</td>
             <td>{{ task.description }}</td>
+          </tr>
+          <tr *ngIf="tasks.length == 0">
+            <td colspan="5" class="text-center">There is no tasks in this Exam</td>
+          </tr>
+          <tr *ngIf="tasks.length > 0">
+            <td colspan="5" class="text-center">Total {{ tasks.length }} tasks in this Exam</td>
           </tr>
         </tbody>
       </table>

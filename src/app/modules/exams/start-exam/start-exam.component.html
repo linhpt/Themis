@@ -26,6 +26,12 @@
             <td>{{ contestant.joinDate }}</td>
             <td *ngFor="let score of scoreBoard[i]">{{ score }}</td>
           </tr>
+          <tr *ngIf="exam">
+            <td [colSpan]="4 + scoreBoard[0].length" class="text-center">
+              <span class="h5">{{ exam.name }}</span>
+              <span class="ml-2">{{ exam.timeCreated }}</span>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -55,6 +55,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
       const examId = +params['id'];
       let exams = await this.examService.getById(examId);
       this.exam = exams[0];
+      console.log('examp', this.exam);
       let tasks = await this.taskService.getByExamId(examId);
       let contestants = await this.contestantService.getByExamId(examId);
       if (tasks && tasks.length && contestants && contestants.length) {
@@ -74,17 +75,16 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
           return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
         });
 
-        if (!this.exam.started) {
-          this.spreadsheetUtils.started = false;
-          this.exam.started = true;
-          this.examService.update(this.exam.examId, this.exam);
-        } else {
-          await this.updateLastStarted();
-        }
         this.spreadsheetUtils.headers = this.headers;
         this.spreadsheetUtils.rows = this.contestants;
         this.spreadsheetUtils.scoreBoard = this.scoreBoard;
-        this.spreadsheetUtils.createSheet();
+        console.log('exam', this.exam);
+        if (!this.exam.started) {
+          console.log('create sheet');
+          this.spreadsheetUtils.createSheet();
+        } else {
+          await this.updateLastStarted();
+        }
       }
 
     });
@@ -105,15 +105,19 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         score: res.content
       };
       this.submissionService.add(submission);
-      this.spreadsheetUtils.updateSheet({contestantIndex, 
+      this.spreadsheetUtils.updateSheet({
+        contestantIndex, 
         taskIndex, 
         taskName: this.taskNames[taskIndex], 
-        score: res.content.substr(0, 10)});
+        score: res.content.substr(0, 10)
+      });
       this.cd.detectChanges();
     });
   }
 
   ngOnDestroy(): void {
+    this.exam.started = true;
+    this.examService.update(this.exam.examId, this.exam);
     this.submissionWatcher.unwatch();
     this.logsWatcher.unwatch();
   }

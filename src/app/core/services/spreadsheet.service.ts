@@ -15,16 +15,11 @@ export class SpreadsheetUtils {
     _headers: Array<string>;
     _rows: Array<IContestant>;
     _scoreBoard: Array<Array<string>>;
-    _started: boolean = false;
 
     sheetRows: any;
 
     constructor() {
         this.SPREADSHEET_ID = localStorage.getItem('spreadsheetId');
-    }
-
-    set started(started: boolean) {
-        this._started = started;
     }
 
     set headers(headers: Array<string>) {
@@ -44,14 +39,12 @@ export class SpreadsheetUtils {
         this.document.useServiceAccountAuth(creds, (err: any) => {
             this.document.getInfo((err: any, info: any) => {
                 this.sheet = info.worksheets[0];
-                if (!this._started) {
-                    this.createSpreadsheet();
-                }
+                this.createSpreadsheet();
             });
         });
     }
 
-    updateSheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string}) {
+    updateSheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string }) {
         if (this.sheetRows) {
             this.updateSpreadsheet(info);
         } else {
@@ -65,7 +58,7 @@ export class SpreadsheetUtils {
         }
     }
 
-    private updateSpreadsheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string}) {
+    private updateSpreadsheet(info: { contestantIndex: number, taskIndex: number, taskName: string, score: string }) {
         this.sheetRows[info.contestantIndex][info.taskName.toLowerCase()] = info.score;
         this.sheetRows[info.contestantIndex].save();
     }
@@ -87,11 +80,7 @@ export class SpreadsheetUtils {
                         row[this._headers[j]] = rowValues[j];
                     }
 
-                    this.sheet.addRow(row, (err) => {
-                        if (!err) {
-                            this._started = true;
-                        }
-                    });
+                    this.sheet.addRow(row, (err: any) => {});
                 }
             }
         });
