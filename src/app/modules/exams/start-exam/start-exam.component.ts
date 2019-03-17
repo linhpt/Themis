@@ -31,7 +31,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
   taskNames: Array<string>;
   contestants: IContestant[] = [];
   contestantIds: Array<number>;
-  headers = ['#', 'First Name', 'Last Name', 'Join Date'];
+  headers = ['Sdudent ID', 'First Name', 'Last Name', 'Join Date'];
   scoreBoard: Array<Array<string>>;
 
   constructor(
@@ -73,12 +73,15 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.headers.push(...this.taskNames);
             this.spreadsheetUtils.headers = this.headers;
-            //this.spreadsheetUtils.updateSheet();
 
             this.scoreBoard = Array.from({ length: this.contestantIds.length }, (col, colIndex) => {
               return Array.from({ length: this.taskNames.length }, (row, rowIndex) => '-');
             });
-            this.updateLastStarted();
+            this.updateLastStarted().then(() => {
+              this.spreadsheetUtils.rows = this.contestants;
+              this.spreadsheetUtils.scoreBoard = this.scoreBoard;
+              this.spreadsheetUtils.updateSheet();
+            });
           }
         });
       });
