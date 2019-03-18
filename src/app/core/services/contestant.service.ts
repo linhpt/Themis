@@ -18,6 +18,10 @@ export class ContestantService {
     return this.table.toArray();
   }
 
+  getById(id: number): Promise<IContestant[]> {
+    return this.table.where({ contestantId: id }).toArray();
+  }
+
   getByExamId(examId: number): Promise<IContestant[]> {
     return this.table.where({ examId: examId }).toArray();
   }

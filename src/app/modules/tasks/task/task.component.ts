@@ -14,7 +14,6 @@ export class TaskComponent implements OnInit {
   task: ITask = {};
 
   constructor(
-    private router: Router,
     private location: Location,
     private route: ActivatedRoute,
     private taskService: TaskService
@@ -22,7 +21,15 @@ export class TaskComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      this.task.examId = +params['id'];
+      const id = +params['id'];
+      if (this.action == 'create') {
+        this.task.examId = id;
+      }
+      if (this.action == 'edit'){
+        this.taskService.getById(id).then((task: ITask[]) => {
+          Object.assign(this.task, task[0]);
+        });  
+      }
     });
   }
 

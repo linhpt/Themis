@@ -80,7 +80,7 @@
             <td>{{ contestant.joinDate | dateFormat}}</td>
             <td>{{ contestant.dob }}</td>
             <td [class.w-25]="!exam.started" [class.w-10]="exam.started">
-              <a role="button" class="btn btn-primary mr-1 text-white">
+              <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/contestants/edit-contestant', contestant.contestantId]">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </a>
               <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started">
@@ -115,7 +115,7 @@
             <td>{{ task.timeCreated | dateFormat }}</td>
             <td>{{ task.description }}</td>
             <td [class.w-20]="!exam.started" [class.w-10]="exam.started">
-              <a role="button" class="btn btn-primary mr-1 text-white">
+              <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.taskId]">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </a>
               <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started">

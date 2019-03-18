@@ -16,7 +16,6 @@ export class ContestantComponent implements OnInit {
   contestant: IContestant = {};
 
   constructor(
-    private router: Router,
     private location: Location,
     private route: ActivatedRoute,
     private examService: ExamService,
@@ -26,9 +25,14 @@ export class ContestantComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       const id = +params['id'];
-      this.examService.getById(id).then((exams: IExam[]) => {
-        this.contestant.examId = exams[0].examId;
-      });
+      if (this.action == 'create') {
+        this.contestant.examId = id;
+      }
+      if (this.action == 'edit') {
+        this.contestantService.getById(id).then((contestant: IContestant[]) => {
+          Object.assign(this.contestant, contestant[0]);
+        });  
+      }
     });
   }
 

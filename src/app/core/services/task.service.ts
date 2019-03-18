@@ -18,6 +18,10 @@ export class TaskService {
     return this.table.toArray();
   }
 
+  getById(id: number): Promise<ITask[]> {
+    return this.table.where({ taskId: id }).toArray();
+  }
+
   getByExamId(examId: number): Promise<ITask[]> {
     return this.table.where({examId: examId}).toArray();
   }
