@@ -93,7 +93,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
       let taskIndex = this.taskNames.indexOf(res.taskName);
       let taskId = this.tasks[taskIndex].taskId;
       let contestantIndex = this.contestantIds.indexOf(res.contestantId);
-      this.scoreBoard[contestantIndex][taskIndex] = res.content.substr(0, 10);
+      this.scoreBoard[contestantIndex][taskIndex] = res.content.split('\n')[2];
       let submissionTime = new Date();
       let submission: ISubmission = {
         contestantId: res.contestantId,
@@ -107,7 +107,7 @@ export class StartExamComponent implements OnInit, OnDestroy, AfterViewInit {
         contestantIndex, 
         taskIndex, 
         taskName: this.taskNames[taskIndex], 
-        score: res.content.substr(0, 10)
+        score: res.content.split('\n')[2]
       });
       this.cd.detectChanges();
     });
