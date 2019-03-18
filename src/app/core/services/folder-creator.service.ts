@@ -16,7 +16,7 @@ export class FolderCreator {
 
     constructor(
     ) {
-        this.examFolder = localStorage.getItem('examFolder');
+        this.examFolder = localStorage.getItem('examFolder') + '\\';
     }
 
     set exam(exam: IExam) {

@@ -16,7 +16,7 @@ export class LogsWatcher {
 
     constructor(
     ) {
-        this.logsFolder = localStorage.getItem('destinationFolder') + 'Logs';
+        this.logsFolder = localStorage.getItem('destinationFolder') + '\\Logs';
     }
 
     watch() {

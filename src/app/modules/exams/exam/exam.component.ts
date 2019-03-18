@@ -20,7 +20,6 @@ export class ExamComponent implements OnInit {
   contestants: IContestant[] = [];
 
   constructor(
-    private router: Router,
     private examService: ExamService,
     private taskService: TaskService,
     private location: Location,
@@ -29,6 +28,8 @@ export class ExamComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.action == 'create') return;
+
     this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
       let exams = await this.examService.getById(id);
@@ -51,8 +52,9 @@ export class ExamComponent implements OnInit {
       let now = new Date();
       this.exam.timeCreated = now.toString();
       this.exam.started = false;
-      this.examService.add(this.exam);
-      this.router.navigate(['/']);
+      this.examService.add(this.exam).then(() => {
+        this.back();
+      });
     }
   }
 

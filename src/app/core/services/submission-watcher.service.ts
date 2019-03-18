@@ -17,8 +17,8 @@ export class SubmissionWatcher {
 
     constructor(
     ) {
-        this.submissionFolder = localStorage.getItem('sourceFolder');
-        this.destinationFolder = localStorage.getItem('destinationFolder');
+        this.submissionFolder = localStorage.getItem('sourceFolder') + '\\';
+        this.destinationFolder = localStorage.getItem('destinationFolder') + '\\';
     }
 
     watch() {
