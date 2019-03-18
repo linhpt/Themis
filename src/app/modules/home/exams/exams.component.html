@@ -24,9 +24,12 @@
         <td>{{ exam.timeCreated }}</td>
         <td>{{ exam.description }}</td>
         <td>
-          <a role="button" [routerLink]="['/exams/edit-exam', exam.examId]" class="btn btn-primary">
+          <a role="button" [routerLink]="['/exams/edit-exam', exam.examId]" class="btn btn-primary mr-1">
             <i class="fa fa-eye" aria-hidden="true"></i>
           </a>
+          <button role="button" class="btn btn-danger" (click)="remove(exam.examId)">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
         </td>
       </tr>
       <tr *ngIf="examList.length == 0">

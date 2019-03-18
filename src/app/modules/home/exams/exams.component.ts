@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { IExam } from 'src/app/core/interfaces/core';
 import { ExamService } from 'src/app/core/services/exam.service';
-import { Router } from '@angular/router';
+import { TaskService } from 'src/app/core/services/task.service';
+import { ContestantService } from 'src/app/core/services/contestant.service';
+import { SubmissionService } from 'src/app/core/services/submission.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-exams',
@@ -14,12 +17,22 @@ export class ExamsComponent implements OnInit {
 
   constructor(
     private examService: ExamService,
-    private router: Router
+    private taskService: TaskService,
+    private contestantService: ContestantService,
+    private submissionService: SubmissionService
   ) { }
 
   ngOnInit() {
     this.examService.getAll().then((list: IExam[]) => {
       this.examList.push(...list);
     });
+  }
+
+  remove(examId: number) {
+    this.examService.remove(examId);
+    this.taskService.removeByExamId(examId);
+    this.contestantService.removeByExamId(examId);
+    this.submissionService.removeByExamId(examId);
+    _.remove(this.examList, (exam: IExam) => exam.examId == examId);
   }
 }

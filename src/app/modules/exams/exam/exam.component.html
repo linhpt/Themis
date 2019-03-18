@@ -6,11 +6,11 @@
         <i class="fa fa-flag" aria-hidden="true"></i>
       </button>
       <a role="button" class="btn btn-primary text-white ml-1"
-        [routerLink]="['/contestants/create-contestant', exam.examId]" *ngIf="action == 'edit'">
+        [routerLink]="['/contestants/create-contestant', exam.examId]" *ngIf="action == 'edit' && !exam.started">
         <i class="fa fa-users" aria-hidden="true"></i>
       </a>
       <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]"
-        *ngIf="action == 'edit'">
+        *ngIf="action == 'edit' && !exam.started">
         <i class="fa fa-tasks" aria-hidden="true"></i>
       </a>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
@@ -33,9 +33,8 @@
 
           <div class="form-group col-6">
             <label for="sheetId">Sheet ID</label>
-            <input type="text" class="form-control" name="sheetId" [(ngModel)]="exam.sheetId"
-              #sheetId="ngModel" [ngClass]="{ 'is-invalid': f.submitted && sheetId.invalid }" required
-              [readonly]="action == 'edit'" />
+            <input type="text" class="form-control" name="sheetId" [(ngModel)]="exam.sheetId" #sheetId="ngModel"
+              [ngClass]="{ 'is-invalid': f.submitted && sheetId.invalid }" required [readonly]="action == 'edit'" />
             <div *ngIf="f.submitted && sheetId.invalid" class="invalid-feedback">
               <div *ngIf="sheetId.errors.required">Sheet ID is required</div>
             </div>

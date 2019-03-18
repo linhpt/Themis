@@ -49,4 +49,8 @@ export class SubmissionService {
   remove(id: number): Promise<void> {
     return this.table.delete(id);
   }
+
+  removeByExamId(id: number): Promise<number> {
+    return this.table.where('examId').equals(id).delete();
+  }
 }

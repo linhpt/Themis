@@ -19,7 +19,7 @@ export class ContestantService {
   }
 
   getByExamId(examId: number): Promise<IContestant[]> {
-    return this.table.where({examId: examId}).toArray();
+    return this.table.where({ examId: examId }).toArray();
   }
 
   add(contestant: IContestant): Promise<number> {
@@ -32,5 +32,9 @@ export class ContestantService {
 
   remove(id: number): Promise<void> {
     return this.table.delete(id);
+  }
+
+  removeByExamId(id: number): Promise<number> {
+    return this.table.where('examId').equals(id).delete();
   }
 }
