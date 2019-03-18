@@ -5,6 +5,7 @@ import { ExamService } from 'src/app/core/services/exam.service';
 import { TaskService } from 'src/app/core/services/task.service';
 import { ContestantService } from 'src/app/core/services/contestant.service';
 import { Location } from '@angular/common';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-exam',
@@ -52,6 +53,16 @@ export class ExamComponent implements OnInit {
       this.exam.started = false;
       this.examService.add(this.exam);
       this.router.navigate(['/']);
+    }
+  }
+
+  remove(id: number, field: string = 'Contestant') {
+    if (field == 'Contestant') {
+      this.contestantService.remove(id);
+      _.remove(this.contestants, (contestant: IContestant) => contestant.contestantId == id);
+    } else if (field == 'Task') {
+      this.taskService.remove(id);
+      _.remove(this.tasks, (task: ITask) => task.taskId == id);
     }
   }
 
