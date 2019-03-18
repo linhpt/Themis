@@ -7,6 +7,7 @@ import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { StartExamComponent } from './start-exam/start-exam.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CoreModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent, StartExamComponent]

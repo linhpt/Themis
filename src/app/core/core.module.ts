@@ -7,6 +7,7 @@ import { SidebarService } from './services/sidebar.service';
 import { TaskService } from './services/task.service';
 import { ContestantService } from './services/contestant.service';
 import { ExamService } from './services/exam.service';
+import { DateFormatPipe } from './pipes/date-format.pipe';
 
 @NgModule({
   imports: [
@@ -15,14 +16,16 @@ import { ExamService } from './services/exam.service';
   exports: [
     HeaderComponent,
     FooterComponent,
+    DateFormatPipe
   ],
   providers: [
     SidebarService,
     ContestantService,
     TaskService,
     ExamService,
-    DexieService
+    DexieService,
+    DateFormatPipe
   ],
-  declarations: [HeaderComponent, FooterComponent]
+  declarations: [HeaderComponent, FooterComponent, DateFormatPipe]
 })
 export class CoreModule { }
