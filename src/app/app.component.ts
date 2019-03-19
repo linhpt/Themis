@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { WatcherService } from './core/services/watcher.service';
-var chokidar = (<any>window).require('chokidar');
 
 @Component({
   selector: 'app-root',

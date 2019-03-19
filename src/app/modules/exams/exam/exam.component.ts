@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { IExam, ITask, IContestant } from 'src/app/core/interfaces/core';
-import { ExamService } from 'src/app/core/services/exam.service';
-import { TaskService } from 'src/app/core/services/task.service';
-import { ContestantService } from 'src/app/core/services/contestant.service';
+import { ExamService } from 'src/app/core/services/db-utils/exam.service';
+import { TaskService } from 'src/app/core/services/db-utils/task.service';
+import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
 

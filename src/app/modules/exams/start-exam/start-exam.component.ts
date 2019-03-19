@@ -1,16 +1,16 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { TaskService } from 'src/app/core/services/task.service';
-import { ContestantService } from 'src/app/core/services/contestant.service';
+import { TaskService } from 'src/app/core/services/db-utils/task.service';
+import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
 import { IExam, IContestant, ITask, ISubmission } from 'src/app/core/interfaces/core';
 import * as _ from 'lodash';
-import { SubmissionWatcher } from 'src/app/core/services/submission-watcher.service';
-import { LogsWatcher } from 'src/app/core/services/logs-watcher.service';
-import { FolderCreator } from 'src/app/core/services/folder-creator.service';
-import { SpreadsheetUtils } from 'src/app/core/services/spreadsheet.service';
+import { SubmissionWatcher } from 'src/app/core/services/folder-utils/submission-watcher.service';
+import { LogsWatcher } from 'src/app/core/services/folder-utils/logs-watcher.service';
+import { FolderCreator } from 'src/app/core/services/folder-utils/folder-creator.service';
+import { SpreadsheetUtils } from 'src/app/core/services/sheet-utils/spreadsheet.service';
 import { Location } from '@angular/common';
-import { ExamService } from 'src/app/core/services/exam.service';
-import { SubmissionService } from 'src/app/core/services/submission.service';
+import { ExamService } from 'src/app/core/services/db-utils/exam.service';
+import { SubmissionService } from 'src/app/core/services/db-utils/submission.service';
 
 export interface IResult {
   contestantId: number;

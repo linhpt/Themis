@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as _ from 'lodash';
-import { IExam } from '../interfaces/core';
+import { IExam } from '../../interfaces/core';
 
 const chokidar = (<any>window).require('chokidar');
 const path = (<any>window).require('path');

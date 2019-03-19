@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IContestant, IExam } from 'src/app/core/interfaces/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ContestantService } from 'src/app/core/services/contestant.service';
+import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
 import { Location } from '@angular/common';
-import { ExamService } from 'src/app/core/services/exam.service';
+import { ExamService } from 'src/app/core/services/db-utils/exam.service';
 
 @Component({
   selector: 'app-contestant',

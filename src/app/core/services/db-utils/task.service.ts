@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import { ITask } from '../interfaces/core';
+import { ITask } from '../../interfaces/core';
 import { Injectable } from '@angular/core';
 import { DexieService } from './dexie.service';
 

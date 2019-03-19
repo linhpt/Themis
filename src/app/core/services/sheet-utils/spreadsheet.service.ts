@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as creds from 'src/app/core/credentials/client_secret.json';
-import { IContestant } from '../interfaces/core';
+import { IContestant } from '../../interfaces/core';
 const GoogleSpreadsheet = (<any>window).require('google-spreadsheet');
 
 

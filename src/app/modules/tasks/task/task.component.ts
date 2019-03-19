@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ITask } from 'src/app/core/interfaces/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { TaskService } from 'src/app/core/services/task.service';
+import { TaskService } from 'src/app/core/services/db-utils/task.service';
 import { Location } from '@angular/common';
 
 @Component({
