@@ -10,18 +10,6 @@ const appRoutes: Routes = [
   {
     path: '',
     loadChildren: './modules/home/home.module#HomeModule'
-  },
-  {
-    path: 'exams',
-    loadChildren: './modules/exams/exams.module#ExamsModule',
-  },
-  {
-    path: 'tasks',
-    loadChildren: './modules/tasks/tasks.module#TasksModule',
-  },
-  {
-    path: 'contestants',
-    loadChildren: './modules/contestants/contestants.module#ContestantsModule',
   }
 ];
 

@@ -4,9 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { AboutComponent } from './about/about.component';
 import { InstructionsComponent } from './instructions/instructions.component';
 import { HomeComponent } from './home.component';
-import { SettingsComponent } from './settings/settings.component';
 import { FormsModule } from '@angular/forms';
-import { ExamsComponent } from './exams/exams.component';
+import { RenameComponent } from './rename/rename.component';
 import { CoreModule } from 'src/app/core/core.module';
 
 
@@ -17,16 +16,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'exams',
+        redirectTo: 'rename',
         pathMatch: 'full'
       },
       {
-        path: 'exams',
-        component: ExamsComponent
-      },
-      {
-        path: 'settings',
-        component: SettingsComponent
+        path: 'rename',
+        component: RenameComponent
       }
     ]
   }
@@ -39,6 +34,6 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, AboutComponent, InstructionsComponent, SettingsComponent, SettingsComponent, ExamsComponent]
+  declarations: [HomeComponent, AboutComponent, InstructionsComponent, RenameComponent]
 })
 export class HomeModule { }
