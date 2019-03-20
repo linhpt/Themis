@@ -18,7 +18,8 @@
         <div class="form-group">
           <label for="fullName">Full Name</label>
           <input type="text" class="form-control" name="fullName" [(ngModel)]="contestant.fullName" #fullName="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && fullName.invalid }" required [readonly]="action == 'edit'" />
+            [ngClass]="{ 'is-invalid': f.submitted && fullName.invalid }" required [readonly]="action == 'edit'"
+            placeholder="Full Name" />
           <div *ngIf="f.submitted && fullName.invalid" class="invalid-feedback">
             <div *ngIf="fullName.errors.required">Full Name is required</div>
           </div>
@@ -28,16 +29,27 @@
           <label for="aliasName">Alias Name</label>
           <input type="text" class="form-control" name="aliasName" [(ngModel)]="contestant.aliasName"
             #aliasName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && aliasName.invalid }" required
-            [readonly]="action == 'edit'" />
+            placeholder="Alias Name" [readonly]="action == 'edit'" />
           <div *ngIf="f.submitted && aliasName.invalid" class="invalid-feedback">
             <div *ngIf="aliasName.errors.required">Alias Name is required</div>
           </div>
         </div>
 
         <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" name="email" [(ngModel)]="contestant.email" #email="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required placeholder="Email"
+            [readonly]="action == 'edit'" />
+          <div *ngIf="f.submitted && aliasName.invalid" class="invalid-feedback">
+            <div *ngIf="email.errors.required">Email is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label for="dob">Date of Birth</label>
           <input type="text" class="form-control" name="dob" [(ngModel)]="contestant.dob" #dob="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && dob.invalid }" required [readonly]="action == 'edit'" />
+            [ngClass]="{ 'is-invalid': f.submitted && dob.invalid }" required [readonly]="action == 'edit'"
+            placeholder="Date of Birth" />
           <div *ngIf="f.submitted && dob.invalid" class="invalid-feedback">
             <div *ngIf="dob.errors.required">Date of Birth is required</div>
           </div>

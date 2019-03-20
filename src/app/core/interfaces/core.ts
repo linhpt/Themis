@@ -12,6 +12,7 @@ export interface IContestant {
   examId?: number;
   fullName?: string;
   aliasName?: string;
+  email?: string;
   joinDate?: string;
   dob?: string;
 }
