@@ -8,9 +8,9 @@
     <label for="sourceFolder">Source Folder</label>
     <div class="input-group">
       <input type="text" class="form-control" name="sourceFolder" [(ngModel)]="settings.sourceFolder"
-        #sourceFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required
+        #sourceFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required readonly
         placeholder="Source Drive Folder" />
-        <button class="btn btn-primary ml-2" (click)="select('Source')">Select</button>
+      <button class="btn btn-primary ml-2" (click)="select('Source')">Select</button>
     </div>
     <div *ngIf="f.submitted && sourceFolder.invalid" class="invalid-feedback">
       <div *ngIf="sourceFolder.errors.required">Source Folder is required</div>
@@ -21,8 +21,8 @@
     <label for="destinationFolder">Destination Folder</label>
     <div class="input-group">
       <input type="text" class="form-control" name="destinationFolder" [(ngModel)]="settings.destinationFolder"
-      #destinationFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && destinationFolder.invalid }" required
-      placeholder="Destination Working Folder" />
+        #destinationFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && destinationFolder.invalid }" required
+        readonly placeholder="Destination Working Folder" />
       <button class="btn btn-primary ml-2" (click)="select('Dest')">Select</button>
     </div>
     <div *ngIf="f.submitted && destinationFolder.invalid" class="invalid-feedback">
@@ -34,7 +34,8 @@
     <label for="examFolder">Exam Folder</label>
     <div class="input-group">
       <input type="text" class="form-control" name="examFolder" [(ngModel)]="settings.examFolder" #examFolder="ngModel"
-      [ngClass]="{ 'is-invalid': f.submitted && examFolder.invalid }" required placeholder="Exam Working Folder" />
+        [ngClass]="{ 'is-invalid': f.submitted && examFolder.invalid }" required readonly
+        placeholder="Exam Working Folder" />
       <button class="btn btn-primary ml-2" (click)="select('Exam')">Select</button>
     </div>
     <div *ngIf="f.submitted && examFolder.invalid" class="invalid-feedback">
