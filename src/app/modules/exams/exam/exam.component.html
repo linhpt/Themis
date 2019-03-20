@@ -1,16 +1,18 @@
 <div class="container-fluid mt-3">
   <div class="row">
+    <div class="col text-left">
+      <h5>Exam: {{ exam.name }}</h5>
+    </div>
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" [routerLink]="['/exams/start-exam', exam.examId]"
-        *ngIf="action == 'edit'">
+      <button role="button" class="btn btn-primary text-white" [routerLink]="['/exams/start-exam', exam.examId]">
         <i class="fa fa-fire" aria-hidden="true"></i>
       </button>
       <a role="button" class="btn btn-primary text-white ml-1"
-        [routerLink]="['/contestants/create-contestant', exam.examId]" *ngIf="action == 'edit' && !exam.started">
+        [routerLink]="['/contestants/create-contestant', exam.examId]" *ngIf="!exam.started">
         <i class="fa fa-user-plus"></i>
       </a>
       <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.examId]"
-        *ngIf="action == 'edit' && !exam.started">
+        *ngIf="!exam.started">
         <i class="fa fa-tasks" aria-hidden="true"></i>
       </a>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
@@ -18,48 +20,17 @@
       </button>
     </div>
   </div>
-  <div class="row">
+
+  <div class="row mt-3">
     <div class="col">
-      <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-        <div class="form-row">
-          <div class="form-group col-6">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" name="name" [(ngModel)]="exam.name" #name="ngModel"
-              [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'" />
-            <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
-              <div *ngIf="name.errors.required">Exam Name is required</div>
-            </div>
-          </div>
-
-          <div class="form-group col-6">
-            <label for="sheetId">Sheet ID</label>
-            <input type="text" class="form-control" name="sheetId" [(ngModel)]="exam.sheetId" #sheetId="ngModel"
-              [ngClass]="{ 'is-invalid': f.submitted && sheetId.invalid }" required [readonly]="action == 'edit'" />
-            <div *ngIf="f.submitted && sheetId.invalid" class="invalid-feedback">
-              <div *ngIf="sheetId.errors.required">Sheet ID is required</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group col">
-            <label for="description">Description</label>
-            <input type="text" class="form-control" name="description" [(ngModel)]="exam.description"
-              #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
-              [readonly]="action == 'edit'" />
-            <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
-              <div *ngIf="description.errors.required">Description is required</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group" *ngIf="action == 'create'">
-          <button class="btn btn-primary">Create Exam</button>
-        </div>
-      </form>
+      <p>
+        <span>Sheet ID: </span>
+        <span class="font-weight-light font-italic">{{ exam.sheetId }}</span>
+      </p>
     </div>
   </div>
-  <div class="row" *ngIf="action == 'edit'">
+
+  <div class="row">
     <div class="col">
       <table class="table table-bordered">
         <thead>
@@ -80,10 +51,12 @@
             <td>{{ contestant.joinDate | dateFormat}}</td>
             <td>{{ contestant.dob }}</td>
             <td [class.w-25]="!exam.started" [class.w-10]="exam.started">
-              <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/contestants/edit-contestant', contestant.contestantId]">
+              <a role="button" class="btn btn-primary mr-1 text-white"
+                [routerLink]="['/contestants/edit-contestant', contestant.contestantId]">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </a>
-              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="remove(contestant.contestantId, 'Contestant')">
+              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started"
+                (click)="remove(contestant.contestantId, 'Contestant')">
                 <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </td>
@@ -118,7 +91,8 @@
               <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.taskId]">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </a>
-              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="remove(task.taskId, 'Task')">
+              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started"
+                (click)="remove(task.taskId, 'Task')">
                 <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </td>
@@ -131,6 +105,14 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">{{ exam.description }}</div>
+      </div>
     </div>
   </div>
 </div>

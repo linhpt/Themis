@@ -14,7 +14,6 @@ import * as _ from 'lodash';
 })
 export class ExamComponent implements OnInit {
 
-  @Input() action: string;
   exam: IExam = {};
   tasks: ITask[] = [];
   contestants: IContestant[] = [];
@@ -28,8 +27,6 @@ export class ExamComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.action == 'create') return;
-
     this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
       let exams = await this.examService.getById(id);
@@ -48,14 +45,12 @@ export class ExamComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.action == 'create') {
-      let now = new Date();
-      this.exam.timeCreated = now.toString();
-      this.exam.started = false;
-      this.examService.add(this.exam).then(() => {
-        this.back();
-      });
-    }
+    let now = new Date();
+    this.exam.timeCreated = now.toString();
+    this.exam.started = false;
+    this.examService.add(this.exam).then(() => {
+      this.back();
+    });
   }
 
   remove(id: number, field: string = 'Contestant') {

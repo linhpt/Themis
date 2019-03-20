@@ -8,12 +8,17 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { StartExamComponent } from './start-exam/start-exam.component';
 import { CoreModule } from 'src/app/core/core.module';
+import { FormExamComponent } from './form-exam/form-exam.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ExamsComponent,
     children: [
+      {
+        path: 'exam/:id',
+        component: ExamComponent
+      },
       {
         path: 'create-exam',
         component: CreateExamComponent
@@ -37,6 +42,6 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent, StartExamComponent]
+  declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent, StartExamComponent, FormExamComponent]
 })
 export class ExamsModule { }

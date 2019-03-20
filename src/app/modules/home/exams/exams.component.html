@@ -24,7 +24,7 @@
         <td>{{ exam.timeCreated | dateFormat }}</td>
         <td>{{ exam.description }}</td>
         <td>
-          <a role="button" [routerLink]="['/exams/edit-exam', exam.examId]" class="btn btn-primary mr-1">
+          <a role="button" [routerLink]="['/exams/exam', exam.examId]" class="btn btn-primary mr-1">
             <i class="fa fa-eye" aria-hidden="true"></i>
           </a>
           <button role="button" class="btn btn-danger" (click)="remove(exam.examId)">
