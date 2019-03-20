@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/core/services/sidebar.service';
 import { Location } from '@angular/common';
+const remote = (<any>window).require('electron').remote;
+const dialog = remote.require('electron').dialog;
 
 @Component({
   selector: 'app-settings',
@@ -40,7 +42,20 @@ export class SettingsComponent implements OnInit {
     for (var name in this.settings) {
       localStorage.setItem(name, this.settings[name]);
     }
-    this.back();
+  }
+
+  select(type: 'Source' | 'Dest' | 'Exam') {
+    let path = dialog.showOpenDialog({
+      properties: ['openDirectory']
+    });
+
+    if (type == 'Source') {
+      this.settings.sourceFolder = path[0];
+    } else if (type == 'Dest') {
+      this.settings.destinationFolder = path[0];
+    } else if (type == 'Exam') {
+      this.settings.examFolder = path[0];
+    }
   }
 
   back() {
