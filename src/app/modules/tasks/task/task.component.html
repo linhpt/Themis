@@ -18,7 +18,8 @@
         <div class="form-group">
           <label for="name">Task Name</label>
           <input type="text" class="form-control" name="name" [(ngModel)]="task.name" #name="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'" />
+            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'"
+            placeholder="Task Name" />
           <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
             <div *ngIf="name.errors.required">Task Name is required</div>
           </div>
@@ -28,7 +29,7 @@
           <label for="description">Task Description</label>
           <input type="text" class="form-control" name="description" [(ngModel)]="task.description"
             #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
-            [readonly]="action == 'edit'" />
+            placeholder="Task Description" [readonly]="action == 'edit'" />
           <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
             <div *ngIf="description.errors.required">Task Description is required</div>
           </div>
