@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GspreadUtils } from './core/services/sheet-utils/gspread.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +11,16 @@ export class AppComponent  implements OnInit{
   
   title = 'Themis Editor';
 
-  constructor() { }
+  constructor(
+    private gspread: GspreadUtils,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    let authResult = this.gspread.authorize();
+
+    if (!authResult) {
+      this.router.navigate(['/get-token']);
+    }
   }
 }

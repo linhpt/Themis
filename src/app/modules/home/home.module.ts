@@ -8,6 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { FormsModule } from '@angular/forms';
 import { ExamsComponent } from './exams/exams.component';
 import { CoreModule } from 'src/app/core/core.module';
+import { GetTokenComponent } from './get-token/get-token.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,10 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsComponent
+      },
+      {
+        path: 'get-token',
+        component: GetTokenComponent
       }
     ]
   }
@@ -39,6 +44,6 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, AboutComponent, InstructionsComponent, SettingsComponent, SettingsComponent, ExamsComponent]
+  declarations: [HomeComponent, AboutComponent, InstructionsComponent, SettingsComponent, SettingsComponent, ExamsComponent, GetTokenComponent]
 })
 export class HomeModule { }

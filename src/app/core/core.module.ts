@@ -29,7 +29,7 @@ import { MatDialogModule, MatButtonModule } from '@angular/material';
     TaskService,
     ExamService,
     DexieService,
-    DateFormatPipe
+    DateFormatPipe,
   ],
   declarations: [HeaderComponent, FooterComponent, DateFormatPipe, ConfirmDialogComponent],
   entryComponents: [
