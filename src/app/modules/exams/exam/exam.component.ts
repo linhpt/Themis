@@ -6,6 +6,8 @@ import { TaskService } from 'src/app/core/services/db-utils/task.service';
 import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-exam',
@@ -19,6 +21,7 @@ export class ExamComponent implements OnInit {
   contestants: IContestant[] = [];
 
   constructor(
+    private dialog: MatDialog,
     private examService: ExamService,
     private taskService: TaskService,
     private location: Location,
@@ -53,13 +56,39 @@ export class ExamComponent implements OnInit {
     });
   }
 
-  remove(id: number, field: string = 'Contestant') {
+  remove(id: number, field: 'Contestant' | 'Task') {
+    let message = this.message(field, id);
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = message;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((res: boolean) => {
+      if (res) {
+        if (field == 'Contestant') {
+          this.contestantService.remove(id);
+          _.remove(this.contestants, (contestant: IContestant) => contestant.contestantId == id);
+        } else if (field == 'Task') {
+          this.taskService.remove(id);
+          _.remove(this.tasks, (task: ITask) => task.taskId == id);
+        }
+      }
+    });
+  }
+
+  message(field: 'Contestant' | 'Task', id: number) {
     if (field == 'Contestant') {
-      this.contestantService.remove(id);
-      _.remove(this.contestants, (contestant: IContestant) => contestant.contestantId == id);
+      return {
+        title: 'Delete Contestant Confirmation',
+        message: `Are you sure you want to delete Contestant ${id}?`
+      }
     } else if (field == 'Task') {
-      this.taskService.remove(id);
-      _.remove(this.tasks, (task: ITask) => task.taskId == id);
+      return {
+        title: 'Delete Task Confirmation',
+        message: `Are you sure you want to delete Task ${id}?`
+      }
+
     }
   }
 
