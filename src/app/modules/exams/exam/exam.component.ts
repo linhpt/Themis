@@ -47,15 +47,6 @@ export class ExamComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    let now = new Date();
-    this.exam.timeCreated = now.toString();
-    this.exam.started = false;
-    this.examService.add(this.exam).then(() => {
-      this.back();
-    });
-  }
-
   remove(id: number, field: 'Contestant' | 'Task') {
     let message = this.message(field, id);
 
