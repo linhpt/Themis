@@ -8,15 +8,20 @@ import { TaskService } from './services/db-utils/task.service';
 import { ContestantService } from './services/db-utils/contestant.service';
 import { ExamService } from './services/db-utils/exam.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { MatDialogModule, MatButtonModule } from '@angular/material';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
   ],
   exports: [
     HeaderComponent,
     FooterComponent,
-    DateFormatPipe
+    DateFormatPipe,
+    ConfirmDialogComponent
   ],
   providers: [
     SidebarService,
@@ -26,6 +31,9 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
     DexieService,
     DateFormatPipe
   ],
-  declarations: [HeaderComponent, FooterComponent, DateFormatPipe]
+  declarations: [HeaderComponent, FooterComponent, DateFormatPipe, ConfirmDialogComponent],
+  entryComponents: [
+    ConfirmDialogComponent
+  ]
 })
 export class CoreModule { }

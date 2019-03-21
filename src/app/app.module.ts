@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 
 import { Routes, RouterModule } from '@angular/router';
 import { CoreModule } from './core/core.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   {
@@ -33,6 +34,7 @@ const appRoutes: Routes = [
     BrowserModule,
     RouterModule,
     CoreModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],
