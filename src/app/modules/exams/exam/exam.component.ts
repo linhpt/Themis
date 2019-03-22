@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { IExam, ITask, IContestant } from 'src/app/core/interfaces/core';
+import { IExam, ITask, IContestant, DocType } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
@@ -51,8 +51,13 @@ export class ExamComponent implements OnInit {
     });
   }
 
-  remove(id: number, field: 'Contestant' | 'Task') {
-    let message = this.message(field, id);
+  remove(id: number, type: string) {
+
+    let docType = DocType[type];
+    let message = {
+      title: `Delete ${type} Confirmation`,
+      message: `Are you sure you want to delete ${type} ${id}?`
+    }
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
@@ -60,31 +65,18 @@ export class ExamComponent implements OnInit {
     dialogConfig.data = message;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((res: boolean) => {
-      if (res) {
-        if (field == 'Contestant') {
-          this.contestantDatabase.remove(id);
-          remove(this.contestants, (contestant: IContestant) => contestant.id == id);
-        } else if (field == 'Task') {
-          this.taskDatabase.remove(id);
-          remove(this.tasks, (task: ITask) => task.id == id);
-        }
+      if (!res) return;
+
+      if (docType == DocType.CONTESTANT) {
+        remove(this.contestants, (contestant: IContestant) => contestant.id == id);
+        return this.contestantDatabase.remove(id);
+      }
+      
+      if (docType == DocType.TASK) {
+        remove(this.tasks, (task: ITask) => task.id == id);
+        return this.taskDatabase.remove(id);
       }
     });
-  }
-
-  message(field: 'Contestant' | 'Task', id: number) {
-    if (field == 'Contestant') {
-      return {
-        title: 'Delete Contestant Confirmation',
-        message: `Are you sure you want to delete Contestant ${id}?`
-      }
-    } else if (field == 'Task') {
-      return {
-        title: 'Delete Task Confirmation',
-        message: `Are you sure you want to delete Task ${id}?`
-      }
-
-    }
   }
 
   start() {

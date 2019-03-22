@@ -35,8 +35,8 @@ export interface ISubmission extends IDocument {
 }
 
 export enum DocType {
-  EXAM,
-  CONTESTANT,
-  TASK,
-  SUBMISSION
+  EXAM = 'Exam',
+  CONTESTANT = 'Contestant',
+  TASK = 'Task',
+  SUBMISSION = 'Submission' 
 }
