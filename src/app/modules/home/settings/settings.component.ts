@@ -4,6 +4,7 @@ import { SidebarService } from 'src/app/core/services/sidebar.service';
 import { Location } from '@angular/common';
 const remote = (<any>window).require('electron').remote;
 const dialog = remote.require('electron').dialog;
+const fs = (<any>window).require('fs');
 
 @Component({
   selector: 'app-settings',
@@ -41,6 +42,14 @@ export class SettingsComponent implements OnInit {
   onSubmit() {
     for (var name in this.settings) {
       localStorage.setItem(name, this.settings[name]);
+    }
+    this.createLogs();
+  }
+
+  createLogs() {
+    const logsFolder = localStorage.getItem('destinationFolder') + '\\';
+    if (!fs.existsSync(logsFolder)) {
+      fs.mkdirSync(logsFolder);
     }
   }
 
