@@ -52,11 +52,30 @@ export class GspreadUtils {
     }
 
     createSpreadsheet(exam: IExam, callback?: () => void) {
-        const { name, examId } = exam;
+        const { name, examId, sheetId } = exam;
+        if (sheetId) {
+
+            if (callback && typeof callback == 'function') {
+                callback();
+            }
+            return console.info(`Sheet with exam ${name} is already existed`);
+        }
         const resource = {
             properties: {
                 title: name,
             },
+            sheets: [{
+                properties: {
+                    title: 'Rankings',
+                    index: 1
+                }
+            },
+            {
+                properties: {
+                    title: 'Submission',
+                    index: 2
+                }
+            }]
         };
         const sheets = google.sheets({ version: 'v4', auth: this.oAuth2Client });
         sheets.spreadsheets.create({
@@ -64,7 +83,7 @@ export class GspreadUtils {
             fields: 'spreadsheetId',
         }, (err: string, spreadsheet: any) => {
             if (err) {
-                return console.error('Error while trying create spreadsheet', err);
+                return console.error(`Error while trying create spreadsheet: ${err}`);
             }
             exam.sheetId = spreadsheet.data.spreadsheetId;
             this.examService.update(examId, exam);
@@ -74,5 +93,28 @@ export class GspreadUtils {
         });
 
     }
+
+    updateSpreadsheet(exam: IExam, callback?: () => void) {
+        const { sheetId } = exam;
+        var sheets = google.sheets('v4');
+        sheets.spreadsheets.values.append({
+            auth: this.oAuth2Client,
+            spreadsheetId: sheetId,
+            range: 'Rankings!A2:B',
+            valueInputOption: "USER_ENTERED",
+            resource: {
+                values: [["Void", "Canvas", "Website"], ["Paul", "Shan", "Human"]]
+            }
+        }, (err: string, response: any) => {
+            if (err) {
+                return console.error(`The API returned an error: ${err}`);
+            }
+            if (callback && typeof callback == 'function') {
+                callback();
+            }
+            return console.log(`Update success`)
+        });
+    }
+
 
 }

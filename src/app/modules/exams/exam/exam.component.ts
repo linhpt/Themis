@@ -88,7 +88,9 @@ export class ExamComponent implements OnInit {
 
   start() {
     this.gspread.createSpreadsheet(this.exam, () => {
-      this.router.navigate(['/exams/start-exam', this.exam.examId]);
+      this.gspread.updateSpreadsheet(this.exam, () => {
+        this.router.navigate(['/exams/start-exam', this.exam.examId]);
+      })
     });
   }
 
