@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import * as _ from 'lodash';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
+import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 
 @Component({
   selector: 'app-exam',
@@ -26,6 +27,8 @@ export class ExamComponent implements OnInit {
     private taskService: TaskService,
     private location: Location,
     private route: ActivatedRoute,
+    private router: Router,
+    private gspread: GspreadUtils,
     private contestantService: ContestantService
   ) { }
 
@@ -81,6 +84,12 @@ export class ExamComponent implements OnInit {
       }
 
     }
+  }
+
+  start() {
+    this.gspread.createSpreadsheet(this.exam, () => {
+      this.router.navigate(['/exams/start-exam', this.exam.examId]);
+    });
   }
 
   back() {

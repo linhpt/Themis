@@ -9,7 +9,7 @@ import { GspreadUtils, TOKEN_PATH } from 'src/app/core/services/sheet-utils/gspr
 })
 export class GetTokenComponent implements OnInit {
   _url: string;
-  token: string = '';
+  code: string = '';
 
   constructor(
     private location: Location,
@@ -21,8 +21,9 @@ export class GetTokenComponent implements OnInit {
   }
 
   onSubmit() {
-    localStorage.setItem(TOKEN_PATH, this.token);
-    this.back();
+    this.gspread.getToken(this.code, () => {
+      this.back();
+    });
   }
 
   back() {
