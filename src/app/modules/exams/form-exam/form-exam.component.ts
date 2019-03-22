@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ExamService } from 'src/app/core/services/db-utils/exam.service';
+import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 import { IExam } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
 
@@ -14,13 +14,13 @@ export class FormExamComponent implements OnInit {
   exam: IExam = {};
 
   constructor(
-    private examService: ExamService,
+    private examDatabase: ExamDatabase,
     private location: Location
   ) { }
 
   ngOnInit() {
     if (this.action == 'edit') {
-      this.examService.getById(this.examId).then((exams: IExam[]) => {
+      this.examDatabase.getById(this.examId).then((exams: IExam[]) => {
         this.exam = exams[0];
       });
     }
@@ -31,7 +31,7 @@ export class FormExamComponent implements OnInit {
       let now = new Date();
       this.exam.timeCreated = now.toString();
       this.exam.started = false;
-      this.examService.add(this.exam).then(() => {
+      this.examDatabase.add(this.exam).then(() => {
         this.back();
       });  
     }

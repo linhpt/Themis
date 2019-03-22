@@ -1,36 +1,16 @@
-import Dexie from 'dexie';
-import { IExam } from '../../interfaces/core';
+import { IExam, DocType } from '../../interfaces/core';
 import { Injectable } from '@angular/core';
 import { DexieService } from './dexie.service';
+import { DB } from './db.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ExamService {
+export class ExamDatabase extends DB {
 
-  table: Dexie.Table<IExam, number>;
-
-  constructor(private dexieService: DexieService) {
-    this.table = this.dexieService.table('exam');
+  constructor(private dexie: DexieService) {
+    super(dexie);
+    this._docType = DocType.EXAM;
   }
 
-  getAll(): Promise<IExam[]> {
-    return this.table.toArray();
-  }
-
-  getById(examId: number): Promise<IExam[]> {
-    return this.table.where({examId: examId}).toArray();
-  }
-
-  add(exam: IExam): Promise<number> {
-    return this.table.add(exam);
-  }
-
-  update(id: number, exam: IExam): Promise<number> {
-    return this.table.update(id, exam);
-  }
-
-  remove(id: number): Promise<void> {
-    return this.table.delete(id);
-  }
 }

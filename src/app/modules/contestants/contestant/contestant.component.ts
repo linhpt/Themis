@@ -1,9 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IContestant, IExam } from 'src/app/core/interfaces/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
+import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { Location } from '@angular/common';
-import { ExamService } from 'src/app/core/services/db-utils/exam.service';
+import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 
 @Component({
   selector: 'app-contestant',
@@ -18,8 +18,8 @@ export class ContestantComponent implements OnInit {
   constructor(
     private location: Location,
     private route: ActivatedRoute,
-    private examService: ExamService,
-    private contestantService: ContestantService
+    private examDatabase: ExamDatabase,
+    private contestantDatabase: ContestantDatabase
   ) { }
 
   ngOnInit() {
@@ -29,7 +29,7 @@ export class ContestantComponent implements OnInit {
         this.contestant.examId = id;
       }
       if (this.action == 'edit') {
-        this.contestantService.getById(id).then((contestant: IContestant[]) => {
+        this.contestantDatabase.getById(id).then((contestant: IContestant[]) => {
           Object.assign(this.contestant, contestant[0]);
         });  
       }
@@ -40,7 +40,7 @@ export class ContestantComponent implements OnInit {
     if (this.action == 'create') {
       let now = new Date();
       this.contestant.joinDate = now.toString();
-      this.contestantService.add(this.contestant);
+      this.contestantDatabase.add(this.contestant);
       this.back();
     }
   }

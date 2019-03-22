@@ -1,14 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { IExam, ITask, IContestant } from 'src/app/core/interfaces/core';
-import { ExamService } from 'src/app/core/services/db-utils/exam.service';
-import { TaskService } from 'src/app/core/services/db-utils/task.service';
-import { ContestantService } from 'src/app/core/services/db-utils/contestant.service';
 import { Location } from '@angular/common';
-import * as _ from 'lodash';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
 import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
+import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
+import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
+import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
+import { first, remove } from 'lodash';
+
 
 @Component({
   selector: 'app-exam',
@@ -23,29 +24,29 @@ export class ExamComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private examService: ExamService,
-    private taskService: TaskService,
     private location: Location,
     private route: ActivatedRoute,
     private router: Router,
     private gspread: GspreadUtils,
-    private contestantService: ContestantService
+    private taskDatabase: TaskDatabase,
+    private examDatabase: ExamDatabase,
+    private contestantDatabase: ContestantDatabase
   ) { }
 
   ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
-      let exams = await this.examService.getById(id);
-      Object.assign(this.exam, exams[0]);
+      let exams = await this.examDatabase.getById(id);
+      this.exam = first(exams);
 
-      let tasks = await this.taskService.getByExamId(id);
+      let tasks = await this.taskDatabase.getByExamId(id);
       if (tasks) {
-        this.tasks.push(...tasks);
+        this.tasks = tasks;
       }
 
-      let contestants = await this.contestantService.getByExamId(id);
+      let contestants = await this.contestantDatabase.getByExamId(id);
       if (contestants) {
-        this.contestants.push(...contestants);
+        this.contestants = contestants;
       }
     });
   }
@@ -61,11 +62,11 @@ export class ExamComponent implements OnInit {
     dialogRef.afterClosed().subscribe((res: boolean) => {
       if (res) {
         if (field == 'Contestant') {
-          this.contestantService.remove(id);
-          _.remove(this.contestants, (contestant: IContestant) => contestant.contestantId == id);
+          this.contestantDatabase.remove(id);
+          remove(this.contestants, (contestant: IContestant) => contestant.id == id);
         } else if (field == 'Task') {
-          this.taskService.remove(id);
-          _.remove(this.tasks, (task: ITask) => task.taskId == id);
+          this.taskDatabase.remove(id);
+          remove(this.tasks, (task: ITask) => task.id == id);
         }
       }
     });
@@ -89,7 +90,7 @@ export class ExamComponent implements OnInit {
   start() {
     this.gspread.createSpreadsheet(this.exam, () => {
       this.gspread.updateSpreadsheet(this.exam, () => {
-        this.router.navigate(['/exams/start-exam', this.exam.examId]);
+        this.router.navigate(['/exams/start-exam', this.exam.id]);
       })
     });
   }

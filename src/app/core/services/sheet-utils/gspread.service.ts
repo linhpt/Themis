@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 const { google } = (<any>window).require('googleapis');
 import * as credentials from 'src/assets/credentials.json';
 import { IExam } from '../../interfaces/core';
-import { ExamService } from '../db-utils/exam.service';
+import { ExamDatabase } from '../db-utils/exam.service';
 
 export const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 export const TOKEN_PATH = 'token.json';
-
+export const Rankings = 'Rankings';
+export const Submissions = 'Submissions';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +15,7 @@ export const TOKEN_PATH = 'token.json';
 export class GspreadUtils {
     oAuth2Client: any;
     constructor(
-        private examService: ExamService
+        private examDatabase: ExamDatabase
     ) { }
 
     authorize() {
@@ -52,9 +53,8 @@ export class GspreadUtils {
     }
 
     createSpreadsheet(exam: IExam, callback?: () => void) {
-        const { name, examId, sheetId } = exam;
+        const { id, name, sheetId } = exam;
         if (sheetId) {
-
             if (callback && typeof callback == 'function') {
                 callback();
             }
@@ -66,13 +66,13 @@ export class GspreadUtils {
             },
             sheets: [{
                 properties: {
-                    title: 'Rankings',
+                    title: Rankings,
                     index: 1
                 }
             },
             {
                 properties: {
-                    title: 'Submission',
+                    title: Submissions,
                     index: 2
                 }
             }]
@@ -86,7 +86,7 @@ export class GspreadUtils {
                 return console.error(`Error while trying create spreadsheet: ${err}`);
             }
             exam.sheetId = spreadsheet.data.spreadsheetId;
-            this.examService.update(examId, exam);
+            this.examDatabase.update(id, exam);
             if (callback && typeof callback == 'function') {
                 callback();
             }

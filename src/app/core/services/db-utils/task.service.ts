@@ -1,44 +1,16 @@
-import Dexie from 'dexie';
-import { ITask } from '../../interfaces/core';
 import { Injectable } from '@angular/core';
 import { DexieService } from './dexie.service';
+import { DB } from './db.service';
+import { DocType } from '../../interfaces/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TaskService {
+export class TaskDatabase extends DB{
 
-  table: Dexie.Table<ITask, number>;
-
-  constructor(private dexieService: DexieService) {
-    this.table = this.dexieService.table('task');
+  constructor(private dexie: DexieService) {
+      super(dexie);
+      this._docType = DocType.TASK;
   }
 
-  getAll(): Promise<ITask[]> {
-    return this.table.toArray();
-  }
-
-  getById(id: number): Promise<ITask[]> {
-    return this.table.where({ taskId: id }).toArray();
-  }
-
-  getByExamId(examId: number): Promise<ITask[]> {
-    return this.table.where({examId: examId}).toArray();
-  }
-
-  add(task: ITask): Promise<number> {
-    return this.table.add(task);
-  }
-
-  update(id: number, task: ITask): Promise<number> {
-    return this.table.update(id, task);
-  }
-
-  remove(id: number): Promise<void> {
-    return this.table.delete(id);
-  }
-
-  removeByExamId(id: number): Promise<number> {
-    return this.table.where('examId').equals(id).delete();
-  }
 }

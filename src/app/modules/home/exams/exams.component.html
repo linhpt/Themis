@@ -18,25 +18,25 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let exam of examList">
-        <th scope="row">{{ exam.examId }}</th>
+      <tr *ngFor="let exam of exams">
+        <th scope="row">{{ exam.id }}</th>
         <td>{{ exam.name }}</td>
         <td>{{ exam.timeCreated | dateFormat }}</td>
         <td>{{ exam.description }}</td>
         <td>
-          <a role="button" [routerLink]="['/exams/exam', exam.examId]" class="btn btn-primary mr-1">
+          <a role="button" [routerLink]="['/exams/exam', exam.id]" class="btn btn-primary mr-1">
             <i class="fa fa-eye" aria-hidden="true"></i>
           </a>
-          <button role="button" class="btn btn-danger" (click)="remove(exam.examId)">
+          <button role="button" class="btn btn-danger" (click)="remove(exam.id)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </td>
       </tr>
-      <tr *ngIf="examList.length == 0">
+      <tr *ngIf="exams.length == 0">
         <td colspan="5" class="text-center">There is no Exam yet</td>
       </tr>
-      <tr *ngIf="examList.length > 0">
-        <td colspan="5" class="text-center">Total {{ examList.length }} Exam</td>
+      <tr *ngIf="exams.length > 0">
+        <td colspan="5" class="text-center">Total {{ exams.length }} Exam</td>
       </tr>
     </tbody>
   </table>

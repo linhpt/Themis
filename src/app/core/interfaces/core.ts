@@ -1,5 +1,8 @@
-export interface IExam {
-  examId?: number;
+export interface IDocument {
+  id?: number;
+}
+
+export interface IExam extends IDocument {
   name?: string;
   started?: boolean;
   description?: string;
@@ -7,8 +10,7 @@ export interface IExam {
   sheetId?: string;
 }
 
-export interface IContestant {
-  contestantId?: number;
+export interface IContestant extends IDocument {
   examId?: number;
   fullName?: string;
   aliasName?: string;
@@ -17,19 +19,24 @@ export interface IContestant {
   dob?: string;
 }
 
-export interface ITask {
-  taskId?: number;
+export interface ITask extends IDocument {
   examId?: number;
   name?: string;
   timeCreated?: string;
   description?: string;
 }
 
-export interface ISubmission {
-  submissionId?: number;
+export interface ISubmission extends IDocument {
   taskId?: number;
   examId?: number;
   contestantId?: number;
   timeSubmission?: string;
   score?: string;
+}
+
+export enum DocType {
+  EXAM,
+  CONTESTANT,
+  TASK,
+  SUBMISSION
 }

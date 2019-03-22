@@ -10,9 +10,9 @@
     <div class="col">
       <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
         <div class="form-group">
-          <label for="examId">Exam Id</label>
-          <input type="text" class="form-control" name="examId" [(ngModel)]="task.examId" #examId="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && examId.invalid }" disabled />
+          <label for="id">Exam Id</label>
+          <input type="text" class="form-control" name="id" [(ngModel)]="task.id" #id="ngModel"
+            [ngClass]="{ 'is-invalid': f.submitted && id.invalid }" disabled />
         </div>
 
         <div class="form-group">

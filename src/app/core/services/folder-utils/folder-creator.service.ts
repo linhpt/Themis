@@ -31,10 +31,10 @@ export class FolderCreator {
 
     createContestants(contestantIds: Array<number>) {
 
-        this.createIfNotExisted(this.examFolder + this._exam.examId);
-        this.createIfNotExisted(this.examFolder + this._exam.examId + '\\contestants');
+        this.createIfNotExisted(this.examFolder + this._exam.id);
+        this.createIfNotExisted(this.examFolder + this._exam.id + '\\contestants');
 
-        let contestantsFolder = this.examFolder + this._exam.examId + '\\contestants';
+        let contestantsFolder = this.examFolder + this._exam.id + '\\contestants';
         for (var i = 0; i < contestantIds.length; i++){
             let contestant = contestantsFolder + '\\' +  contestantIds[i];
             if (!fs.existsSync(contestant)) {
@@ -45,10 +45,10 @@ export class FolderCreator {
     }
 
     createTasks(taskNames: Array<string>) {
-        this.createIfNotExisted(this.examFolder + this._exam.examId);
-        this.createIfNotExisted(this.examFolder + this._exam.examId + '\\tasks');
+        this.createIfNotExisted(this.examFolder + this._exam.id);
+        this.createIfNotExisted(this.examFolder + this._exam.id + '\\tasks');
         
-        let tasksFolder = this.examFolder + this._exam.examId + '\\tasks';
+        let tasksFolder = this.examFolder + this._exam.id + '\\tasks';
         for (var i = 0; i < taskNames.length; i++){
             let taskFolder = tasksFolder + '\\' +  taskNames[i];
             if (!fs.existsSync(taskFolder)) {
