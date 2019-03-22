@@ -10,6 +10,11 @@ import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.se
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 import { first, remove } from 'lodash';
 
+const fs = (<any>window).require('fs');
+
+export const DestinationFolder = 'destinationFolder';
+export const ExamFolder = 'examFolder';
+export const SourceFolder = 'sourceFolder';
 
 @Component({
   selector: 'app-exam',
@@ -71,7 +76,7 @@ export class ExamComponent implements OnInit {
         remove(this.contestants, (contestant: IContestant) => contestant.id == id);
         return this.contestantDatabase.remove(id);
       }
-      
+
       if (docType == DocType.TASK) {
         remove(this.tasks, (task: ITask) => task.id == id);
         return this.taskDatabase.remove(id);
@@ -80,11 +85,30 @@ export class ExamComponent implements OnInit {
   }
 
   start() {
+    const examFolder = localStorage.getItem(ExamFolder);
+
+    this._createFolder(`${examFolder}\\${this.exam.name}`);
+    this._createFolder(`${examFolder}\\${this.exam.name}\\tasks`);
+    this._createFolder(`${examFolder}\\${this.exam.name}\\contestants`);
+
+    for (let i = 0; i < this.tasks.length; i++) {
+      this._createFolder(`${examFolder}\\${this.exam.name}\\tasks\\${this.tasks[i].name}`);
+    }
+
+    for (let i = 0; i < this.contestants.length; i++) {
+      this._createFolder(`${examFolder}\\${this.exam.name}\\contestants\\${this.contestants[i].aliasName}`);
+    }
+
     this.gspread.createSpreadsheet(this.exam, () => {
-      this.gspread.updateSpreadsheet(this.exam, () => {
-        this.router.navigate(['/exams/start-exam', this.exam.id]);
-      })
+      this.router.navigate(['/exams/start-exam', this.exam.id]);
     });
+  }
+
+  private _createFolder(folder: string) {
+    if (!folder) return;
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder);
+    }
   }
 
   back() {
