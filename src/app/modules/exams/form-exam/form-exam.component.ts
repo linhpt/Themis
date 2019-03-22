@@ -20,8 +20,8 @@ export class FormExamComponent implements OnInit {
 
   ngOnInit() {
     if (this.action == 'edit') {
-      this.examDatabase.getById(this.examId).then((exams: IExam[]) => {
-        this.exam = exams[0];
+      this.examDatabase.getById(this.examId).then((exam: IExam) => {
+        this.exam = exam;
       });
     }
   }

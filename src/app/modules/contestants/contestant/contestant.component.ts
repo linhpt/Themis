@@ -29,8 +29,8 @@ export class ContestantComponent implements OnInit {
         this.contestant.examId = id;
       }
       if (this.action == 'edit') {
-        this.contestantDatabase.getById(id).then((contestant: IContestant[]) => {
-          Object.assign(this.contestant, contestant[0]);
+        this.contestantDatabase.getById(id).then((contestant: IContestant) => {
+          this.contestant = contestant;
         });  
       }
     });

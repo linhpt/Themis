@@ -51,8 +51,8 @@ export class DB {
         return this._getDocument().delete(id);
     }
 
-    getById(id: number): Promise<IDocument[]> {
-        return this._getDocument().where({ id: id }).toArray();
+    getById(id: number): Promise<IDocument> {
+        return this._getDocument().get({ id: id });
     }
 
     getByTaskId(taskId: number): Promise<ISubmission[]> {

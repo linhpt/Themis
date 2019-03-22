@@ -3,7 +3,6 @@ import { ITask } from 'src/app/core/interfaces/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { Location } from '@angular/common';
-import { first } from 'lodash';
 
 @Component({
   selector: 'app-task',
@@ -26,10 +25,10 @@ export class TaskComponent implements OnInit {
       if (this.action == 'create') {
         this.task.examId = id;
       }
-      if (this.action == 'edit'){
-        this.taskDatabase.getById(id).then((tasks: ITask[]) => {
-          this.task = first(tasks);
-        });  
+      if (this.action == 'edit') {
+        this.taskDatabase.getById(id).then((task: ITask) => {
+          this.task = task;
+        });
       }
     });
   }

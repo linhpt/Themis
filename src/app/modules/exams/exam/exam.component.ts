@@ -8,7 +8,7 @@ import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service'
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
-import { first, remove } from 'lodash';
+import { remove } from 'lodash';
 
 const fs = (<any>window).require('fs');
 
@@ -41,18 +41,10 @@ export class ExamComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
-      let exams = await this.examDatabase.getById(id);
-      this.exam = first(exams);
-
-      let tasks = await this.taskDatabase.getByExamId(id);
-      if (tasks) {
-        this.tasks = tasks;
-      }
-
-      let contestants = await this.contestantDatabase.getByExamId(id);
-      if (contestants) {
-        this.contestants = contestants;
-      }
+      this.exam = await this.examDatabase.getById(id);
+      console.log('exam', this.exam);
+      this.tasks = await this.taskDatabase.getByExamId(id);
+      this.contestants = await this.contestantDatabase.getByExamId(id);
     });
   }
 
