@@ -43,13 +43,13 @@ export class SettingsComponent implements OnInit {
     for (var name in this.settings) {
       localStorage.setItem(name, this.settings[name]);
     }
-    this.createLogs();
+    this._createFolder(`${localStorage.getItem('destinationFolder')}\\Logs`);
   }
 
-  createLogs() {
-    const logsFolder = localStorage.getItem('destinationFolder') + '\\';
-    if (!fs.existsSync(logsFolder)) {
-      fs.mkdirSync(logsFolder);
+  private _createFolder(folder: string) {
+    if (!folder) return;
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder);
     }
   }
 
