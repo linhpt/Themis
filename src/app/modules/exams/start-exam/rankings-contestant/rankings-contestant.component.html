@@ -1,0 +1,30 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ID</th>
+      <th scope="col">Full name</th>
+      <th scope="col">Alias name</th>
+      <th scope="col">Join date</th>
+      <th scope="col">DoB</th>
+      <th scope="col">Score</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let contestant of contestants">
+      <th scope="row">{{ contestant.rank }}</th>
+      <td>{{ contestant.id }}</td>
+      <td>{{ contestant.fullName }}</td>
+      <td>{{ contestant.aliasName }}</td>
+      <td>{{ contestant.joinDate | dateFormat}}</td>
+      <td>{{ contestant.dob }}</td>
+      <td>{{ contestant.score }}</td>
+      <td>
+        <button role="button" class="btn btn-primary" (click)="viewDetailContestant(contestant.id)">
+          <i class="fa fa-info-circle" aria-hidden="true"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

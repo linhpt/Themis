@@ -1,7 +1,9 @@
-import { IContestantWithScore, IContestantSubmit } from "./start-exam.component";
+import { IContestantRank } from "./start-exam.component";
+import { IContestantSubmission } from "./details-contestant/details-contestant.component";
 
-export const contestantsMock: IContestantWithScore[] = [
+export const contestantsRank: IContestantRank[] = [
     {
+        rank: 1,
         id: 18,
         fullName: 'Pham Tuan Linh',
         aliasName: 'LinhPT',
@@ -12,6 +14,7 @@ export const contestantsMock: IContestantWithScore[] = [
         score: 890
     },
     {
+        rank: 2,
         id: 14,
         fullName: 'Nguyen Tran Nhan',
         aliasName: 'pocolomos',
@@ -22,6 +25,7 @@ export const contestantsMock: IContestantWithScore[] = [
         score: 220
     },
     {
+        rank: 3,
         id: 23,
         fullName: 'Luc Van Minh',
         aliasName: 'mink.luk',
@@ -32,6 +36,7 @@ export const contestantsMock: IContestantWithScore[] = [
         score: 118
     },
     {
+        rank: 4,
         id: 12,
         fullName: 'Hoang Tran Xuan',
         aliasName: 'Katakuri',
@@ -44,7 +49,7 @@ export const contestantsMock: IContestantWithScore[] = [
 ];
 
 
-export const contestantDetailSubmission: IContestantSubmit[] = [
+export const contestantSubmission: IContestantSubmission[] = [
     {
         id: 18,
         aliasName: 'LinhPT',

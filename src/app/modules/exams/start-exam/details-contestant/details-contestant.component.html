@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Alias name</th>
+      <th scope="col">Exam Name</th>
+      <th scope="col">Task Name</th>
+      <th scope="col">Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let details of contestantDetails">
+      <td>{{ details.aliasName }}</td>
+      <td>{{ details.examName }}</td>
+      <td>{{ details.taskName }}</td>
+      <td>{{ details.score }}</td>
+    </tr>
+  </tbody>
+</table>

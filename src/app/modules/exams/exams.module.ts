@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { StartExamComponent } from './start-exam/start-exam.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { FormExamComponent } from './form-exam/form-exam.component';
+import { DetailsContestantComponent } from './start-exam/details-contestant/details-contestant.component';
+import { RankingsContestantComponent } from './start-exam/rankings-contestant/rankings-contestant.component';
 
 const routes: Routes = [
   {
@@ -42,6 +44,13 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ExamsComponent, ExamComponent, CreateExamComponent, EditExamComponent, StartExamComponent, FormExamComponent]
+  declarations: [ExamsComponent,
+    ExamComponent,
+    CreateExamComponent,
+    EditExamComponent,
+    StartExamComponent,
+    FormExamComponent,
+    DetailsContestantComponent,
+    RankingsContestantComponent]
 })
 export class ExamsModule { }
