@@ -8,10 +8,18 @@
   </div>
   <div class="row mt-3">
     <div [ngClass]="showPanel? 'col-8' : 'col'">
-      <app-rankings-contestant #rankingContestant (contestant)="contestantChange($event)"></app-rankings-contestant>
+      <app-rankings-contestant 
+        #rankingContestant 
+        (contestant)="contestantChange($event)" 
+        [exam]="exam">
+      </app-rankings-contestant>
     </div>
     <div [class.col-4]="showPanel" [hidden]="!showPanel">
-      <app-details-contestant #detailContestant [contestantId]="detailContestantId"></app-details-contestant>
+      <app-details-contestant 
+        #detailContestant 
+        [contestantId]="detailContestantId" 
+        [exam]="exam">
+      </app-details-contestant>
     </div>
   </div>
 </div>

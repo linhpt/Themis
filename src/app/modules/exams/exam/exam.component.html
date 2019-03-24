@@ -78,12 +78,12 @@
             <th scope="col">Name</th>
             <th scope="col">Time Created</th>
             <th scope="col">Description</th>
-            <th scope="col">Action</th>
+            <th scope="col" style="width: 25%">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let task of tasks">
-            <th scope="row">{{ task.id }}</th>
+          <tr *ngFor="let task of tasks; let i = index">
+            <th scope="row">{{ i + 1 }}</th>
             <td>{{ task.name }}</td>
             <td>{{ task.timeCreated | dateFormat }}</td>
             <td>{{ task.description }}</td>

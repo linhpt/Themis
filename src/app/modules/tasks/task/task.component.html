@@ -8,35 +8,68 @@
   </div>
   <div class="row">
     <div class="col">
-      <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-        <div class="form-group">
-          <label for="id">Exam Id</label>
-          <input type="text" class="form-control" name="id" [(ngModel)]="task.id" #id="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && id.invalid }" disabled />
-        </div>
-
-        <div class="form-group">
-          <label for="name">Task Name</label>
-          <input type="text" class="form-control" name="name" [(ngModel)]="task.name" #name="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'"
-            placeholder="Task Name" />
-          <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
-            <div *ngIf="name.errors.required">Task Name is required</div>
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Name</label>
+            <input type="text" formControlName="name" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" placeholder="Name" />
+            <div *ngIf="submitted && f.name.invalid" class="invalid-feedback">
+              <div *ngIf="f.name.errors.required">Name is required</div>
+            </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="description">Task Description</label>
-          <input type="text" class="form-control" name="description" [(ngModel)]="task.description"
-            #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
-            placeholder="Task Description" [readonly]="action == 'edit'" />
-          <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
-            <div *ngIf="description.errors.required">Task Description is required</div>
+        <div class="form-row">
+          <div class="form-group col">
+            <label>Description</label>
+            <textarea rows="3" formControlName="description" class="form-control" placeholder="Description"
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }"></textarea>
+            <div *ngIf="submitted && f.description.invalid" class="invalid-feedback">
+              <div *ngIf="f.description.errors.required">Description is required</div>
+            </div>
           </div>
         </div>
 
-        <div class="form-group" *ngIf="action == 'create'">
-          <button class="btn btn-primary">Create Task</button>
+        <div class="form-row">
+          <div class="form-group col-6 text-left">
+            <span class="h5">Adding more cases</span>
+          </div>
+          <div class="form-group col-6 text-right">
+            <button type="button" class="btn btn-primary" (click)="addTest()">
+              <i class="fa fa-plus" aria-label="hidden"></i>
+            </button>
+          </div>
+        </div>
+
+        <div formArrayName="tests">
+          <div class="form-row" *ngFor="let form of f.tests.controls; let i = index" [formGroupName]="i">
+            <div class="form-group col-12">
+              <input type="text" formControlName="name" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && form.controls.name.invalid }" placeholder="Name" />
+            </div>
+            <div class="form-group col-6">
+              <textarea formControlName="input" rows="3" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && form.controls.input.invalid }" placeholder="Input"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <textarea formControlName="output" rows="3" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && form.controls.output.invalid }" placeholder="Output"></textarea>
+            </div>
+            <div class="form-group col-12 text-right">
+              <button type="button" class="btn btn-danger" (click)="removeTest(i)">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row form-group card" *ngIf="!f.tests.length">
+          <div class="card-body">There is no test cases for this task.</div>
+        </div>
+
+        <div class="form-group mt-3">
+          <button type="submit" class="btn btn-primary">Create Task</button>
         </div>
       </form>
     </div>

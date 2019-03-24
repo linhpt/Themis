@@ -24,6 +24,7 @@ export interface ITask extends IDocument {
   name?: string;
   timeCreated?: string;
   description?: string;
+  tests?: Array<ITest>;
 }
 
 export interface ISubmission extends IDocument {
@@ -32,6 +33,12 @@ export interface ISubmission extends IDocument {
   contestantId?: number;
   timeSubmission?: string;
   score?: string;
+}
+
+export interface ITest extends IDocument {
+  name?: string;
+  input?: string;
+  output?: string;
 }
 
 export enum DocType {

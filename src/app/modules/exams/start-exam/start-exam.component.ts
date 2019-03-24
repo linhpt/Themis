@@ -33,7 +33,6 @@ export class StartExamComponent implements OnInit, OnDestroy {
   @ViewChild(DetailsContestantComponent) detailContestant: DetailsContestantComponent;
   exam: IExam = {};
 
-
   private _folderWatcher: any;
   private _logsWatcher: any;
   private _submissionFolder: string;
