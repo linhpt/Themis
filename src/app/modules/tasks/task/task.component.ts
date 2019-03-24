@@ -12,7 +12,7 @@ const uuidv1 = (<any>window).require('uuid/v1');
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css']
 })
-export class TaskComponent implements OnInit{
+export class TaskComponent implements OnInit {
   @Input() action: string;
   taskForm: FormGroup;
   submitted: boolean = false;
@@ -56,7 +56,9 @@ export class TaskComponent implements OnInit{
   }
 
   save(task: ITask) {
-    this.taskDatabase.add(task);
+    this.action == 'create' ?
+      this.taskDatabase.add(task) :
+      this.taskDatabase.update(task.id, task);
     this.back();
   }
 
@@ -65,10 +67,11 @@ export class TaskComponent implements OnInit{
     if (this.action == 'create') {
       const now = new Date;
       this.taskForm.patchValue({
-        id: uuidv1(),
         timeCreated: now.toString(),
         examId: this._examId
       });
+
+      delete this.taskForm.controls['id'];
 
     } else if (this.action == 'edit') {
       this.taskDatabase.getById(this._taskId).then((task: ITask) => {
@@ -76,9 +79,11 @@ export class TaskComponent implements OnInit{
         this.taskForm.patchValue({
           id: task.id,
           timeCreated: task.timeCreated,
-          examId: task.examId
+          examId: task.examId,
+          name: task.name,
+          description: task.description
         });
-  
+
         _.forEach(task.tests, (test: ITest) => {
           this.addTest(test);
         });
@@ -88,12 +93,11 @@ export class TaskComponent implements OnInit{
   }
 
   processToSave() {
-    if (this.action == 'edit') return;
-
-    _.forEach((<FormArray>this.taskForm.controls['tests']).controls, (tests: FormGroup) => {
-      tests.controls['id'].setValue(uuidv1());
-    });
-
+    if (this.action == 'create') {
+      _.forEach((<FormArray>this.taskForm.controls['tests']).controls, (tests: FormGroup) => {
+        tests.controls['id'].setValue(uuidv1());
+      });
+    }
     return this.taskForm.value;
   }
 
