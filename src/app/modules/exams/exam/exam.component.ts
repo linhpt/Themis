@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { IExam, ITask, IContestant, DocType } from 'src/app/core/interfaces/core';
+import { IExam, ITask, IContestant, DocType, ITest } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
@@ -8,7 +8,8 @@ import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service'
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
-import { remove } from 'lodash';
+
+import * as _ from 'lodash';
 
 const fs = (<any>window).require('fs');
 
@@ -42,7 +43,6 @@ export class ExamComponent implements OnInit {
     this.route.params.subscribe(async (params: Params) => {
       const id = +params['id'];
       this.exam = await this.examDatabase.getById(id);
-      console.log('exam', this.exam);
       this.tasks = await this.taskDatabase.getByExamId(id);
       this.contestants = await this.contestantDatabase.getByExamId(id);
     });
@@ -65,12 +65,12 @@ export class ExamComponent implements OnInit {
       if (!res) return;
 
       if (docType == DocType.CONTESTANT) {
-        remove(this.contestants, (contestant: IContestant) => contestant.id == id);
+        _.remove(this.contestants, (contestant: IContestant) => contestant.id == id);
         return this.contestantDatabase.remove(id);
       }
 
       if (docType == DocType.TASK) {
-        remove(this.tasks, (task: ITask) => task.id == id);
+        _.remove(this.tasks, (task: ITask) => task.id == id);
         return this.taskDatabase.remove(id);
       }
     });
@@ -79,17 +79,33 @@ export class ExamComponent implements OnInit {
   start() {
     const examFolder = localStorage.getItem(ExamFolder);
 
-    this._createFolder(`${examFolder}\\${this.exam.name}`);
-    this._createFolder(`${examFolder}\\${this.exam.name}\\tasks`);
-    this._createFolder(`${examFolder}\\${this.exam.name}\\contestants`);
+    const examName = `${examFolder}\\${this.exam.name}`;
+    const tasks = `${examName}\\tasks`;
+    const contestants = `${examName}\\contestants`;
 
-    for (let i = 0; i < this.tasks.length; i++) {
-      this._createFolder(`${examFolder}\\${this.exam.name}\\tasks\\${this.tasks[i].name}`);
-    }
+    this._createFolder(examName);
+    this._createFolder(tasks);
+    this._createFolder(contestants);
 
-    for (let i = 0; i < this.contestants.length; i++) {
-      this._createFolder(`${examFolder}\\${this.exam.name}\\contestants\\${this.contestants[i].aliasName}`);
-    }
+    _.forEach(this.tasks, (task: ITask) => {
+      const taskName = `${tasks}\\${task.name}`;
+
+      this._createFolder(taskName);
+      _.forEach(task.tests, (test: ITest) => {
+        const testName = `${taskName}\\${test.name}`;
+        this._createFolder(testName);
+
+        const input = `${testName}\\${task.name}.inp`;
+        const output = `${testName}\\${task.name}.out`;
+
+        this._createFile(input, test.input);
+        this._createFile(output, test.output);
+      });
+    });
+
+    _.forEach(this.contestants, (contestant: IContestant) => {
+      this._createFolder(`${examFolder}\\${this.exam.name}\\contestants\\${contestant.aliasName}`);
+    });
 
     this.gspread.createSpreadsheet(this.exam, () => {
       this.router.navigate(['/exams/start-exam', this.exam.id]);
@@ -101,6 +117,12 @@ export class ExamComponent implements OnInit {
     if (!fs.existsSync(folder)) {
       fs.mkdirSync(folder);
     }
+  }
+
+  private _createFile(absolutePath: string, content: string) {
+    fs.writeFile(absolutePath, content, (err: string) => {
+      if (err) return console.log(err);
+    });
   }
 
   back() {
