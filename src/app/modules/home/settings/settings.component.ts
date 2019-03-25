@@ -13,18 +13,13 @@ const fs = (<any>window).require('fs');
 })
 export class SettingsComponent implements OnInit {
 
-  settings: {
-    sourceFolder: string;
-    destinationFolder: string;
-    examFolder: string;
-  } = {
-      sourceFolder: '',
-      destinationFolder: '',
-      examFolder: ''
-    }
+  settings = {
+    drive: '',
+    submission: '',
+    themisContest: ''
+  }
 
   constructor(
-    private router: Router,
     private location: Location,
     private sidebarService: SidebarService
   ) { }
@@ -53,17 +48,17 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  select(type: 'Source' | 'Dest' | 'Exam') {
+  select(type: string) {
     let path = dialog.showOpenDialog({
       properties: ['openDirectory']
     });
 
-    if (type == 'Source') {
-      this.settings.sourceFolder = path[0];
-    } else if (type == 'Dest') {
-      this.settings.destinationFolder = path[0];
-    } else if (type == 'Exam') {
-      this.settings.examFolder = path[0];
+    if (type == 'Drive') {
+      this.settings.drive = path[0];
+    } else if (type == 'Submission') {
+      this.settings.submission = path[0];
+    } else if (type == 'ThemisContest') {
+      this.settings.themisContest = path[0];
     }
   }
 

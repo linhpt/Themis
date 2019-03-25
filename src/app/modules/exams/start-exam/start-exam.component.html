@@ -7,19 +7,11 @@
     </div>
   </div>
   <div class="row mt-3">
-    <div [ngClass]="showPanel? 'col-8' : 'col'">
-      <app-rankings-contestant 
-        #rankingContestant 
-        (contestant)="contestantChange($event)" 
-        [examId]="examId">
-      </app-rankings-contestant>
+    <div [class.col-8]="showPanel" [class.col-12]="!showPanel">
+      <app-rankings-contestant (contestant)="detailsContestant($event)" [examId]="examId"></app-rankings-contestant>
     </div>
     <div [class.col-4]="showPanel" [hidden]="!showPanel">
-      <app-details-contestant 
-        #detailContestant 
-        [contestantId]="detailContestantId" 
-        [exam]="exam">
-      </app-details-contestant>
+      <app-details-contestant [contestantId]="contestantId" [exam]="exam"></app-details-contestant>
     </div>
   </div>
 </div>

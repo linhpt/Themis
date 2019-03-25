@@ -13,9 +13,9 @@ import * as _ from 'lodash';
 
 const fs = (<any>window).require('fs');
 
-export const DestinationFolder = 'destinationFolder';
-export const ExamFolder = 'examFolder';
-export const SourceFolder = 'sourceFolder';
+export const SUBMISSION = 'submission';
+export const THEMIS_CONTEST = 'themisContest';
+export const DRIVE = 'drive';
 
 @Component({
   selector: 'app-exam',
@@ -77,9 +77,9 @@ export class ExamComponent implements OnInit {
   }
 
   start() {
-    const examFolder = localStorage.getItem(ExamFolder);
+    const themisDir = localStorage.getItem(THEMIS_CONTEST);
 
-    const examName = `${examFolder}\\${this.exam.name}`;
+    const examName = `${themisDir}\\${this.exam.name}`;
     const tasks = `${examName}\\tasks`;
     const contestants = `${examName}\\contestants`;
 
@@ -104,7 +104,7 @@ export class ExamComponent implements OnInit {
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this._createFolder(`${examFolder}\\${this.exam.name}\\contestants\\${contestant.aliasName}`);
+      this._createFolder(`${themisDir}\\${this.exam.name}\\contestants\\${contestant.aliasName}`);
     });
 
     this.gspread.createSpreadsheet(this.exam, () => {

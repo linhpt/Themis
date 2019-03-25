@@ -2,13 +2,11 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChi
 import { ActivatedRoute, Params } from '@angular/router';
 import { IExam, IContestant, } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
-import { contestantsRank } from './mock';
-import { SourceFolder, DestinationFolder } from '../exam/exam.component';
+import { DRIVE, SUBMISSION} from '../exam/exam.component';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
 const chokidar = (<any>window).require('chokidar');
-const fsExtra = (<any>window).require('fs-extra');
 
 import * as _ from 'lodash';
 import { DetailsContestantComponent } from './details-contestant/details-contestant.component';
@@ -34,13 +32,13 @@ export class StartExamComponent implements OnInit, OnDestroy {
   exam: IExam = {};
   examId: number;
 
-  private _folderWatcher: any;
-  private _logsWatcher: any;
-  private _submissionFolder: string;
-  private _destinationFolder: string;
-  private _logsFolder: string;
+  private driveEventListener: any;
+  private logsEventListener: any;
+  private driveDir: string;
+  private submitDir: string;
+  private logsDir: string;
 
-  detailContestantId: number;
+  contestantId: number;
   showPanel: boolean = false;
 
   constructor(
@@ -56,25 +54,26 @@ export class StartExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._destinationFolder = localStorage.getItem(DestinationFolder);
-    this._submissionFolder = localStorage.getItem(SourceFolder);
-    this._logsFolder = `${localStorage.getItem(DestinationFolder)}\\Logs`;
+    this.driveDir = localStorage.getItem(DRIVE);
 
-    this._folderWatcher = chokidar.watch(this._submissionFolder, { ignored: /(^|[\/\\])\../, persistent: true });
-    this._folderWatcher.on('add', this._onSubmit);
+    this.submitDir = localStorage.getItem(SUBMISSION);
+    this.logsDir = `${localStorage.getItem(SUBMISSION)}\\Logs`;
 
-    this._logsWatcher = chokidar.watch(this._logsFolder, { ignored: /(^|[\/\\])\../, persistent: true });
-    this._logsWatcher.on('add', this._onLogs);
+    this.driveEventListener = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.driveEventListener.on('add', this.onSync);
+
+    this.logsEventListener = chokidar.watch(this.logsDir, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.logsEventListener.on('add', this.onCreateLogs);
   }
 
-  private _onSubmit = (absolutePath: string) => {
+  private onSync = (absolutePath: string) => {
     const tokens = path.normalize(absolutePath).split('\\');
     const fileName = tokens[tokens.length - 1];
-    const dataPath = `${this._destinationFolder}\\${fileName}`;
+    const dataPath = `${this.submitDir}\\${fileName}`;
     fs.createReadStream(absolutePath).pipe(fs.createWriteStream(dataPath));
   }
 
-  private _onLogs = (absolutePath: string) => {
+  private onCreateLogs = (absolutePath: string) => {
     if (_.last(absolutePath.split('.')) == 'tmp') return;
 
     let fileNameTokens = path.normalize(absolutePath).split('\\');
@@ -82,25 +81,24 @@ export class StartExamComponent implements OnInit, OnDestroy {
     let tokens = fileName.split(/\s+/);
   }
 
-  contestantChange(contestantId: number) {
+  detailsContestant(contestantId: number) {
     if (!this.showPanel) {
       this.showPanel = true;
-      this.detailContestantId = contestantId;
+      this.contestantId = contestantId;
     } else {
-      if (this.detailContestantId == contestantId) {
+      if (this.contestantId == contestantId) {
         this.showPanel = false;
       } else {
-        this.detailContestantId = contestantId;
+        this.contestantId = contestantId;
       }
 
     }
     this.cd.detectChanges();
     this.detailContestant.view();
-
   }
 
   ngOnDestroy(): void {
-    this._folderWatcher.unwatch();
+    this.driveEventListener.unwatch();
   }
 
   back() {

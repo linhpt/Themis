@@ -5,45 +5,45 @@
 </div>
 <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
   <div class="form-group">
-    <label for="sourceFolder">Source Folder</label>
+    <label>Drive</label>
     <div class="input-group">
-      <input type="text" class="form-control" name="sourceFolder" [(ngModel)]="settings.sourceFolder"
-        #sourceFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && sourceFolder.invalid }" required readonly
-        placeholder="Source Drive Folder" />
-      <button class="btn btn-primary ml-2" (click)="select('Source')">Select</button>
+      <input type="text" class="form-control" name="drive" [(ngModel)]="settings.drive"
+        #drive="ngModel" [ngClass]="{ 'is-invalid': f.submitted && drive.invalid }" required readonly
+        placeholder="Drive" />
+      <button type="button" class="btn btn-primary ml-2" (click)="select('Drive')">Select</button>
     </div>
-    <div *ngIf="f.submitted && sourceFolder.invalid" class="invalid-feedback">
-      <div *ngIf="sourceFolder.errors.required">Source Folder is required</div>
+    <div *ngIf="f.submitted && drive.invalid" class="invalid-feedback">
+      <div *ngIf="drive.errors.required">Drive is required</div>
     </div>
   </div>
 
   <div class="form-group">
-    <label for="destinationFolder">Destination Folder</label>
+    <label>Submission</label>
     <div class="input-group">
-      <input type="text" class="form-control" name="destinationFolder" [(ngModel)]="settings.destinationFolder"
-        #destinationFolder="ngModel" [ngClass]="{ 'is-invalid': f.submitted && destinationFolder.invalid }" required
-        readonly placeholder="Destination Working Folder" />
-      <button class="btn btn-primary ml-2" (click)="select('Dest')">Select</button>
+      <input type="text" class="form-control" name="sumission" [(ngModel)]="settings.submission"
+        #submission="ngModel" [ngClass]="{ 'is-invalid': f.submitted && submission.invalid }" required
+        readonly placeholder="Submission" />
+      <button type="button" class="btn btn-primary ml-2" (click)="select('Submission')">Select</button>
     </div>
-    <div *ngIf="f.submitted && destinationFolder.invalid" class="invalid-feedback">
-      <div *ngIf="destinationFolder.errors.required">Destination Folder is required</div>
+    <div *ngIf="f.submitted && submission.invalid" class="invalid-feedback">
+      <div *ngIf="submission.errors.required">Submission is required</div>
     </div>
   </div>
 
   <div class="form-group">
-    <label for="examFolder">Exam Folder</label>
+    <label>Themis Contest</label>
     <div class="input-group">
-      <input type="text" class="form-control" name="examFolder" [(ngModel)]="settings.examFolder" #examFolder="ngModel"
-        [ngClass]="{ 'is-invalid': f.submitted && examFolder.invalid }" required readonly
-        placeholder="Exam Working Folder" />
-      <button class="btn btn-primary ml-2" (click)="select('Exam')">Select</button>
+      <input type="text" class="form-control" name="themisContest" [(ngModel)]="settings.themisContest" #themisContest="ngModel"
+        [ngClass]="{ 'is-invalid': f.submitted && themisContest.invalid }" required readonly
+        placeholder="Themis Contest" />
+      <button type="button" class="btn btn-primary ml-2" (click)="select('ThemisContest')">Select</button>
     </div>
-    <div *ngIf="f.submitted && examFolder.invalid" class="invalid-feedback">
-      <div *ngIf="examFolder.errors.required">Exam Folder is required</div>
+    <div *ngIf="f.submitted && themisContest.invalid" class="invalid-feedback">
+      <div *ngIf="themisContest.errors.required">Themis contest is required</div>
     </div>
   </div>
 
   <div class="form-group">
-    <button class="btn btn-primary" (click)="back()">Save Settings</button>
+    <button type="submit" class="btn btn-primary" (click)="back()">Save Settings</button>
   </div>
 </form>
