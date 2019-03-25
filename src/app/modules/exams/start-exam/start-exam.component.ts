@@ -32,6 +32,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
 
   @ViewChild(DetailsContestantComponent) detailContestant: DetailsContestantComponent;
   exam: IExam = {};
+  examId: number;
 
   private _folderWatcher: any;
   private _logsWatcher: any;
@@ -47,7 +48,12 @@ export class StartExamComponent implements OnInit, OnDestroy {
     private location: Location,
     private cd: ChangeDetectorRef,
     private examDatabase: ExamDatabase
-  ) { }
+  ) {
+    this.route.params.subscribe(async (params: Params) => {
+      this.examId = +params['id'];
+      this.exam = await this.examDatabase.getById(this.examId);
+    });
+  }
 
   ngOnInit(): void {
     this._destinationFolder = localStorage.getItem(DestinationFolder);
@@ -59,13 +65,6 @@ export class StartExamComponent implements OnInit, OnDestroy {
 
     this._logsWatcher = chokidar.watch(this._logsFolder, { ignored: /(^|[\/\\])\../, persistent: true });
     this._logsWatcher.on('add', this._onLogs);
-
-    this.route.params.subscribe(this._onParamMap);
-  }
-
-  private _onParamMap = async (params: Params) => {
-    const id = +params['id'];
-    this.exam = await this.examDatabase.getById(id);
   }
 
   private _onSubmit = (absolutePath: string) => {

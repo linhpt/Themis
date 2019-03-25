@@ -11,7 +11,7 @@
       <app-rankings-contestant 
         #rankingContestant 
         (contestant)="contestantChange($event)" 
-        [exam]="exam">
+        [examId]="examId">
       </app-rankings-contestant>
     </div>
     <div [class.col-4]="showPanel" [hidden]="!showPanel">

@@ -11,9 +11,9 @@ import * as _ from 'lodash';
   templateUrl: './rankings-contestant.component.html',
   styleUrls: ['./rankings-contestant.component.css']
 })
-export class RankingsContestantComponent {
+export class RankingsContestantComponent implements OnInit {
 
-  @Input() exam: IExam;
+  @Input() examId: number;
   @Output() contestant = new EventEmitter<number>();
   contestants: IContestantRank[] = contestantsRank;
 
@@ -25,15 +25,19 @@ export class RankingsContestantComponent {
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
   ) {
+  }
+
+  ngOnInit() {
     this.init();
   }
 
   async init() {
-    this.contestants = await this.contestantDatabase.getByExamId(this.exam.id);
+    this.contestants = await this.contestantDatabase.getByExamId(this.examId);
+    /*
     _.forEach(this.contestants, async (contestant: IContestantRank) => {
       let submissionByContestant = await this.submissionDatabase.getByContestantId(contestant.id);
       contestant.score = 0;
-      const submissions = _.filter(submissionByContestant, (submission: ISubmission) => submission.examId == this.exam.id);
+      const submissions = _.filter(submissionByContestant, (submission: ISubmission) => submission.examId == this.examId);
       _.forEach(submissions, (submission: ISubmission) => {
         contestant.score += +submission.score;
       });
@@ -44,6 +48,7 @@ export class RankingsContestantComponent {
     _.forEach(this.contestants, (contestant: IContestantRank, index: number) => {
       contestant.rank = index;
     });
+    */
 
   }
 
