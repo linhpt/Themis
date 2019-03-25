@@ -80,8 +80,8 @@ export class ExamComponent implements OnInit {
     const themisDir = localStorage.getItem(THEMIS_CONTEST);
 
     const examName = `${themisDir}\\${this.exam.name}`;
-    const tasks = `${examName}\\tasks`;
-    const contestants = `${examName}\\contestants`;
+    const tasks = `${examName}\\Tasks`;
+    const contestants = `${examName}\\Contestants`;
 
     this._createFolder(examName);
     this._createFolder(tasks);
@@ -104,7 +104,7 @@ export class ExamComponent implements OnInit {
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this._createFolder(`${themisDir}\\${this.exam.name}\\contestants\\${contestant.aliasName}`);
+      this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.aliasName}`);
     });
 
     this.gspread.createSpreadsheet(this.exam, () => {
