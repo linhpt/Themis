@@ -32,8 +32,8 @@ export class StartExamComponent implements OnInit, OnDestroy {
   exam: IExam = {};
   examId: number;
 
-  private driveEventListener: any;
-  private logsEventListener: any;
+  private driveEvent: any;
+  private logsEvent: any;
   private driveDir: string;
   private submitDir: string;
   private logsDir: string;
@@ -59,11 +59,11 @@ export class StartExamComponent implements OnInit, OnDestroy {
     this.submitDir = localStorage.getItem(SUBMISSION);
     this.logsDir = `${localStorage.getItem(SUBMISSION)}\\Logs`;
 
-    this.driveEventListener = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
-    this.driveEventListener.on('add', this.onSync);
+    this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.driveEvent.on('add', this.onSync);
 
-    this.logsEventListener = chokidar.watch(this.logsDir, { ignored: /(^|[\/\\])\../, persistent: true });
-    this.logsEventListener.on('add', this.onCreateLogs);
+    this.logsEvent = chokidar.watch(this.logsDir, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.logsEvent.on('add', this.onCreateLogs);
   }
 
   private onSync = (absolutePath: string) => {
@@ -98,7 +98,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.driveEventListener.unwatch();
+    this.driveEvent.unwatch();
   }
 
   back() {
