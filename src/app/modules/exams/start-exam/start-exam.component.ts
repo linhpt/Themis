@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { IExam, IContestant, } from 'src/app/core/interfaces/core';
+import { IExam, IContestant, ISubmission, ITask, } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
-import { DRIVE, SUBMISSION, ROOT} from '../exam/exam.component';
+import { DRIVE, SUBMISSION, ROOT } from '../exam/exam.component';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
@@ -10,6 +10,19 @@ const chokidar = (<any>window).require('chokidar');
 
 import * as _ from 'lodash';
 import { DetailsContestantComponent } from './details-contestant/details-contestant.component';
+import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
+import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
+import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
+
+export const SPECIAL_CHARS = {
+  TRIANGULAR_BULLET: 0x2023,
+  NEWLINE: '\n',
+  COLON: ':'
+}
+
+export const PATTERNS = {
+  COLONE_TRIANGLE_BULLET: /:|‣/,
+}
 
 export interface IResult {
   contestantId: number;
@@ -46,7 +59,10 @@ export class StartExamComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private cd: ChangeDetectorRef,
-    private examDatabase: ExamDatabase
+    private examDatabase: ExamDatabase,
+    private contestantDatabase: ContestantDatabase,
+    private submissionDatabase: SubmissionDatabase,
+    private taskDatabase: TaskDatabase
   ) {
     this.route.params.subscribe(async (params: Params) => {
       this.examId = +params['id'];
@@ -63,13 +79,13 @@ export class StartExamComponent implements OnInit, OnDestroy {
     this.logsDir = `${this.submitDir}\\Logs`;
 
     this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
-    this.driveEvent.on('add', this.onSync);
+    this.driveEvent.on('add', this.moveToSumission);
 
     this.logsEvent = chokidar.watch(this.logsDir, { ignored: /(^|[\/\\])\../, persistent: true });
     this.logsEvent.on('add', this.onCreateLogs);
   }
 
-  private onSync = (absolutePath: string) => {
+  private moveToSumission = (absolutePath: string) => {
     const tokens = path.normalize(absolutePath).split('\\');
     const fileName = tokens[tokens.length - 1];
     const dataPath = `${this.submitDir}\\${fileName}`;
@@ -78,12 +94,35 @@ export class StartExamComponent implements OnInit, OnDestroy {
 
   private onCreateLogs = (absolutePath: string) => {
     if (_.last(absolutePath.split('.')) == 'tmp') return;
+    fs.readFile(absolutePath, { encoding: 'utf-8' }, async (err: string, content: string) => {
+      if (err) return console.error('error while reading logs', err);
 
-    let fileNameTokens = path.normalize(absolutePath).split('\\');
-    let fileName = fileNameTokens[fileNameTokens.length - 1].replace(/\]|\[/g, ' ');
-    let tokens = fileName.split(/\s+/);
+      //Success reading logs
+      const [firstLine] = content.split(SPECIAL_CHARS.NEWLINE);
+      const [aliasName, taskName, score] = firstLine.split(PATTERNS.COLONE_TRIANGLE_BULLET);
 
-    console.log('Logs', tokens);
+      let now = new Date;
+
+      let tasks = await this.taskDatabase.getByExamId(this.examId);
+      if (!tasks || !tasks.length) return console.log('error: tasks is empty with examId', this.examId);
+
+      let task = _.find(tasks, (task: ITask) => task.name == taskName);
+      if (!task) return console.error('error: cannot find task with taskName', taskName);
+
+      let contestants = await this.contestantDatabase.getByExamId(this.examId);
+      let contestant = _.find(contestants, (contestant: IContestant) => contestant.aliasName == aliasName.trim());
+
+      if (!contestant) return console.error('error: cannot find contestant with aliasName', aliasName);
+
+      const submission = <ISubmission>{
+        contestantId: contestant.id,
+        examId: this.examId,
+        taskId: task.id,
+        score: score.trim(),
+        timeSubmission: now.toString()
+      }
+      this.submissionDatabase.add(submission);
+    });
   }
 
   detailsContestant(contestantId: number) {
