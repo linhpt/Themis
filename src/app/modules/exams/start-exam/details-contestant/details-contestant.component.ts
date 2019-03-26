@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 
 export interface IContestantSubmission extends IContestant {
   taskName?: string;
-  examName?: string;
+  timeSubmitted?: string;
   score?: number;
 }
 
@@ -42,16 +42,15 @@ export class DetailsContestantComponent {
 
     this._tasks = await this.taskDatabase.getByExamId(this.exam.id);
 
-    const examName = this.exam.name;
-
     _.forEach(this._submissions, (submission: ISubmission) => {
       let task = _.find(this._tasks, (task: ITask) => task.id == submission.taskId);
       const taskName = task.name;
+      const timeSubmitted = task.timeSubmited;
 
       this.contestantDetails.push({
         ...this._contestant,
         taskName,
-        examName,
+        timeSubmitted,
         score: +submission.score
       });
     });

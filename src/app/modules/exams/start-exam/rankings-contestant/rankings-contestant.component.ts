@@ -53,7 +53,7 @@ export class RankingsContestantComponent implements OnInit {
 
     this.contestants = _.sortBy(this.contestants, [(contestant: IContestantRank) => contestant.score]);
     _.forEach(this.contestants, (contestant: IContestantRank, index: number) => {
-      contestant.rank = index;
+      contestant.rank = index + 1;
     });
     
   }
