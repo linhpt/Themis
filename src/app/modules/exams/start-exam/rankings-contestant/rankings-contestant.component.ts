@@ -33,11 +33,18 @@ export class RankingsContestantComponent implements OnInit {
 
   async init() {
     this.contestants = await this.contestantDatabase.getByExamId(this.examId);
-    /*
+
+    if (!this.contestants || !this.contestants.length) console.error('error: contestants empty with examId', this.examId);
+
     _.forEach(this.contestants, async (contestant: IContestantRank) => {
+      
       let submissionByContestant = await this.submissionDatabase.getByContestantId(contestant.id);
+
+      if (!submissionByContestant && !submissionByContestant.length) console.error('error: submissions is empty with contestantId', contestant.id);
+
       contestant.score = 0;
       const submissions = _.filter(submissionByContestant, (submission: ISubmission) => submission.examId == this.examId);
+
       _.forEach(submissions, (submission: ISubmission) => {
         contestant.score += +submission.score;
       });
@@ -48,8 +55,7 @@ export class RankingsContestantComponent implements OnInit {
     _.forEach(this.contestants, (contestant: IContestantRank, index: number) => {
       contestant.rank = index;
     });
-    */
-
+    
   }
 
 }
