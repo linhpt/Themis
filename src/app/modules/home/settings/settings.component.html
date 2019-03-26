@@ -18,28 +18,15 @@
   </div>
 
   <div class="form-group">
-    <label>Submission</label>
+    <label>Root</label>
     <div class="input-group">
-      <input type="text" class="form-control" name="sumission" [(ngModel)]="settings.submission"
-        #submission="ngModel" [ngClass]="{ 'is-invalid': f.submitted && submission.invalid }" required
-        readonly placeholder="Submission" />
-      <button type="button" class="btn btn-primary ml-2" (click)="select('Submission')">Select</button>
+      <input type="text" class="form-control" name="root" [(ngModel)]="settings.root"
+        #root="ngModel" [ngClass]="{ 'is-invalid': f.submitted && root.invalid }" required
+        readonly placeholder="Root" />
+      <button type="button" class="btn btn-primary ml-2" (click)="select('Root')">Select</button>
     </div>
-    <div *ngIf="f.submitted && submission.invalid" class="invalid-feedback">
-      <div *ngIf="submission.errors.required">Submission is required</div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>Themis Contest</label>
-    <div class="input-group">
-      <input type="text" class="form-control" name="themisContest" [(ngModel)]="settings.themisContest" #themisContest="ngModel"
-        [ngClass]="{ 'is-invalid': f.submitted && themisContest.invalid }" required readonly
-        placeholder="Themis Contest" />
-      <button type="button" class="btn btn-primary ml-2" (click)="select('ThemisContest')">Select</button>
-    </div>
-    <div *ngIf="f.submitted && themisContest.invalid" class="invalid-feedback">
-      <div *ngIf="themisContest.errors.required">Themis contest is required</div>
+    <div *ngIf="f.submitted && root.invalid" class="invalid-feedback">
+      <div *ngIf="root.errors.required">Root is required</div>
     </div>
   </div>
 

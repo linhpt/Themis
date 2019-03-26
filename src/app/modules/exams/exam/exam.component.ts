@@ -13,8 +13,9 @@ import * as _ from 'lodash';
 
 const fs = (<any>window).require('fs');
 
-export const SUBMISSION = 'submission';
-export const THEMIS_CONTEST = 'themisContest';
+export const ROOT = 'root';
+export const SUBMISSION = 'Submission';
+export const THEMIS_CONTEST = 'ThemisContest';
 export const DRIVE = 'drive';
 
 @Component({
@@ -77,7 +78,15 @@ export class ExamComponent implements OnInit {
   }
 
   start() {
-    const themisDir = localStorage.getItem(THEMIS_CONTEST);
+
+    const root = localStorage.getItem(ROOT);
+
+    const submissionDir = `${root}\\${SUBMISSION}`;
+    const themisDir = `${root}\\${THEMIS_CONTEST}`;
+
+    this._createFolder(themisDir);
+    this._createFolder(submissionDir);
+    this._createFolder(`${submissionDir}\\Logs`);
 
     const examName = `${themisDir}\\${this.exam.name}`;
     const tasks = `${examName}\\Tasks`;

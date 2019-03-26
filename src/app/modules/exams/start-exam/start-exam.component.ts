@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChi
 import { ActivatedRoute, Params } from '@angular/router';
 import { IExam, IContestant, } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
-import { DRIVE, SUBMISSION} from '../exam/exam.component';
+import { DRIVE, SUBMISSION, ROOT} from '../exam/exam.component';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
@@ -37,6 +37,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
   private driveDir: string;
   private submitDir: string;
   private logsDir: string;
+  private root: string;
 
   contestantId: number;
   showPanel: boolean = false;
@@ -54,10 +55,12 @@ export class StartExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.root = localStorage.getItem(ROOT);
     this.driveDir = localStorage.getItem(DRIVE);
 
-    this.submitDir = localStorage.getItem(SUBMISSION);
-    this.logsDir = `${localStorage.getItem(SUBMISSION)}\\Logs`;
+    this.submitDir = `${this.root}\\${SUBMISSION}`
+    this.logsDir = `${this.submitDir}\\Logs`;
 
     this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
     this.driveEvent.on('add', this.onSync);
@@ -79,6 +82,8 @@ export class StartExamComponent implements OnInit, OnDestroy {
     let fileNameTokens = path.normalize(absolutePath).split('\\');
     let fileName = fileNameTokens[fileNameTokens.length - 1].replace(/\]|\[/g, ' ');
     let tokens = fileName.split(/\s+/);
+
+    console.log('Logs', tokens);
   }
 
   detailsContestant(contestantId: number) {

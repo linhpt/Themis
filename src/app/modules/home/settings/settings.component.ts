@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/core/services/sidebar.service';
 import { Location } from '@angular/common';
+import { ROOT, SUBMISSION } from '../../exams/exam/exam.component';
 const remote = (<any>window).require('electron').remote;
 const dialog = remote.require('electron').dialog;
 const fs = (<any>window).require('fs');
@@ -15,8 +16,7 @@ export class SettingsComponent implements OnInit {
 
   settings = {
     drive: '',
-    submission: '',
-    themisContest: ''
+    root: '',
   }
 
   constructor(
@@ -38,14 +38,6 @@ export class SettingsComponent implements OnInit {
     for (var name in this.settings) {
       localStorage.setItem(name, this.settings[name]);
     }
-    this._createFolder(`${localStorage.getItem('destinationFolder')}\\Logs`);
-  }
-
-  private _createFolder(folder: string) {
-    if (!folder) return;
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder);
-    }
   }
 
   select(type: string) {
@@ -55,10 +47,8 @@ export class SettingsComponent implements OnInit {
 
     if (type == 'Drive') {
       this.settings.drive = path[0];
-    } else if (type == 'Submission') {
-      this.settings.submission = path[0];
-    } else if (type == 'ThemisContest') {
-      this.settings.themisContest = path[0];
+    } else if (type == 'Root') {
+      this.settings.root = path[0];
     }
   }
 
