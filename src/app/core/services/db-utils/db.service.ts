@@ -1,75 +1,49 @@
 import Dexie from 'dexie';
-import { IContestant, ITask, IExam, IDocument, DocType, ISubmission } from '../../interfaces/core';
+import { IDocument } from '../../interfaces/core';
 import { DexieService } from './dexie.service';
 
-export class DB {
+export class DB<T extends IDocument> {
 
-    private _contestant: Dexie.Table<IContestant, number>;
-    private _task: Dexie.Table<ITask, number>;
-    private _exam: Dexie.Table<IExam, number>;
-    private _submission: Dexie.Table<IExam, number>;
-    _docType: DocType;
+    private _table: Dexie.Table<T, number>;
 
-    constructor(private dexieService: DexieService) {
-        this._contestant = this.dexieService.table('contestant');
-        this._task = this.dexieService.table('task');
-        this._exam = this.dexieService.table('exam');
-        this._submission = this.dexieService.table('submission');
+    constructor(private dexieService: DexieService, 
+            private tbName: string) {
+        this._table = this.dexieService.table(tbName);
     }
 
-    private _getDocument(): Dexie.Table<IDocument, number> {
-        if (this._docType == DocType.EXAM) {
-            return this._exam;
-        } else if (this._docType == DocType.CONTESTANT) {
-            return this._contestant;
-        } else if (this._docType == DocType.TASK) {
-            return this._task;
-        } else if (this._docType == DocType.SUBMISSION) {
-            return this._submission;
-        }
+    getAll(): Promise<T[]> {
+        return this._table.toArray();
     }
 
-    private _hasExamId(): boolean {
-        return this._docType == DocType.TASK ||
-            this._docType == DocType.CONTESTANT ||
-            this._docType == DocType.SUBMISSION;
+    add(document: T): Promise<number> {
+        return this._table.add(document);
     }
 
-    getAll(): Promise<IDocument[]> {
-        return this._getDocument().toArray();
-    }
-
-    add(document: IDocument): Promise<number> {
-        return this._getDocument().add(document);
-    }
-
-    update(id: number, document: IDocument): Promise<number> {
-        return this._getDocument().update(id, document);
+    update(id: number, document: T): Promise<number> {
+        return this._table.update(id, document);
     }
 
     remove(id: number): Promise<void> {
-        return this._getDocument().delete(id);
+        return this._table.delete(id);
     }
 
-    getById(id: number): Promise<IDocument> {
-        return this._getDocument().get({ id: id });
+    getById(id: number): Promise<T> {
+        return this._table.get({ id });
     }
 
-    getByTaskId(taskId: number): Promise<ISubmission[]> {
-        return this._submission.where('taskId').equals(taskId).toArray();
+    getByTaskId(taskId: number): Promise<T[]> {
+        return this._table.where('taskId').equals(taskId).toArray();
     }
 
-    getByContestantId(contestantId: number): Promise<ISubmission[]> {
-        return this._submission.where('contestantId').equals(contestantId).toArray();
+    getByContestantId(contestantId: number): Promise<T[]> {
+        return this._table.where('contestantId').equals(contestantId).toArray();
     }
 
     removeByExamId(examId: number): Promise<number> {
-        return this._getDocument().where('examId').equals(examId).delete();
+        return this._table.where('examId').equals(examId).delete();
     }
 
-    getByExamId(examId: number): Promise<IDocument[]> {
-        if (this._hasExamId()) {
-            return this._getDocument().where({ examId }).toArray();
-        }
+    getByExamId(examId: number): Promise<T[]> {
+        return this._table.where({ examId }).toArray();
     }
 }
