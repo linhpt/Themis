@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { contestantSubmission } from '../mock';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
@@ -31,7 +31,8 @@ export class DetailsContestantComponent {
   constructor(
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
-    private taskDatabase: TaskDatabase
+    private taskDatabase: TaskDatabase,
+    private cd: ChangeDetectorRef
   ) { }
 
   async view() {
@@ -55,6 +56,12 @@ export class DetailsContestantComponent {
       });
     });
 
+  }
+
+  refresh() {
+    this.view().then(() => {
+      this.cd.detectChanges();
+    });
   }
 
 }

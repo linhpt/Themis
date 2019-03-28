@@ -7,12 +7,14 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
 const chokidar = (<any>window).require('chokidar');
+const fsExtra = (<any>window).require('fs-extra');
 
 import * as _ from 'lodash';
 import { DetailsContestantComponent } from './details-contestant/details-contestant.component';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
+import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
 
 export const SPECIAL_CHARS = {
   TRIANGULAR_BULLET: 0x2023,
@@ -42,6 +44,7 @@ export interface IContestantRank extends IContestant {
 export class StartExamComponent implements OnInit, OnDestroy {
 
   @ViewChild(DetailsContestantComponent) detailContestant: DetailsContestantComponent;
+  @ViewChild(RankingsContestantComponent) rankingsContestant: RankingsContestantComponent;
   exam: IExam = {};
   examId: number;
 
@@ -78,6 +81,10 @@ export class StartExamComponent implements OnInit, OnDestroy {
     this.submitDir = `${this.root}\\${SUBMISSION}`
     this.logsDir = `${this.submitDir}\\Logs`;
 
+    fsExtra.emptyDirSync(this.driveDir);
+    fsExtra.emptyDirSync(this.submitDir);
+    fsExtra.emptyDirSync(this.logsDir);
+    
     this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
     this.driveEvent.on('add', this.moveToSumission);
 
@@ -121,7 +128,9 @@ export class StartExamComponent implements OnInit, OnDestroy {
         score: score.trim(),
         timeSubmission: now.toString()
       }
-      this.submissionDatabase.add(submission);
+      await this.submissionDatabase.add(submission);
+      this.rankingsContestant.refesh();
+      if (this.showPanel) this.detailContestant.refresh();
     });
   }
 
