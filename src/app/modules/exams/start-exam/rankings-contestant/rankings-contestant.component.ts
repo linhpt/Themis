@@ -43,14 +43,9 @@ export class RankingsContestantComponent implements OnInit {
 
     _.forEach(this.contestants, (contestant: IContestantRank) => {
 
-      let submitByContestant = _.filter(allSubmit, (submit: ISubmission) => submit.contestantId == contestant.id);
-
-      if (!submitByContestant && !submitByContestant.length) console.error('error: submissions is empty with contestantId', contestant.id);
-
+      let submitByContestant = _.filter(allSubmit, (submit: ISubmission) => submit.contestantId == contestant.id && submit.examId == this.examId);
       contestant.score = 0;
-      const submissions = _.filter(submitByContestant, (submission: ISubmission) => submission.examId == this.examId);
-
-      _.forEach(submissions, (submission: ISubmission) => {
+      _.forEach(submitByContestant, (submission: ISubmission) => {
         contestant.score += +submission.score;
       });
 
