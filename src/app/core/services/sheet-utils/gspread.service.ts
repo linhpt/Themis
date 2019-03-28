@@ -3,11 +3,15 @@ const { google } = (<any>window).require('googleapis');
 import * as credentials from 'src/assets/credentials.json';
 import { IExam } from '../../interfaces/core';
 import { ExamDatabase } from '../db-utils/exam.service';
+import * as _ from 'lodash';
 
 export const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 export const TOKEN_PATH = 'token.json';
-export const Rankings = 'Rankings';
-export const Submissions = 'Submissions';
+export const RANKINGS = 'Rankings';
+export const SUBMISSIONS = 'Submissions';
+
+export type CB = () => void;
+
 
 @Injectable({
     providedIn: 'root'
@@ -31,15 +35,15 @@ export class GspreadUtils {
         return res;
     }
 
-    getToken(code: string, callback?: () => void) {
+    getToken(code: string, cb?: CB) {
         this.oAuth2Client.getToken(code, (err: string, token: string) => {
             if (err) {
                 return console.error('Error while trying to retrieve access token', err);
             }
             this.oAuth2Client.setCredentials(token);
             localStorage.setItem(TOKEN_PATH, JSON.stringify(token));
-            if (callback && typeof callback == 'function') {
-                callback();
+            if (cb && typeof cb == 'function') {
+                cb();
             }
         });
     }
@@ -52,11 +56,11 @@ export class GspreadUtils {
         return authUrl;
     }
 
-    createSpreadsheet(exam: IExam, callback?: () => void) {
+    createSpreadsheet(exam: IExam, cb?: CB) {
         const { id, name, sheetId } = exam;
         if (sheetId) {
-            if (callback && typeof callback == 'function') {
-                callback();
+            if (cb && typeof cb == 'function') {
+                cb();
             }
             return console.info(`Sheet with exam ${name} is already existed`);
         }
@@ -66,13 +70,13 @@ export class GspreadUtils {
             },
             sheets: [{
                 properties: {
-                    title: Rankings,
+                    title: RANKINGS,
                     index: 1
                 }
             },
             {
                 properties: {
-                    title: Submissions,
+                    title: SUBMISSIONS,
                     index: 2
                 }
             }]
@@ -87,34 +91,35 @@ export class GspreadUtils {
             }
             exam.sheetId = spreadsheet.data.spreadsheetId;
             this.examDatabase.update(id, exam);
-            if (callback && typeof callback == 'function') {
-                callback();
+            if (cb && typeof cb == 'function') {
+                cb();
             }
         });
 
     }
 
-    updateSpreadsheet(exam: IExam, callback?: () => void) {
+    update(exam: IExam, sheetName: string, data: any, cb: CB) {
+        let callback = cb && typeof cb == 'function' ? cb : () => true;
+        console.log(data);
+        this._updateSheet(exam, sheetName, data, callback);
+    }
+
+    private _updateSheet(exam: IExam, sheetName: string, values: any, cb: CB) {
+
+        if (sheetName != RANKINGS && sheetName != SUBMISSIONS) return console.error(`error: cannot update sheet with name ${sheetName}`);
         const { sheetId } = exam;
-        var sheets = google.sheets('v4');
-        sheets.spreadsheets.values.append({
+        const sheets = google.sheets('v4');
+        sheets.spreadsheets.values.update({
             auth: this.oAuth2Client,
             spreadsheetId: sheetId,
-            range: 'Rankings!A2:B',
+            range: `${sheetName}!A2`,
             valueInputOption: "USER_ENTERED",
-            resource: {
-                values: [["Void", "Canvas", "Website"], ["Paul", "Shan", "Human"]]
-            }
+            resource: { values }
         }, (err: string, response: any) => {
-            if (err) {
-                return console.error(`The API returned an error: ${err}`);
-            }
-            if (callback && typeof callback == 'function') {
-                callback();
-            }
-            return console.log(`Update success`)
+            if (err) return console.error(`The API returned an error: ${err}`);
+            cb();
         });
-    }
 
+    }
 
 }
