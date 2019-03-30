@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
 import { IContestantRank } from '../start-exam.component';
-import { ISubmission, IExam } from 'src/app/core/interfaces/core';
+import { ISubmission, IExam, IContestant } from 'src/app/core/interfaces/core';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import * as _ from 'lodash';
@@ -34,12 +34,7 @@ export class RankingsContestantComponent implements OnInit {
 
   ngOnInit() {
     this.init().then((contestantRank: IContestantRank[]) => {
-      let values = [];
-      _.forEach(contestantRank, (contestant: IContestantRank) => {
-        values.push(_.values(contestant));
-      });
-
-      this.gspread.updateRankings(this._exam, values, () => { });
+      this._updateRanking(contestantRank);
       this.cd.detectChanges();
     });
   }
@@ -74,11 +69,19 @@ export class RankingsContestantComponent implements OnInit {
   }
 
   refesh() {
-
-    this.init().then(() => {
+    this.init().then((contestantRank: IContestantRank[]) => {
+      this._updateRanking(contestantRank);
       this.cd.detectChanges();
     });
 
+  }
+
+  private _updateRanking(contestantRank: IContestantRank[]) {
+    let values = [];
+    _.forEach(contestantRank, (contestant: IContestantRank) => {
+      values.push(_.values(contestant));
+    });
+    this.gspread.updateRankings(this._exam, values, () => { });
   }
 
 }
