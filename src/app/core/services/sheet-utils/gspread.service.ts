@@ -98,13 +98,13 @@ export class GspreadUtils {
 
     }
 
-    updateRankings(exam: IExam, values: any, cb: CB) {
+    updateRankings(exam: IExam, values: any, cb?: CB) {
         let headers = this._buildHeaders(RANKINGS);
         let newValues = [headers, ...values];
         this._updateSheet(exam, RANKINGS, newValues, cb);
     }
 
-    appendNewSubmit(exam: IExam, values: Array<any>, cb: CB) {
+    appendNewSubmit(exam: IExam, values: Array<any>, cb?: CB) {
         let newValues = [values];
         this._updateSheet(exam, SUBMISSIONS, newValues, cb);
     }
@@ -125,7 +125,9 @@ export class GspreadUtils {
 
         const handleError = (err: string, response: any) => {
             if (err) return console.error(`The API returned an error while updating sheet: ${err}`);
-            cb();
+            if (cb && typeof cb == 'function') {
+                cb();
+            }
         };
 
         const sheets = google.sheets('v4');

@@ -37,6 +37,9 @@ export interface IContestantRank extends IContestant {
   rank?: number;
   score?: number;
 }
+
+export const SUBMIT_SHEMA = ['id', 'contestantName', 'taskName', 'examName', 'timeSubmission', 'score'];
+
 @Component({
   selector: 'app-start-exam',
   templateUrl: './start-exam.component.html',
@@ -130,8 +133,13 @@ export class StartExamComponent implements OnInit, OnDestroy {
         score: score.trim(),
         timeSubmission: now.toString()
       }
-      await this.submissionDatabase.add(submission);
-      this.gspread.appendNewSubmit(this.exam, _.values(submission), () => { });
+      let submit = _.cloneDeep(submission);
+      submit.id = await this.submissionDatabase.add(submission);
+      submit.contestantName = contestant.aliasName;
+      submit.taskName = task.name;
+      submit.examName = this.exam.name;
+  
+      this.gspread.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
       this.rankingsContestant.refesh();
       if (this.showPanel) {
         this.detailContestant.refresh();
