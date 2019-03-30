@@ -46,7 +46,7 @@ export class DetailsContestantComponent {
     _.forEach(this._submissions, (submission: ISubmission) => {
       let task = _.find(this._tasks, (task: ITask) => task.id == submission.taskId);
       const taskName = task.name;
-      const timeSubmitted = task.timeSubmited;
+      const timeSubmitted = submission.timeSubmission;
 
       this.contestantDetails.push({
         ...this._contestant,
