@@ -99,7 +99,9 @@ export class GspreadUtils {
     }
 
     updateRankings(exam: IExam, values: any, cb: CB) {
-        this._updateSheet(exam, RANKINGS, values, cb);
+        let headers = this._buildHeaders(RANKINGS);
+        let newValues = [headers, ...values];
+        this._updateSheet(exam, RANKINGS, newValues, cb);
     }
 
     appendNewSubmit(exam: IExam, values: Array<any>, cb: CB) {
@@ -116,7 +118,7 @@ export class GspreadUtils {
         const options = {
             auth: this.oAuth2Client,
             spreadsheetId: sheetId,
-            range: `${sheetName}!A2`,
+            range: `${sheetName}!A1`,
             valueInputOption: "USER_ENTERED",
             resource: { values }
         };
@@ -133,7 +135,23 @@ export class GspreadUtils {
             sheets.spreadsheets.values.append(options, handleError);
         }
 
+    }
 
+    private _buildHeaders(sheetName: string): Array<string | number> {
+        let headers = [];
+        switch (sheetName) {
+            case RANKINGS:
+                headers.push(...['Ranking', 'ID', 'Full Name', 'Alias Name', 'Join Date', 'DoB', 'Score']);
+                break;
+
+            case SUBMISSIONS:
+                headers.push(...['ID', 'Name', 'Task Name', 'Submit Time', 'Score']);
+                break;
+
+            default:
+                break;
+        }
+        return headers;
     }
 
 }

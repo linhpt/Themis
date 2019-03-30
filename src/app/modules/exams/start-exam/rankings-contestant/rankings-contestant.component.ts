@@ -7,6 +7,8 @@ import * as _ from 'lodash';
 import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 
+export const SCHEMAS = ['rank', 'id', 'fullName', 'aliasName', 'joinDate', 'dob', 'score'];
+
 @Component({
   selector: 'app-rankings-contestant',
   templateUrl: './rankings-contestant.component.html',
@@ -63,7 +65,7 @@ export class RankingsContestantComponent implements OnInit {
     _.forEach(this.contestants, (contestant: IContestantRank, index: number) => {
       contestant.rank = index + 1;
     });
-    
+
     return this.contestants;
 
   }
@@ -79,7 +81,7 @@ export class RankingsContestantComponent implements OnInit {
   private _updateRanking(contestantRank: IContestantRank[]) {
     let values = [];
     _.forEach(contestantRank, (contestant: IContestantRank) => {
-      values.push(_.values(contestant));
+      values.push(_.at(contestant, SCHEMAS));
     });
     this.gspread.updateRankings(this._exam, values, () => { });
   }
