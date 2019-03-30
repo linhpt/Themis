@@ -4,7 +4,7 @@ import { ISubmission, IExam } from 'src/app/core/interfaces/core';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import * as _ from 'lodash';
-import { GspreadUtils, RANKINGS } from 'src/app/core/services/sheet-utils/gspread.service';
+import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 
 @Component({
@@ -33,17 +33,19 @@ export class RankingsContestantComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.init().then(() => {
+    this.init().then((contestantRank: IContestantRank[]) => {
       let values = [];
-      _.forEach(this.contestants, (contestant: IContestantRank) => {
+      _.forEach(contestantRank, (contestant: IContestantRank) => {
         values.push(_.values(contestant));
       });
-      this.gspread.update(this._exam, RANKINGS, values, undefined);
+
+      this.gspread.updateRankings(this._exam, values, () => { });
       this.cd.detectChanges();
     });
   }
 
   async init() {
+    this.contestants.length = 0;
     this._exam = await this.examDatabase.getById(this.examId);
     this.contestants.push(...<IContestantRank[]>await this.contestantDatabase.getByExamId(this.examId));
 
@@ -62,10 +64,13 @@ export class RankingsContestantComponent implements OnInit {
     });
 
     this.contestants = _.orderBy(this.contestants, ['score'], ['desc']);
-    
+
     _.forEach(this.contestants, (contestant: IContestantRank, index: number) => {
       contestant.rank = index + 1;
     });
+    
+    return this.contestants;
+
   }
 
   refesh() {

@@ -15,6 +15,7 @@ import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.se
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
+import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 
 export const SPECIAL_CHARS = {
   TRIANGULAR_BULLET: 0x2023,
@@ -65,7 +66,8 @@ export class StartExamComponent implements OnInit, OnDestroy {
     private examDatabase: ExamDatabase,
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
-    private taskDatabase: TaskDatabase
+    private taskDatabase: TaskDatabase,
+    private gspread: GspreadUtils
   ) {
     this.route.params.subscribe(async (params: Params) => {
       this.examId = +params['id'];
@@ -84,7 +86,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
     fsExtra.emptyDirSync(this.driveDir);
     fsExtra.emptyDirSync(this.submitDir);
     fsExtra.emptyDirSync(this.logsDir);
-    
+
     this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
     this.driveEvent.on('add', this.moveToSumission);
 
@@ -129,8 +131,11 @@ export class StartExamComponent implements OnInit, OnDestroy {
         timeSubmission: now.toString()
       }
       await this.submissionDatabase.add(submission);
+      this.gspread.appendNewSubmit(this.exam, _.values(submission), () => { });
       this.rankingsContestant.refesh();
-      if (this.showPanel) this.detailContestant.refresh();
+      if (this.showPanel) {
+        this.detailContestant.refresh();
+      }
     });
   }
 

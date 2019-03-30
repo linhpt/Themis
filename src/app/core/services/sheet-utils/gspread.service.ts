@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 const { google } = (<any>window).require('googleapis');
-import * as credentials from 'src/assets/credentials.json';
+import value, * as credentials from 'src/assets/credentials.json';
 import { IExam } from '../../interfaces/core';
 import { ExamDatabase } from '../db-utils/exam.service';
 import * as _ from 'lodash';
@@ -98,27 +98,41 @@ export class GspreadUtils {
 
     }
 
-    update(exam: IExam, sheetName: string, data: any, cb: CB) {
-        let callback = cb && typeof cb == 'function' ? cb : () => true;
-        console.log(data);
-        this._updateSheet(exam, sheetName, data, callback);
+    updateRankings(exam: IExam, values: any, cb: CB) {
+        this._updateSheet(exam, RANKINGS, values, cb);
+    }
+
+    appendNewSubmit(exam: IExam, values: Array<any>, cb: CB) {
+        let newValues = [values];
+        this._updateSheet(exam, SUBMISSIONS, newValues, cb);
     }
 
     private _updateSheet(exam: IExam, sheetName: string, values: any, cb: CB) {
 
         if (sheetName != RANKINGS && sheetName != SUBMISSIONS) return console.error(`error: cannot update sheet with name ${sheetName}`);
+
         const { sheetId } = exam;
-        const sheets = google.sheets('v4');
-        sheets.spreadsheets.values.update({
+
+        const options = {
             auth: this.oAuth2Client,
             spreadsheetId: sheetId,
             range: `${sheetName}!A2`,
             valueInputOption: "USER_ENTERED",
             resource: { values }
-        }, (err: string, response: any) => {
-            if (err) return console.error(`The API returned an error: ${err}`);
+        };
+
+        const handleError = (err: string, response: any) => {
+            if (err) return console.error(`The API returned an error while updating sheet: ${err}`);
             cb();
-        });
+        };
+
+        const sheets = google.sheets('v4');
+        if (sheetName == RANKINGS) {
+            sheets.spreadsheets.values.update(options, handleError);
+        } else {
+            sheets.spreadsheets.values.append(options, handleError);
+        }
+
 
     }
 
