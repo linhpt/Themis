@@ -10,4 +10,4 @@ Run `npm run electron` for a dev server
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `electron-packager <sourcedir> <appname> --platform=win32 --arch=x64` to .exe app. The build artifacts will be stored in the `<appname>-win32-x64` directory. Open the folder you will see the <appname>.exe file
