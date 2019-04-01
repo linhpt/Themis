@@ -83,7 +83,7 @@ export class RankingsContestantComponent implements OnInit {
     _.forEach(contestantRank, (contestant: IContestantRank) => {
       values.push(_.at(contestant, SCHEMAS));
     });
-    this.gspread.updateRankings(this._exam, values, () => { });
+    this.gspread.updateRankings(this._exam, values);
   }
 
 }
