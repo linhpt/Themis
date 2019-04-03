@@ -13,6 +13,7 @@ import * as _ from 'lodash';
 
 const fs = (<any>window).require('fs');
 const nodemailer = (<any>window).require("nodemailer");
+const uuid = (<any>window).require('uuid/v1');
 
 export const ROOT = 'root';
 export const SUBMISSION = 'Submission';
@@ -117,11 +118,22 @@ export class ExamComponent implements OnInit {
       this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.aliasName}`);
     });
 
-    this._sendMail();
-    this.gspread.createSpreadsheet(this.exam, () => {
-      this.router.navigate(['/exams/start-exam', this.exam.id]);
+    this._generateUUIDKeyForContestants().then(() => {
+      this._sendMail();
+      this.gspread.createSpreadsheet(this.exam, () => {
+        this.router.navigate(['/exams/start-exam', this.exam.id]);
+      });  
+    });
+  }
+
+  private async _generateUUIDKeyForContestants() {
+    _.forEach(this.contestants, (contestant: IContestant) => {
+      contestant.generateUUIDKey = uuid();
     });
 
+    await Promise.all(_.forEach(this.contestants, async (contestant: IContestant) => {
+      await this.contestantDatabase.update(contestant.id, contestant);
+    }));
   }
 
   private async _sendMail() {

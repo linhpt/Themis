@@ -17,6 +17,7 @@ export interface IContestant extends IDocument {
   email?: string;
   joinDate?: string;
   dob?: string;
+  generateUUIDKey?: string;
 }
 
 export interface ITask extends IDocument {
