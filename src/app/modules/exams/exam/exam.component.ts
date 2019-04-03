@@ -12,6 +12,7 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 import * as _ from 'lodash';
 
 const fs = (<any>window).require('fs');
+const nodemailer = (<any>window).require("nodemailer");
 
 export const ROOT = 'root';
 export const SUBMISSION = 'Submission';
@@ -116,9 +117,32 @@ export class ExamComponent implements OnInit {
       this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.aliasName}`);
     });
 
+    this._sendMail();
     this.gspread.createSpreadsheet(this.exam, () => {
       this.router.navigate(['/exams/start-exam', this.exam.id]);
     });
+
+  }
+
+  private async _sendMail() {
+    let mails = _.map(this.contestants, (contestant: IContestant) => contestant.email).join(', ');
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'int10041n3@gmail.com',
+        pass: 'tinhoccoso'
+      }
+    });
+
+    let mailOptions = {
+      from: `'Themis administrator' <int10041n3@gmail.com>`,
+      to: mails,
+      subject: `Genearated key for submission mail`,
+      text: `UUID generated key`,
+      html: `<b></b>`
+    };
+
+    transporter.sendMail(mailOptions)
   }
 
   private _createFolder(folder: string) {
