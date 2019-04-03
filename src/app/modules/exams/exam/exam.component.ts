@@ -137,7 +137,6 @@ export class ExamComponent implements OnInit {
   }
 
   private async _sendMail() {
-    let mails = _.map(this.contestants, (contestant: IContestant) => contestant.email).join(', ');
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -146,15 +145,16 @@ export class ExamComponent implements OnInit {
       }
     });
 
-    let mailOptions = {
-      from: `'Themis administrator' <int10041n3@gmail.com>`,
-      to: mails,
-      subject: `Genearated key for submission mail`,
-      text: `UUID generated key`,
-      html: `<b></b>`
-    };
-
-    transporter.sendMail(mailOptions)
+    let now = new Date;
+    _.forEach(this.contestants, (contestant: IContestant) => {
+      transporter.sendMail({
+        from: `'Themis administrator' <int10041n3@gmail.com>`,
+        to: contestant.email,
+        subject: `Genearated key for submission mail${now.toString()}`,
+        text: `UUID generated key`,
+        html: `<b>${contestant.generateUUIDKey}</b>`
+      })
+    });
   }
 
   private _createFolder(folder: string) {
