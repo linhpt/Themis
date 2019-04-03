@@ -41,8 +41,10 @@ export class ContestantComponent implements OnInit {
       let now = new Date();
       this.contestant.joinDate = now.toString();
       this.contestantDatabase.add(this.contestant);
-      this.back();
+    } else if (this.action == 'edit') {
+      this.contestantDatabase.update(this.contestant.id, this.contestant);
     }
+    this.back();
   }
 
   back() {
