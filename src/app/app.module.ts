@@ -10,19 +10,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 const appRoutes: Routes = [
   {
     path: '',
-    loadChildren: './modules/home/home.module#HomeModule'
+    loadChildren: './modules/home#HomeModule'
   },
   {
     path: 'exams',
-    loadChildren: './modules/exams/exams.module#ExamsModule',
+    loadChildren: './modules/exams#ExamsModule',
   },
   {
     path: 'tasks',
-    loadChildren: './modules/tasks/tasks.module#TasksModule',
+    loadChildren: './modules/tasks#TasksModule',
   },
   {
     path: 'contestants',
-    loadChildren: './modules/contestants/contestants.module#ContestantsModule',
+    loadChildren: './modules/contestants#ContestantsModule',
   }
 ];
 
