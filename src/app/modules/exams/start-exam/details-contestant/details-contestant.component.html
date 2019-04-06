@@ -14,5 +14,8 @@
       <td>{{ details.timeSubmitted | dateFormat }}</td>
       <td>{{ details.score }}</td>
     </tr>
+    <tr *ngIf="!contestantDetails || !contestantDetails.length">
+      <td colspan="4" class="text-center">There is no submit for this contestant yet!</td>
+    </tr>
   </tbody>
 </table>
