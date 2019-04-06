@@ -25,6 +25,7 @@ export const SPECIAL_CHARS = {
 
 export const PATTERNS = {
   COLONE_TRIANGLE_BULLET: /:|‣/,
+  FNAME_REGEX: /[[\]]{1,2}/
 }
 
 export interface IResult {
@@ -40,6 +41,11 @@ export interface IContestantRank extends IContestant {
 
 export const SUBMIT_SHEMA = ['id', 'contestantName', 'taskName', 'examName', 'timeSubmission', 'score'];
 
+export interface IContestantWithKey {
+  id: number;
+  generateUUIDKey: string;
+}
+
 @Component({
   selector: 'app-start-exam',
   templateUrl: './start-exam.component.html',
@@ -51,6 +57,8 @@ export class StartExamComponent implements OnInit, OnDestroy {
   @ViewChild(RankingsContestantComponent) rankingsContestant: RankingsContestantComponent;
   exam: IExam = {};
   examId: number;
+
+  private _contestants: IContestantWithKey[];
 
   private driveEvent: any;
   private logsEvent: any;
@@ -74,6 +82,12 @@ export class StartExamComponent implements OnInit, OnDestroy {
   ) {
     this.route.params.subscribe(async (params: Params) => {
       this.examId = +params['id'];
+      this.contestantDatabase.getByExamId(this.examId).then((contestants: IContestant[]) => {
+        this._contestants = _.map(contestants, (contestant: IContestant) => (<IContestantWithKey>{
+          id: contestant.id,
+          generateUUIDKey: contestant.generateUUIDKey
+        }));
+      });
       this.exam = await this.examDatabase.getById(this.examId);
     });
   }
@@ -100,8 +114,29 @@ export class StartExamComponent implements OnInit, OnDestroy {
   private moveToSumission = (absolutePath: string) => {
     const tokens = path.normalize(absolutePath).split('\\');
     const fileName = tokens[tokens.length - 1];
-    const dataPath = `${this.submitDir}\\${fileName}`;
-    fs.createReadStream(absolutePath).pipe(fs.createWriteStream(dataPath));
+    let res = this.checkValid(fileName);
+    if (typeof res == 'boolean' && !res) {
+      fs.unlink(absolutePath, () => {
+        console.log('File name is invalid. Removed!');
+      }); 
+    } else if (typeof res == 'string') {
+      const dataPath = `${this.submitDir}\\${res}`;
+      fs.createReadStream(absolutePath).pipe(fs.createWriteStream(dataPath));  
+    }
+  }
+
+  private checkValid(fileName: string) {
+    let [submitTime, privateKey, id, task, extention] = fileName.split(PATTERNS.FNAME_REGEX);
+    let valid = this.checkIdMatchUUID(+id, privateKey);
+    if (valid) {
+      return `${submitTime}[${id}][${task}]${extention}`;
+    } else {
+      return false;
+    }
+  }
+
+  private checkIdMatchUUID(id: number, uuid: string) {
+    return _.some(this._contestants, (contestant: IContestant) => contestant.id == id && contestant.generateUUIDKey == uuid);
   }
 
   private onCreateLogs = (absolutePath: string) => {
@@ -138,7 +173,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
       submit.contestantName = contestant.aliasName;
       submit.taskName = task.name;
       submit.examName = this.exam.name;
-  
+
       this.gspread.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
       this.rankingsContestant.refesh();
       if (this.showPanel) {
