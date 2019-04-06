@@ -16,6 +16,7 @@ export class TaskComponent implements OnInit {
   @Input() action: string;
   taskForm: FormGroup;
   submitted: boolean = false;
+  editTask: boolean = false;
   private _examId: number;
   private _taskId: number;
 
@@ -121,6 +122,10 @@ export class TaskComponent implements OnInit {
   removeTest(index: number) {
     const tests = <FormArray>this.taskForm.controls['tests'];
     tests.removeAt(index);
+  }
+
+  edit() {
+    this.editTask = true;
   }
 
   back() {
