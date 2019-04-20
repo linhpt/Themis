@@ -32,7 +32,8 @@
 
   <div class="row">
     <div class="col">
-      <table class="table table-bordered">
+      <app-search (search)="searchContestant($event)" (reset)="resetContestant()" [pHolder]="'Search Contestant by Name'"></app-search>
+      <table class="table table-bordered mt-3">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -71,7 +72,8 @@
       </table>
     </div>
     <div class="col">
-      <table class="table table-bordered">
+      <app-search (search)="searchTask($event)" (reset)="resetTask()" [pHolder]="'Search Task by Name'"></app-search>
+      <table class="table table-bordered mt-3">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -91,8 +93,7 @@
               <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.id]">
                 <i class="fa fa-eye" aria-hidden="true"></i>
               </a>
-              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started"
-                (click)="remove(task.id, 'Task')">
+              <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="remove(task.id, 'Task')">
                 <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </td>

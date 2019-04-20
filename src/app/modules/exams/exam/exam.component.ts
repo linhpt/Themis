@@ -30,6 +30,8 @@ export class ExamComponent implements OnInit {
   exam: IExam = {};
   tasks: ITask[] = [];
   contestants: IContestant[] = [];
+  private originContestants: IContestant[] = [];
+  private originTasks: ITask[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -48,6 +50,8 @@ export class ExamComponent implements OnInit {
       this.exam = await this.examDatabase.getById(id);
       this.tasks = await this.taskDatabase.getByExamId(id);
       this.contestants = await this.contestantDatabase.getByExamId(id);
+      this.originContestants = _.cloneDeep(this.contestants);
+      this.originTasks = _.cloneDeep(this.tasks);
     });
   }
 
@@ -168,6 +172,27 @@ export class ExamComponent implements OnInit {
     fs.writeFile(absolutePath, content, (err: string) => {
       if (err) return console.log(err);
     });
+  }
+
+  searchContestant(name: string) {
+    this.contestants = _.filter(this.originContestants, (contestant: IContestant) => {
+      return _.lowerCase(contestant.aliasName).indexOf(_.lowerCase(name)) > -1 || 
+              _.lowerCase(contestant.fullName).indexOf(_.lowerCase(name)) > -1;
+    });
+  }
+
+  resetContestant() {
+    this.contestants = _.cloneDeep(this.originContestants);
+  }
+
+  searchTask(name: string) {
+    this.tasks = _.filter(this.originTasks, (task: ITask) => {
+      return _.lowerCase(task.name).indexOf(_.lowerCase(name)) > -1;
+    });
+  }
+
+  resetTask() {
+    this.tasks = _.cloneDeep(this.originTasks);
   }
 
   back() {

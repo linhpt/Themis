@@ -4,7 +4,7 @@
       <i class="fa fa-refresh" aria-hidden="true"></i>
     </button>
   </div>
-  <input type="text" class="form-control" placeholder="Search by Name" [(ngModel)]="name">
+  <input type="text" class="form-control" [placeholder]="pHolder" [(ngModel)]="name">
   <div class="input-group-append">
     <button type="button" class="btn btn-outline-secondary" (click)="searchByName()">
       <i class="fa fa-search-plus"></i>

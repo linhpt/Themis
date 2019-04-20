@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'app-search',
@@ -7,6 +7,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
+  @Input() pHolder: string = 'Search by Name';
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
   @Output() reset: EventEmitter<void> = new EventEmitter<void>();
   name: string;
