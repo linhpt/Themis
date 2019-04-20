@@ -1,0 +1,13 @@
+<div class="input-group mt-3">
+  <div class="input-group-prepend">
+    <button type="button" class="btn btn-outline-secondary" (click)="resetSearch()">
+      <i class="fa fa-refresh" aria-hidden="true"></i>
+    </button>
+  </div>
+  <input type="text" class="form-control" placeholder="Search by Name" [(ngModel)]="name">
+  <div class="input-group-append">
+    <button type="button" class="btn btn-outline-secondary" (click)="searchByName()">
+      <i class="fa fa-search-plus"></i>
+    </button>
+  </div>
+</div>
