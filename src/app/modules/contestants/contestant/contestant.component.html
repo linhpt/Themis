@@ -19,7 +19,7 @@
           <label for="aliasName">Alias Name</label>
           <input type="text" class="form-control" name="aliasName" [(ngModel)]="contestant.aliasName"
             #aliasName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && aliasName.invalid }" required
-            placeholder="Alias Name" [readonly]="action == 'edit'" />
+            placeholder="Alias Name" />
           <div *ngIf="f.submitted && aliasName.invalid" class="invalid-feedback">
             <div *ngIf="aliasName.errors.required">Alias Name is required</div>
           </div>
