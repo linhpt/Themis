@@ -28,6 +28,9 @@
           <a role="button" [routerLink]="['/exams/exam', exam.id]" class="btn btn-primary mr-1">
             <i class="fa fa-eye" aria-hidden="true"></i>
           </a>
+          <a role="button" [routerLink]="['/exams/edit-exam', exam.id]" class="btn btn-primary mr-1">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </a>
           <button role="button" class="btn btn-danger" (click)="remove(exam.id)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>

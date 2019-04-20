@@ -27,13 +27,18 @@ export class FormExamComponent implements OnInit {
   }
 
   onSubmit() {
+    let now = new Date();
+    this.exam.timeCreated = now.toString();
+    this.exam.started = false;
     if (this.action == 'create') {
-      let now = new Date();
-      this.exam.timeCreated = now.toString();
-      this.exam.started = false;
       this.examDatabase.add(this.exam).then(() => {
         this.back();
       });  
+    } else if (this.action == 'edit') {
+      this.examDatabase.update(this.exam.id, this.exam).then(() => {
+        this.back();
+      });  
+
     }
   }
 

@@ -9,11 +9,15 @@
   <div class="row">
     <div class="col">
       <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+        <div class="form-group" *ngIf="action == 'edit'">
+          <label for="name">Exam ID</label>
+          <input type="text" class="form-control" name="examId" [(ngModel)]="exam.id" #examId="ngModel" readonly />
+        </div>
+
         <div class="form-group">
           <label for="name">Name</label>
           <input type="text" class="form-control" name="name" [(ngModel)]="exam.name" #name="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required [readonly]="action == 'edit'"
-            placeholder="Exam name" />
+            [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required placeholder="Exam name" />
           <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
             <div *ngIf="name.errors.required">Exam Name is required</div>
           </div>
@@ -23,14 +27,15 @@
           <label for="description">Description</label>
           <input type="text" class="form-control" name="description" [(ngModel)]="exam.description"
             #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
-            [readonly]="action == 'edit'" placeholder="Description is required" />
+            placeholder="Description is required" />
           <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
             <div *ngIf="description.errors.required">Description is required</div>
           </div>
         </div>
 
-        <div class="form-group" *ngIf="action == 'create'">
-          <button class="btn btn-primary">Create Exam</button>
+        <div class="form-group">
+          <button class="btn btn-primary" *ngIf="action == 'create'">Create Exam</button>
+          <button class="btn btn-primary" *ngIf="action == 'edit'">Save Exam</button>
         </div>
       </form>
     </div>
