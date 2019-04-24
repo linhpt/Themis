@@ -126,6 +126,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
   }
 
   private checkValid(fileName: string) {
+    console.log('fileName', fileName);
     let [submitTime, privateKey, id, task, extention] = fileName.split(PATTERNS.FNAME_REGEX);
     let valid = this.checkIdMatchUUID(+id, privateKey);
     if (valid) {
@@ -144,6 +145,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
     fs.readFile(absolutePath, { encoding: 'utf-8' }, async (err: string, content: string) => {
       if (err) return console.error('error while reading logs', err);
 
+      console.log('content', content);
       //Success reading logs
       const [firstLine] = content.split(SPECIAL_CHARS.NEWLINE);
       const [aliasName, taskName, score] = firstLine.split(PATTERNS.COLONE_TRIANGLE_BULLET);
@@ -157,7 +159,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
       if (!task) return console.error('error: cannot find task with taskName', taskName);
 
       let contestants = await this.contestantDatabase.getByExamId(this.examId);
-      let contestant = _.find(contestants, (contestant: IContestant) => contestant.aliasName == aliasName.trim());
+      let contestant = _.find(contestants, (contestant: IContestant) => contestant.id == +aliasName.trim());
 
       if (!contestant) return console.error('error: cannot find contestant with aliasName', aliasName);
 

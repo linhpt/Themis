@@ -119,7 +119,7 @@ export class ExamComponent implements OnInit {
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.aliasName}`);
+      this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
     });
 
     this._generateUUIDKeyForContestants().then(() => {
