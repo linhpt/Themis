@@ -13,6 +13,7 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 export class ContestantComponent implements OnInit {
 
   @Input() action: string;
+  editMode = false;
   contestant: IContestant = {};
 
   constructor(
@@ -45,6 +46,10 @@ export class ContestantComponent implements OnInit {
       this.contestantDatabase.update(this.contestant.id, this.contestant);
     }
     this.back();
+  }
+
+  edit() {
+    this.editMode = true;
   }
 
   back() {

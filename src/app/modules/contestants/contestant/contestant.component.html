@@ -1,7 +1,10 @@
 <div class="container-fluid mt-3">
   <div class="row">
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" (click)="back()">
+      <button role="button" class="btn btn-primary text-white" *ngIf="action == 'edit' && !editMode" (click)="edit()">
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+      </button>
+      <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </button>
     </div>
@@ -19,7 +22,7 @@
           <label for="aliasName">Alias Name</label>
           <input type="text" class="form-control" name="aliasName" [(ngModel)]="contestant.aliasName"
             #aliasName="ngModel" [ngClass]="{ 'is-invalid': f.submitted && aliasName.invalid }" required
-            placeholder="Alias Name" />
+            placeholder="Alias Name" [readonly]="!editMode" />
           <div *ngIf="f.submitted && aliasName.invalid" class="invalid-feedback">
             <div *ngIf="aliasName.errors.required">Alias Name is required</div>
           </div>
@@ -28,7 +31,8 @@
         <div class="form-group">
           <label for="fullName">Full Name</label>
           <input type="text" class="form-control" name="fullName" [(ngModel)]="contestant.fullName" #fullName="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && fullName.invalid }" required placeholder="Full Name" />
+            [ngClass]="{ 'is-invalid': f.submitted && fullName.invalid }" required placeholder="Full Name"
+            [readonly]="!editMode" />
           <div *ngIf="f.submitted && fullName.invalid" class="invalid-feedback">
             <div *ngIf="fullName.errors.required">Full Name is required</div>
           </div>
@@ -37,7 +41,8 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" class="form-control" name="email" [(ngModel)]="contestant.email" #email="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required placeholder="Email" />
+            [ngClass]="{ 'is-invalid': f.submitted && email.invalid }" required placeholder="Email"
+            [readonly]="!editMode" />
           <div *ngIf="f.submitted && aliasName.invalid" class="invalid-feedback">
             <div *ngIf="email.errors.required">Email is required</div>
           </div>
@@ -46,15 +51,16 @@
         <div class="form-group">
           <label for="dob">Date of Birth</label>
           <input type="text" class="form-control" name="dob" [(ngModel)]="contestant.dob" #dob="ngModel"
-            [ngClass]="{ 'is-invalid': f.submitted && dob.invalid }" required placeholder="Date of Birth" />
+            [ngClass]="{ 'is-invalid': f.submitted && dob.invalid }" required placeholder="Date of Birth"
+            [readonly]="!editMode" />
           <div *ngIf="f.submitted && dob.invalid" class="invalid-feedback">
             <div *ngIf="dob.errors.required">Date of Birth is required</div>
           </div>
         </div>
 
         <div class="form-group">
-          <button class="btn btn-primary" *ngIf="action == 'create'">Create Contestant</button>
-          <button class="btn btn-primary" *ngIf="action == 'edit'">Save Contestant</button>
+          <button class="btn btn-primary" *ngIf="action == 'create'">Create</button>
+          <button class="btn btn-primary" *ngIf="action == 'edit'">Save</button>
         </div>
       </form>
     </div>
