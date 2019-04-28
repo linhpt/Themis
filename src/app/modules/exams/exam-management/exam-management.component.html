@@ -93,11 +93,9 @@
             </button>
           </td>
         </tr>
-        <tr *ngIf="tasks.length == 0">
-          <td colspan="5" class="text-center">There is no tasks in this Exam</td>
-        </tr>
-        <tr *ngIf="tasks.length > 0">
-          <td colspan="5" class="text-center">Total {{ tasks.length }} tasks in this Exam</td>
+        <tr>
+          <td *ngIf="tasks.length == 0" colspan="5" class="text-center">There is no tasks in this Exam</td>
+          <td *ngIf="tasks.length > 0" colspan="5" class="text-center">Total {{ tasks.length }} tasks in this Exam</td>
         </tr>
       </table>
     </div>

@@ -33,11 +33,9 @@
         </button>
       </td>
     </tr>
-    <tr *ngIf="exams.length == 0">
-      <td colspan="5" class="text-center">There is no Exam yet</td>
-    </tr>
-    <tr *ngIf="exams.length > 0">
-      <td colspan="5" class="text-center">Total {{ exams.length }} Exam</td>
+    <tr>
+      <td *ngIf="exams.length == 0" colspan="5" class="text-center">There is no Exam yet</td>
+      <td *ngIf="exams.length > 0" colspan="5" class="text-center">Total {{ exams.length }} Exam</td>
     </tr>
   </table>
 </div>
