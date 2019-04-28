@@ -18,8 +18,8 @@ const routes: Routes = [
     component: ExamsComponent,
     children: [
       {
-        path: 'exam/:id',
-        component: ExamComponent
+        path: 'exam-management/:id',
+        component: ExamManagementComponent
       },
       {
         path: 'create-exam',

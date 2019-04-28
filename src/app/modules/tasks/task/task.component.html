@@ -16,8 +16,8 @@
           <div class="form-group col">
             <label>Name</label>
             <input type="text" formControlName="name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" placeholder="Name" [readonly]="!editTask && action != 'create'" />
-            <div *ngIf="submitted && f.name.invalid" class="invalid-feedback">
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" placeholder="Name" [readonly]="!editMode && action == 'edit'" />
+            <div *ngIf="submitted && f.name.invalid" class="invalid-feedback"></div>
               <div *ngIf="f.name.errors.required">Name is required</div>
             </div>
           </div>
@@ -27,14 +27,14 @@
           <div class="form-group col">
             <label>Description</label>
             <textarea rows="3" formControlName="description" class="form-control" placeholder="Description"
-              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" [readonly]="!editTask && action != 'create'"></textarea>
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" [readonly]="!editMode && action == 'edit'"></textarea>
             <div *ngIf="submitted && f.description.invalid" class="invalid-feedback">
               <div *ngIf="f.description.errors.required">Description is required</div>
             </div>
           </div>
         </div>
 
-        <div class="form-row" *ngIf="editTask || action == 'create'">
+        <div class="form-row" *ngIf="editMode || action == 'create'">
           <div class="form-group col-6 text-left">
             <span class="h5">Adding more cases</span>
           </div>
@@ -50,20 +50,20 @@
             <div class="form-group col-4">
               <input type="text" formControlName="name" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && form.controls.name.invalid }" placeholder="Name"
-                [readonly]="!editTask && action != 'create'" />
+                [readonly]="!editMode && action == 'edit'" />
             </div>
             <div class="form-group col-4">
               <textarea formControlName="input" rows="2" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && form.controls.input.invalid }" placeholder="Input"
-                [readonly]="!editTask && action != 'create'"></textarea>
+                [readonly]="!editMode && action == 'edit'"></textarea>
             </div>
             <div class="form-group col-4">
               <textarea formControlName="output" rows="2" class="form-control"
                 [ngClass]="{ 'is-invalid': submitted && form.controls.output.invalid }" placeholder="Output"
-                [readonly]="!editTask && action != 'create'"></textarea>
+                [readonly]="!editMode && action == 'edit'"></textarea>
             </div>
             <div class="form-group col-12 text-right">
-              <button type="button" class="btn btn-danger" (click)="removeTest(i)" *ngIf="editTask || action == 'create'">
+              <button type="button" class="btn btn-danger" (click)="removeTest(i)" *ngIf="editMode || action == 'create'">
                 <i class="fa fa-times" aria-hidden="true"></i>
               </button>
             </div>
@@ -74,8 +74,9 @@
           <div class="card-body">There is no test cases for this task.</div>
         </div>
 
-        <div class="form-group mt-3" *ngIf="action == 'create' || (action == 'edit' && editTask && action != 'create')">
-          <button type="submit" class="btn btn-primary">Save Task</button>
+        <div class="form-group mt-3">
+          <button *ngIf="action == 'create'" type="submit" class="btn btn-primary">Create</button>
+          <button *ngIf="action == 'edit' && editTask" type="submit" class="btn btn-primary">Save</button>
         </div>
       </form>
     </div>

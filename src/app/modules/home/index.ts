@@ -6,9 +6,9 @@ import { InstructionsComponent } from './instructions/instructions.component';
 import { HomeComponent } from './home.component';
 import { SettingsComponent } from './settings/settings.component';
 import { FormsModule } from '@angular/forms';
-import { ExamsComponent } from './exams/exams.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { GetTokenComponent } from './get-token/get-token.component';
+import { ExamListComponent } from './exam-list/exam-list.component';
 
 
 const routes: Routes = [
@@ -18,12 +18,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'exams',
+        redirectTo: 'exam-list',
         pathMatch: 'full'
       },
       {
-        path: 'exams',
-        component: ExamsComponent
+        path: 'exam-list',
+        component: ExamListComponent
       },
       {
         path: 'settings',
@@ -44,6 +44,14 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomeComponent, AboutComponent, InstructionsComponent, SettingsComponent, SettingsComponent, ExamsComponent, GetTokenComponent]
+  declarations: [
+    HomeComponent, 
+    AboutComponent, 
+    InstructionsComponent, 
+    SettingsComponent, 
+    SettingsComponent, 
+    ExamListComponent, 
+    GetTokenComponent
+  ]
 })
 export class HomeModule { }

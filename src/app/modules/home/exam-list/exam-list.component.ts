@@ -10,11 +10,11 @@ import { ISearchListener } from 'src/app/core/interfaces/ISearchListener';
 import * as _ from 'lodash';
 
 @Component({
-  selector: 'app-exams',
-  templateUrl: './exams.component.html',
-  styleUrls: ['./exams.component.css']
+  selector: 'app-exam-list',
+  templateUrl: './exam-list.component.html',
+  styleUrls: ['./exam-list.component.css']
 })
-export class ExamsComponent implements OnInit, ISearchListener {
+export class ExamListComponent implements OnInit, ISearchListener {
 
   private exams: IExam[] = [];
   private originExams: IExam[] = [];

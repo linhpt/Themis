@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/core/services/sidebar.service';
 import { Location } from '@angular/common';
-import { ROOT, SUBMISSION } from '../../exams/exam/exam.component';
 const remote = (<any>window).require('electron').remote;
 const dialog = remote.require('electron').dialog;
 const fs = (<any>window).require('fs');

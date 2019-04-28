@@ -12,6 +12,7 @@ export class ExamComponent implements OnInit {
   @Input() action: string = '';
   @Input() examId: number;
   exam: IExam = {};
+  editMode = false;
 
   constructor(
     private examDatabase: ExamDatabase,
@@ -20,6 +21,8 @@ export class ExamComponent implements OnInit {
 
   ngOnInit() {
     if (this.action == 'edit') {
+      console.log('examId', this.examId)
+
       this.examDatabase.getById(this.examId).then((exam: IExam) => {
         this.exam = exam;
       });
@@ -34,12 +37,17 @@ export class ExamComponent implements OnInit {
       this.examDatabase.add(this.exam).then(() => {
         this.back();
       });  
-    } else if (this.action == 'edit') {
+    }
+    if (this.action == 'edit') {
       this.examDatabase.update(this.exam.id, this.exam).then(() => {
         this.back();
       });  
 
     }
+  }
+
+  edit() {
+    this.editMode = true;
   }
 
   back() {

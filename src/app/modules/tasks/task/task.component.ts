@@ -16,7 +16,7 @@ export class TaskComponent implements OnInit {
   @Input() action: string;
   taskForm: FormGroup;
   submitted: boolean = false;
-  editTask: boolean = false;
+  editMode = false;
   private examId: number;
   private taskId: number;
 
@@ -125,7 +125,7 @@ export class TaskComponent implements OnInit {
   }
 
   edit() {
-    this.editTask = true;
+    this.editMode = true;
   }
 
   back() {
