@@ -13,6 +13,7 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 export class ContestantComponent implements OnInit {
 
   @Input() action: string;
+  examStarted = false;
   editMode = false;
   contestant: IContestant = {};
 
@@ -32,6 +33,9 @@ export class ContestantComponent implements OnInit {
       if (this.action == 'edit') {
         this.contestantDatabase.getById(id).then((contestant: IContestant) => {
           this.contestant = contestant;
+          this.examDatabase.getById(contestant.examId).then((exam: IExam) => {
+            this.examStarted = exam.started;
+          });
         });  
       }
     });

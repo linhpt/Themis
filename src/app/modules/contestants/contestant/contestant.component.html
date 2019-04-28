@@ -1,7 +1,7 @@
 <div class="container-fluid mt-3">
   <div class="row">
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" *ngIf="action == 'edit' && !editMode" (click)="edit()">
+      <button role="button" class="btn btn-primary text-white" *ngIf="action == 'edit' && !editMode && !examStarted" (click)="edit()">
         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
       </button>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">

@@ -21,7 +21,6 @@ export class ExamComponent implements OnInit {
 
   ngOnInit() {
     if (this.action == 'edit') {
-      console.log('examId', this.examId)
 
       this.examDatabase.getById(this.examId).then((exam: IExam) => {
         this.exam = exam;

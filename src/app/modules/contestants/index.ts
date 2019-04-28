@@ -32,6 +32,11 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ContestantsComponent, ContestantComponent, CreateContestantComponent, EditContestantComponent]
+  declarations: [
+    ContestantsComponent, 
+    ContestantComponent, 
+    CreateContestantComponent, 
+    EditContestantComponent
+  ]
 })
 export class ContestantsModule { }

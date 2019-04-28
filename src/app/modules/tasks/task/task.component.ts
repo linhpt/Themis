@@ -1,10 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ITask, ITest } from 'src/app/core/interfaces/core';
+import { ITask, ITest, IExam } from 'src/app/core/interfaces/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import * as _ from 'lodash';
+import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const uuidv1 = (<any>window).require('uuid/v1');
 
 @Component({
@@ -17,6 +18,7 @@ export class TaskComponent implements OnInit {
   taskForm: FormGroup;
   submitted: boolean = false;
   editMode = false;
+  examStarted = false;
   private examId: number;
   private taskId: number;
 
@@ -28,6 +30,7 @@ export class TaskComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private examDatabase: ExamDatabase,
     private taskDatabase: TaskDatabase
   ) { }
 
@@ -83,6 +86,10 @@ export class TaskComponent implements OnInit {
           examId: task.examId,
           name: task.name,
           description: task.description
+        });
+
+        this.examDatabase.getById(task.examId).then((exam: IExam) => {
+          this.examStarted = exam.started;
         });
 
         _.forEach(task.tests, (test: ITest) => {
