@@ -125,7 +125,7 @@ export class ExamComponent implements OnInit {
     this._generateUUIDKeyForContestants().then(() => {
       this._sendMail();
       this.gspread.createSpreadsheet(this.exam, () => {
-        this.router.navigate(['/exams/start-exam', this.exam.id]);
+        this.router.navigate(['/exams/online-exam', this.exam.id]);
       });  
     });
   }

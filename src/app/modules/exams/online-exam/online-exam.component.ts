@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { IExam, IContestant, ISubmission, ITask, } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
@@ -16,42 +16,14 @@ import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.se
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
 import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
-
-export const SPECIAL_CHARS = {
-  TRIANGULAR_BULLET: 0x2023,
-  NEWLINE: '\n',
-  COLON: ':'
-}
-
-export const PATTERNS = {
-  COLONE_TRIANGLE_BULLET: /:|‣/,
-  FNAME_REGEX: /[[\]]{1,2}/
-}
-
-export interface IResult {
-  contestantId: number;
-  taskName: string;
-  content: string;
-}
-
-export interface IContestantRank extends IContestant {
-  rank?: number;
-  score?: number;
-}
-
-export const SUBMIT_SHEMA = ['id', 'contestantName', 'taskName', 'examName', 'timeSubmission', 'score'];
-
-export interface IContestantWithKey {
-  id: number;
-  generateUUIDKey: string;
-}
+import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA } from './item.models';
 
 @Component({
-  selector: 'app-start-exam',
-  templateUrl: './start-exam.component.html',
-  styleUrls: ['./start-exam.component.css']
+  selector: 'online-exam',
+  templateUrl: './online-exam.component.html',
+  styleUrls: ['./online-exam.component.css']
 })
-export class StartExamComponent implements OnInit, OnDestroy {
+export class OnlineExamComponent implements OnInit, OnDestroy {
 
   @ViewChild(DetailsContestantComponent) detailContestant: DetailsContestantComponent;
   @ViewChild(RankingsContestantComponent) rankingsContestant: RankingsContestantComponent;

@@ -6,11 +6,11 @@ import { CreateExamComponent } from './create-exam/create-exam.component';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { StartExamComponent } from './start-exam/start-exam.component';
 import { CoreModule } from 'src/app/core/core.module';
 import { FormExamComponent } from './form-exam/form-exam.component';
-import { DetailsContestantComponent } from './start-exam/details-contestant/details-contestant.component';
-import { RankingsContestantComponent } from './start-exam/rankings-contestant/rankings-contestant.component';
+import { OnlineExamComponent } from './online-exam/online-exam.component';
+import { DetailsContestantComponent } from './online-exam/details-contestant/details-contestant.component';
+import { RankingsContestantComponent } from './online-exam/rankings-contestant/rankings-contestant.component';
 
 const routes: Routes = [
   {
@@ -30,8 +30,8 @@ const routes: Routes = [
         component: EditExamComponent
       },
       {
-        path: 'start-exam/:id',
-        component: StartExamComponent
+        path: 'online-exam/:id',
+        component: OnlineExamComponent
       },
     ]
   }
@@ -44,13 +44,14 @@ const routes: Routes = [
     CoreModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ExamsComponent,
+  declarations: [
+    ExamsComponent,
     ExamComponent,
     CreateExamComponent,
     EditExamComponent,
-    StartExamComponent,
     FormExamComponent,
     DetailsContestantComponent,
-    RankingsContestantComponent]
+    RankingsContestantComponent
+  ]
 })
 export class ExamsModule { }

@@ -1,10 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { contestantSubmission } from '../mock';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { IContestant, ISubmission, IExam, ITask } from 'src/app/core/interfaces/core';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
-import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 import * as _ from 'lodash';
 
 export interface IContestantSubmission extends IContestant {

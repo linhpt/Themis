@@ -1,11 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
-import { IContestantRank } from '../start-exam.component';
 import { ISubmission, IExam, IContestant } from 'src/app/core/interfaces/core';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import * as _ from 'lodash';
 import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
+import { IContestantRank } from '../item.models';
 
 export const SCHEMAS = ['rank', 'id', 'fullName', 'aliasName', 'joinDate', 'dob', 'score'];
 
