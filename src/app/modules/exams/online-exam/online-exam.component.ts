@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef, ViewChild } from '@ang
 import { ActivatedRoute, Params } from '@angular/router';
 import { IExam, IContestant, ISubmission, ITask, } from 'src/app/core/interfaces/core';
 import { Location } from '@angular/common';
-import { DRIVE, SUBMISSION, ROOT } from '../exam/exam.component';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
 const fs = (<any>window).require('fs');
@@ -17,6 +16,7 @@ import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
 import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
 import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA } from './item.models';
+import { ROOT, DRIVE, SUBMISSION } from '../exam-management/exam-management.component';
 
 @Component({
   selector: 'online-exam',

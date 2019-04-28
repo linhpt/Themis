@@ -1,0 +1,116 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col text-left">
+      <h5>Exam: {{ exam.name }}</h5>
+    </div>
+    <div class="col text-right">
+      <button role="button" class="btn btn-primary text-white" (click)="start()">
+        Start this exam
+      </button>
+      <a role="button" class="btn btn-primary text-white ml-1"
+        [routerLink]="['/contestants/create-contestant', exam.id]" *ngIf="!exam.started">
+        Add more contestant
+      </a>
+      <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.id]"
+        *ngIf="!exam.started">
+        Add more task
+      </a>
+      <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col">
+      <p>
+        <span>Sheet ID: </span>
+        <span class="font-weight-light font-italic">{{ exam.sheetId }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <app-search (search)="searchContestant($event)" (reset)="resetContestant()"
+        [pHolder]="'Search Contestant by Name'"></app-search>
+      <table class="table table-bordered mt-3">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Full name</th>
+          <th scope="col">Alias name</th>
+          <th scope="col">Join date</th>
+          <th scope="col">DoB</th>
+          <th scope="col">Action</th>
+        </tr>
+        <tr *ngFor="let contestant of contestants">
+          <th scope="row">{{ contestant.id }}</th>
+          <td>{{ contestant.fullName }}</td>
+          <td>{{ contestant.aliasName }}</td>
+          <td>{{ contestant.joinDate | dateFormat}}</td>
+          <td>{{ contestant.dob }}</td>
+          <td [class.w-25]="!exam.started" [class.w-10]="exam.started">
+            <a role="button" class="btn btn-primary mr-1 text-white"
+              [routerLink]="['/contestants/edit-contestant', contestant.id]">
+              <i class="fa fa-eye" aria-hidden="true"></i>
+            </a>
+            <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started"
+              (click)="remove(contestant.id, 'Contestant')">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="contestants.length == 0">
+          <td colspan="6" class="text-center">There is no contestants in this Exam</td>
+        </tr>
+        <tr *ngIf="contestants.length > 0">
+          <td colspan="6" class="text-center">Total {{ contestants.length }} contestants in this Exam</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col">
+      <app-search (search)="searchTask($event)" (reset)="resetTask()" [pHolder]="'Search Task by Name'"></app-search>
+      <table class="table table-bordered mt-3">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Time Created</th>
+          <th scope="col">Description</th>
+          <th scope="col" style="width: 25%">Action</th>
+        </tr>
+
+        <tr *ngFor="let task of tasks; let i = index">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ task.name }}</td>
+          <td>{{ task.timeCreated | dateFormat }}</td>
+          <td>{{ task.description }}</td>
+          <td [class.w-20]="!exam.started" [class.w-10]="exam.started">
+            <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.id]">
+              <i class="fa fa-eye" aria-hidden="true"></i>
+            </a>
+            <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="remove(task.id, 'Task')">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="tasks.length == 0">
+          <td colspan="5" class="text-center">There is no tasks in this Exam</td>
+        </tr>
+        <tr *ngIf="tasks.length > 0">
+          <td colspan="5" class="text-center">Total {{ tasks.length }} tasks in this Exam</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-body text-center">
+          <span class="h5">{{ exam.name }}</span>
+          <span class="ml-2">{{ exam.timeCreated }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

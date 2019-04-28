@@ -8,7 +8,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class EditExamComponent implements OnInit {
   action = 'edit';
-  _examId: number;
+  examId: number;
 
   constructor(
     private route: ActivatedRoute
@@ -16,7 +16,7 @@ export class EditExamComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
-      this._examId = +params['id'];
+      this.examId = +params['id'];
     });
   }
 }

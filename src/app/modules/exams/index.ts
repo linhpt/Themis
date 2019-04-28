@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExamsComponent } from './exams.component';
-import { ExamComponent } from './exam/exam.component';
 import { CreateExamComponent } from './create-exam/create-exam.component';
 import { EditExamComponent } from './edit-exam/edit-exam.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CoreModule } from 'src/app/core/core.module';
-import { FormExamComponent } from './form-exam/form-exam.component';
 import { OnlineExamComponent } from './online-exam/online-exam.component';
 import { DetailsContestantComponent } from './online-exam/details-contestant/details-contestant.component';
 import { RankingsContestantComponent } from './online-exam/rankings-contestant/rankings-contestant.component';
+import { ExamComponent } from './exam/exam.component';
+import { ExamManagementComponent } from './exam-management/exam-management.component';
 
 const routes: Routes = [
   {
@@ -46,10 +46,11 @@ const routes: Routes = [
   ],
   declarations: [
     ExamsComponent,
-    ExamComponent,
+    ExamManagementComponent,
     CreateExamComponent,
     EditExamComponent,
-    FormExamComponent,
+    ExamComponent,
+    OnlineExamComponent,
     DetailsContestantComponent,
     RankingsContestantComponent
   ]

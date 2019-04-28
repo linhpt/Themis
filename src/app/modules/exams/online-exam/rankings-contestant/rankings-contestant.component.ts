@@ -19,7 +19,7 @@ export class RankingsContestantComponent implements OnInit {
   @Input() examId: number;
   @Output() contestant = new EventEmitter<number>();
   contestants: IContestantRank[] = [];
-  _exam: IExam;
+  exam: IExam;
 
   viewDetailContestant(contestantId: number) {
     this.contestant.emit(contestantId);
@@ -36,14 +36,14 @@ export class RankingsContestantComponent implements OnInit {
 
   ngOnInit() {
     this.init().then((contestantRank: IContestantRank[]) => {
-      this._updateRanking(contestantRank);
+      this.updateRanking(contestantRank);
       this.cd.detectChanges();
     });
   }
 
   async init() {
     this.contestants.length = 0;
-    this._exam = await this.examDatabase.getById(this.examId);
+    this.exam = await this.examDatabase.getById(this.examId);
     this.contestants.push(...<IContestantRank[]>await this.contestantDatabase.getByExamId(this.examId));
 
     if (!this.contestants || !this.contestants.length) console.error('error: contestants empty with examId', this.examId);
@@ -72,18 +72,18 @@ export class RankingsContestantComponent implements OnInit {
 
   refresh() {
     this.init().then((contestantRank: IContestantRank[]) => {
-      this._updateRanking(contestantRank);
+      this.updateRanking(contestantRank);
       this.cd.detectChanges();
     });
 
   }
 
-  private _updateRanking(contestantRank: IContestantRank[]) {
+  updateRanking(contestantRank: IContestantRank[]) {
     let values = [];
     _.forEach(contestantRank, (contestant: IContestantRank) => {
       values.push(_.at(contestant, SCHEMAS));
     });
-    this.gspread.updateRankings(this._exam, values);
+    this.gspread.updateRankings(this.exam, values);
   }
 
 }

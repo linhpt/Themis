@@ -17,8 +17,8 @@ export class TaskComponent implements OnInit {
   taskForm: FormGroup;
   submitted: boolean = false;
   editTask: boolean = false;
-  private _examId: number;
-  private _taskId: number;
+  private examId: number;
+  private taskId: number;
 
   get f() {
     return this.taskForm.controls;
@@ -35,7 +35,7 @@ export class TaskComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
 
       const id = +params['id'];
-      this.action == 'create' ? this._examId = id : this._taskId = id;
+      this.action == 'create' ? this.examId = id : this.taskId = id;
 
       this.taskForm = this.fb.group({
         id: [''],
@@ -69,13 +69,13 @@ export class TaskComponent implements OnInit {
       const now = new Date;
       this.taskForm.patchValue({
         timeCreated: now.toString(),
-        examId: this._examId
+        examId: this.examId
       });
 
       delete this.taskForm.controls['id'];
 
     } else if (this.action == 'edit') {
-      this.taskDatabase.getById(this._taskId).then((task: ITask) => {
+      this.taskDatabase.getById(this.taskId).then((task: ITask) => {
 
         this.taskForm.patchValue({
           id: task.id,

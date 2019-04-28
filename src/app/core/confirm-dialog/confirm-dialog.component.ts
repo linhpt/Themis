@@ -10,10 +10,10 @@ export class ConfirmDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  _message: string;
-  _title: string;
+  message: string;
+  title: string;
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
-    this._title = data.title;
-    this._message = data.message;
+    this.title = data.title;
+    this.message = data.message;
   }
 }

@@ -21,9 +21,9 @@ export class DetailsContestantComponent {
   @Input() contestantId: number;
   @Input() exam: IExam;
 
-  _contestant: IContestant;
-  _submissions: ISubmission[];
-  _tasks: ITask[];
+  contestant: IContestant;
+  submissions: ISubmission[];
+  tasks: ITask[];
 
   contestantDetails: IContestantSubmission[];
   constructor(
@@ -36,18 +36,18 @@ export class DetailsContestantComponent {
   async view() {
     this.contestantDetails = [];
 
-    this._contestant = await this.contestantDatabase.getById(this.contestantId);
-    this._submissions = await this.submissionDatabase.getByContestantId(this.contestantId);
+    this.contestant = await this.contestantDatabase.getById(this.contestantId);
+    this.submissions = await this.submissionDatabase.getByContestantId(this.contestantId);
 
-    this._tasks = await this.taskDatabase.getByExamId(this.exam.id);
+    this.tasks = await this.taskDatabase.getByExamId(this.exam.id);
 
-    _.forEach(this._submissions, (submission: ISubmission) => {
-      let task = _.find(this._tasks, (task: ITask) => task.id == submission.taskId);
+    _.forEach(this.submissions, (submission: ISubmission) => {
+      let task = _.find(this.tasks, (task: ITask) => task.id == submission.taskId);
       const taskName = task.name;
       const timeSubmitted = submission.timeSubmission;
 
       this.contestantDetails.push({
-        ...this._contestant,
+        ...this.contestant,
         taskName,
         timeSubmitted,
         score: +submission.score
