@@ -8,6 +8,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { MatDialogModule, MatButtonModule } from '@angular/material';
 import { SearchComponent } from './search/search.component';
 import { FormsModule } from '@angular/forms';
+import { DescriptionPipe } from './pipes/description.pipe';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { FormsModule } from '@angular/forms';
     HeaderComponent,
     FooterComponent,
     DateFormatPipe,
+    DescriptionPipe,
     SearchComponent,
     ConfirmDialogComponent
   ],
@@ -27,7 +29,13 @@ import { FormsModule } from '@angular/forms';
     SidebarService,
     DateFormatPipe,
   ],
-  declarations: [HeaderComponent, FooterComponent, DateFormatPipe, ConfirmDialogComponent, SearchComponent],
+  declarations: [
+    HeaderComponent, 
+    FooterComponent, 
+    DateFormatPipe, 
+    DescriptionPipe,
+    ConfirmDialogComponent, 
+    SearchComponent],
   entryComponents: [
     ConfirmDialogComponent
   ]

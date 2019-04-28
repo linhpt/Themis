@@ -83,7 +83,7 @@
           <th scope="row">{{ i + 1 }}</th>
           <td>{{ task.name }}</td>
           <td>{{ task.timeCreated | dateFormat }}</td>
-          <td>{{ task.description }}</td>
+          <td>{{ task.description | description: 20 }}</td>
           <td [class.w-20]="!exam.started" [class.w-10]="exam.started">
             <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.id]">
               <i class="fa fa-eye" aria-hidden="true"></i>
