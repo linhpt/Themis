@@ -70,7 +70,7 @@ export class RankingsContestantComponent implements OnInit {
 
   }
 
-  refesh() {
+  refresh() {
     this.init().then((contestantRank: IContestantRank[]) => {
       this._updateRanking(contestantRank);
       this.cd.detectChanges();

@@ -177,7 +177,7 @@ export class StartExamComponent implements OnInit, OnDestroy {
       submit.examName = this.exam.name;
 
       this.gspread.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
-      this.rankingsContestant.refesh();
+      this.rankingsContestant.refresh();
       if (this.showPanel) {
         this.detailContestant.refresh();
       }
