@@ -14,8 +14,8 @@ import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.se
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
-import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
-import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA } from './item.models';
+import { SpreadsheetService } from 'src/app/core/services/sheet-utils/spreadsheet.service';
+import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA } from '../../models/item.models';
 import { ROOT, DRIVE, SUBMISSION } from '../exam-management/exam-management.component';
 
 @Component({
@@ -50,7 +50,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
     private taskDatabase: TaskDatabase,
-    private gspread: GspreadUtils
+    private spreadsheetService: SpreadsheetService
   ) {
     this.route.params.subscribe(async (params: Params) => {
       this.examId = +params['id'];
@@ -148,7 +148,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
       submit.taskName = task.name;
       submit.examName = this.exam.name;
 
-      this.gspread.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
+      this.spreadsheetService.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
       this.rankingsContestant.refresh();
       if (this.showPanel) {
         this.detailContestant.refresh();

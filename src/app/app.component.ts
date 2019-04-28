@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GspreadUtils } from './core/services/sheet-utils/gspread.service';
+import { SpreadsheetService } from './core/services/sheet-utils/spreadsheet.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,12 +12,12 @@ export class AppComponent  implements OnInit{
   title = 'Themis Editor';
 
   constructor(
-    private gspread: GspreadUtils,
+    private spreadsheetService: SpreadsheetService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    let authResult = this.gspread.authorize();
+    let authResult = this.spreadsheetService.authorize();
 
     if (!authResult) {
       this.router.navigate(['/get-token']);

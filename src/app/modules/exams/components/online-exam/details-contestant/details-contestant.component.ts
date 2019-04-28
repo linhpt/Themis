@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { IContestant, ISubmission, IExam, ITask } from 'src/app/core/interfaces/core';

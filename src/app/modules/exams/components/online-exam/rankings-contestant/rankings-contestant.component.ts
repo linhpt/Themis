@@ -1,11 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, Input, ChangeDetectorRef } from '@angular/core';
-import { ISubmission, IExam, IContestant } from 'src/app/core/interfaces/core';
+import { ISubmission, IExam } from 'src/app/core/interfaces/core';
 import { SubmissionDatabase } from 'src/app/core/services/db-utils/submission.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import * as _ from 'lodash';
-import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
+import { SpreadsheetService } from 'src/app/core/services/sheet-utils/spreadsheet.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
-import { IContestantRank } from '../item.models';
+import { IContestantRank } from '../../../models/item.models';
 
 export const SCHEMAS = ['rank', 'id', 'fullName', 'aliasName', 'joinDate', 'dob', 'score'];
 
@@ -29,7 +29,7 @@ export class RankingsContestantComponent implements OnInit {
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
     private examDatabase: ExamDatabase,
-    private gspread: GspreadUtils,
+    private spreadsheetService: SpreadsheetService,
     private cd: ChangeDetectorRef
   ) {
   }
@@ -83,7 +83,7 @@ export class RankingsContestantComponent implements OnInit {
     _.forEach(contestantRank, (contestant: IContestantRank) => {
       values.push(_.at(contestant, SCHEMAS));
     });
-    this.gspread.updateRankings(this.exam, values);
+    this.spreadsheetService.updateRankings(this.exam, values);
   }
 
 }

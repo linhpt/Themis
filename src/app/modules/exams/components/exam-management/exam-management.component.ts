@@ -4,7 +4,7 @@ import { IExam, ITask, IContestant, DocType, ITest } from 'src/app/core/interfac
 import { Location } from '@angular/common';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
-import { GspreadUtils } from 'src/app/core/services/sheet-utils/gspread.service';
+import { SpreadsheetService } from 'src/app/core/services/sheet-utils/spreadsheet.service';
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.service';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
@@ -38,7 +38,7 @@ export class ExamManagementComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private router: Router,
-    private gspread: GspreadUtils,
+    private spreadsheetService: SpreadsheetService,
     private taskDatabase: TaskDatabase,
     private examDatabase: ExamDatabase,
     private contestantDatabase: ContestantDatabase
@@ -122,7 +122,7 @@ export class ExamManagementComponent implements OnInit {
 
     this.generateUUIDKeyForContestants().then(() => {
       this.sendMail();
-      this.gspread.createSpreadsheet(this.exam, () => {
+      this.spreadsheetService.createSpreadsheet(this.exam, () => {
         this.router.navigate(['/exams/online-exam', this.exam.id]);
       });  
     });

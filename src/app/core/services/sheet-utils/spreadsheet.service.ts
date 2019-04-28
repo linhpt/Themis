@@ -16,7 +16,7 @@ export type CB = () => void;
 @Injectable({
     providedIn: 'root'
 })
-export class GspreadUtils {
+export class SpreadsheetService {
     oAuth2Client: any;
     constructor(
         private examDatabase: ExamDatabase
