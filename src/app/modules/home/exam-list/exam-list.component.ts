@@ -31,6 +31,7 @@ export class ExamListComponent implements OnInit, ISearchListener {
     this.examDatabase.getAll().then((exams: IExam[]) => {
       this.originExams = _.cloneDeep(exams);
       this.exams = _.cloneDeep(exams);
+      console.log(exams);
     });
   }
 

@@ -4,16 +4,16 @@
       <h5>Exam: {{ exam.name }}</h5>
     </div>
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" (click)="start()">
-        Start this exam
+      <button role="button" class="btn btn-primary text-white" *ngIf="exam.sheetId" (click)="start()">
+        Start exam
       </button>
       <a role="button" class="btn btn-primary text-white ml-1"
         [routerLink]="['/contestants/create-contestant', exam.id]" *ngIf="!exam.started">
-        Add more contestant
+        Add contestant
       </a>
       <a role="button" class="btn btn-primary text-white ml-1" [routerLink]="['/tasks/create-task', exam.id]"
         *ngIf="!exam.started">
-        Add more task
+        Add task
       </a>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -22,11 +22,9 @@
   </div>
 
   <div class="row mt-3">
-    <div class="col">
-      <p>
-        <span>Sheet ID: </span>
-        <span class="font-weight-light font-italic">{{ exam.sheetId }}</span>
-      </p>
+    <div class="col" *ngIf="exam.sheetId">
+      <span>Sheet ID: </span>
+      <span class="font-weight-light font-italic">{{ exam.sheetId }}</span>
     </div>
   </div>
 
@@ -78,7 +76,6 @@
           <th scope="col">Description</th>
           <th scope="col" style="width: 25%">Action</th>
         </tr>
-
         <tr *ngFor="let task of tasks; let i = index">
           <th scope="row">{{ i + 1 }}</th>
           <td>{{ task.name }}</td>

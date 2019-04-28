@@ -46,7 +46,7 @@ export class ExamManagementComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
-      const id = +params['id'];
+      const id = Number(params['id']);
       this.exam = await this.examDatabase.getById(id);
       this.tasks = await this.taskDatabase.getByExamId(id);
       this.contestants = await this.contestantDatabase.getByExamId(id);
@@ -84,53 +84,54 @@ export class ExamManagementComponent implements OnInit {
   }
 
   start() {
-
     const root = localStorage.getItem(ROOT);
-
     const submissionDir = `${root}\\${SUBMISSION}`;
     const themisDir = `${root}\\${THEMIS_CONTEST}`;
 
-    this._createFolder(themisDir);
-    this._createFolder(submissionDir);
-    this._createFolder(`${submissionDir}\\Logs`);
+    this.createFolder(themisDir);
+    this.createFolder(submissionDir);
+    this.createFolder(`${submissionDir}\\Logs`);
 
     const examName = `${themisDir}\\${this.exam.name}`;
     const tasks = `${examName}\\Tasks`;
     const contestants = `${examName}\\Contestants`;
 
-    this._createFolder(examName);
-    this._createFolder(tasks);
-    this._createFolder(contestants);
+    this.createFolder(examName);
+    this.createFolder(tasks);
+    this.createFolder(contestants);
 
     _.forEach(this.tasks, (task: ITask) => {
       const taskName = `${tasks}\\${task.name}`;
 
-      this._createFolder(taskName);
+      this.createFolder(taskName);
       _.forEach(task.tests, (test: ITest) => {
         const testName = `${taskName}\\${test.name}`;
-        this._createFolder(testName);
+        this.createFolder(testName);
 
         const input = `${testName}\\${task.name}.inp`;
         const output = `${testName}\\${task.name}.out`;
 
-        this._createFile(input, test.input);
-        this._createFile(output, test.output);
+        this.createFile(input, test.input);
+        this.createFile(output, test.output);
       });
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this._createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
+      this.createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
     });
 
-    this._generateUUIDKeyForContestants().then(() => {
-      this._sendMail();
+    this.generateUUIDKeyForContestants().then(() => {
+      this.sendMail();
       this.gspread.createSpreadsheet(this.exam, () => {
         this.router.navigate(['/exams/online-exam', this.exam.id]);
       });  
     });
+
+    this.exam.started = true;
+    this.examDatabase.update(this.exam.id, this.exam);
   }
 
-  private async _generateUUIDKeyForContestants() {
+  async generateUUIDKeyForContestants() {
     _.forEach(this.contestants, (contestant: IContestant) => {
       contestant.generateUUIDKey = uuid();
     });
@@ -140,7 +141,7 @@ export class ExamManagementComponent implements OnInit {
     }));
   }
 
-  private async _sendMail() {
+  async sendMail() {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -161,14 +162,14 @@ export class ExamManagementComponent implements OnInit {
     });
   }
 
-  private _createFolder(folder: string) {
+  createFolder(folder: string) {
     if (!folder) return;
     if (!fs.existsSync(folder)) {
       fs.mkdirSync(folder);
     }
   }
 
-  private _createFile(absolutePath: string, content: string) {
+  createFile(absolutePath: string, content: string) {
     fs.writeFile(absolutePath, content, (err: string) => {
       if (err) return console.log(err);
     });

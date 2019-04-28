@@ -9,7 +9,7 @@ export class DescriptionPipe implements PipeTransform {
         let trimmedString = text.substr(0, maxLength);
         trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
 
-        return `${trimmedString}...`;
+        return trimmedString ? `${trimmedString}...` : ``;
     }
 
 }

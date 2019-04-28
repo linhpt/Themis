@@ -16,18 +16,19 @@
           <div class="form-group col">
             <label>Name</label>
             <input type="text" formControlName="name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" placeholder="Name" [readonly]="!editMode && action == 'edit'" />
-            <div *ngIf="submitted && f.name.invalid" class="invalid-feedback"></div>
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" placeholder="Name"
+              [readonly]="!editMode && action == 'edit'" />
+            <div *ngIf="submitted && f.name.invalid" class="invalid-feedback">
               <div *ngIf="f.name.errors.required">Name is required</div>
             </div>
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group col">
             <label>Description</label>
             <textarea rows="3" formControlName="description" class="form-control" placeholder="Description"
-              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }" [readonly]="!editMode && action == 'edit'"></textarea>
+              [ngClass]="{ 'is-invalid': submitted && f.name.invalid }"
+              [readonly]="!editMode && action == 'edit'"></textarea>
             <div *ngIf="submitted && f.description.invalid" class="invalid-feedback">
               <div *ngIf="f.description.errors.required">Description is required</div>
             </div>
@@ -63,7 +64,8 @@
                 [readonly]="!editMode && action == 'edit'"></textarea>
             </div>
             <div class="form-group col-12 text-right">
-              <button type="button" class="btn btn-danger" (click)="removeTest(i)" *ngIf="editMode || action == 'create'">
+              <button type="button" class="btn btn-danger" (click)="removeTest(i)"
+                *ngIf="editMode || action == 'create'">
                 <i class="fa fa-times" aria-hidden="true"></i>
               </button>
             </div>

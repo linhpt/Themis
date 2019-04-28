@@ -13,6 +13,7 @@
       <th scope="col">#</th>
       <th scope="col">Name</th>
       <th scope="col">Time Created</th>
+      <th scope="col">Status</th>
       <th scope="col">Description</th>
       <th scope="col">Action</th>
     </tr>
@@ -20,7 +21,8 @@
       <th scope="row">{{ exam.id }}</th>
       <td>{{ exam.name }}</td>
       <td>{{ exam.timeCreated | dateFormat }}</td>
-      <td>{{ exam.description }}</td>
+      <td class="font-weight-bold text-success">{{ exam.started ? 'Started' : '' }}</td>
+      <td>{{ exam.description | description: 30}}</td>
       <td>
         <a role="button" [routerLink]="['/exams/exam-management', exam.id]" class="btn btn-primary mr-1">
           <i class="fa fa-eye" aria-hidden="true"></i>
@@ -34,8 +36,8 @@
       </td>
     </tr>
     <tr>
-      <td *ngIf="exams.length == 0" colspan="5" class="text-center">There is no Exam yet</td>
-      <td *ngIf="exams.length > 0" colspan="5" class="text-center">Total {{ exams.length }} Exam</td>
+      <td *ngIf="exams.length == 0" colspan="6" class="text-center">There is no Exam yet</td>
+      <td *ngIf="exams.length > 0" colspan="6" class="text-center">Total {{ exams.length }} Exam</td>
     </tr>
   </table>
 </div>
