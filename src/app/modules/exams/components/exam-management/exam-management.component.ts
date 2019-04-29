@@ -10,8 +10,10 @@ import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.se
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 
 import * as _ from 'lodash';
+import { DirectoryService } from '../../services/directory.service';
+import { MailService } from '../../services/mail.service';
+import { IMailer } from '../../models/item.models';
 
-const fs = (<any>window).require('fs');
 const nodemailer = (<any>window).require("nodemailer");
 const uuid = (<any>window).require('uuid/v1');
 
@@ -41,8 +43,12 @@ export class ExamManagementComponent implements OnInit {
     private spreadsheetService: SpreadsheetService,
     private taskDatabase: TaskDatabase,
     private examDatabase: ExamDatabase,
+    private directoryService: DirectoryService,
+    private mailService: MailService,
     private contestantDatabase: ContestantDatabase
-  ) { }
+  ) {
+    this.exam.started = true;
+  }
 
   ngOnInit() {
     this.route.params.subscribe(async (params: Params) => {
@@ -55,12 +61,10 @@ export class ExamManagementComponent implements OnInit {
     });
   }
 
-  remove(id: number, type: string) {
-
-    let docType = DocType[type];
+  removeContestant(id: number) {
     let message = {
-      title: `Delete ${type} Confirmation`,
-      message: `Are you sure you want to delete ${type} ${id}?`
+      title: `Delete Contestant Confirmation`,
+      message: `Are you sure you want to delete Contestant ${id}?`
     }
 
     const dialogConfig = new MatDialogConfig();
@@ -68,17 +72,31 @@ export class ExamManagementComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.data = message;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
-    dialogRef.afterClosed().subscribe((res: boolean) => {
-      if (!res) return;
-
-      if (docType == DocType.CONTESTANT) {
-        _.remove(this.contestants, (contestant: IContestant) => contestant.id == id);
-        return this.contestantDatabase.remove(id);
+    dialogRef.afterClosed().subscribe((agree: boolean) => {
+      if (agree) {
+        this.contestantDatabase.remove(id).then(() => {
+          _.remove(this.contestants, (contestant: IContestant) => contestant.id == id);
+        });
       }
+    });
+  }
 
-      if (docType == DocType.TASK) {
-        _.remove(this.tasks, (task: ITask) => task.id == id);
-        return this.taskDatabase.remove(id);
+  removeTask(id: number) {
+    let message = {
+      title: `Delete Task Confirmation`,
+      message: `Are you sure you want to delete Task ${id}?`
+    }
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = message;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((agree: boolean) => {
+      if (agree) {        
+        this.taskDatabase.remove(id).then(() => {
+          _.remove(this.tasks, (task: ITask) => task.id == id);
+        });
       }
     });
   }
@@ -88,43 +106,41 @@ export class ExamManagementComponent implements OnInit {
     const submissionDir = `${root}\\${SUBMISSION}`;
     const themisDir = `${root}\\${THEMIS_CONTEST}`;
 
-    this.createFolder(themisDir);
-    this.createFolder(submissionDir);
-    this.createFolder(`${submissionDir}\\Logs`);
+    this.directoryService.createDirectory(themisDir);
+    this.directoryService.createDirectory(submissionDir);
+    this.directoryService.createDirectory(`${submissionDir}\\Logs`);
 
     const examName = `${themisDir}\\${this.exam.name}`;
     const tasks = `${examName}\\Tasks`;
     const contestants = `${examName}\\Contestants`;
 
-    this.createFolder(examName);
-    this.createFolder(tasks);
-    this.createFolder(contestants);
+    this.directoryService.createDirectory(examName);
+    this.directoryService.createDirectory(tasks);
+    this.directoryService.createDirectory(contestants);
 
     _.forEach(this.tasks, (task: ITask) => {
       const taskName = `${tasks}\\${task.name}`;
+      this.directoryService.createDirectory(taskName);
 
-      this.createFolder(taskName);
       _.forEach(task.tests, (test: ITest) => {
         const testName = `${taskName}\\${test.name}`;
-        this.createFolder(testName);
-
+        this.directoryService.createDirectory(testName);
         const input = `${testName}\\${task.name}.inp`;
         const output = `${testName}\\${task.name}.out`;
-
-        this.createFile(input, test.input);
-        this.createFile(output, test.output);
+        this.directoryService.createFile(input, test.input);
+        this.directoryService.createFile(output, test.output);
       });
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this.createFolder(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
+      this.directoryService.createDirectory(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
     });
 
     this.generateUUIDKeyForContestants().then(() => {
-      this.sendMail();
+      this.sendToAll();
       this.spreadsheetService.createSpreadsheet(this.exam, () => {
         this.router.navigate(['/exams/online-exam', this.exam.id]);
-      });  
+      });
     });
 
     this.exam.started = true;
@@ -141,44 +157,22 @@ export class ExamManagementComponent implements OnInit {
     }));
   }
 
-  async sendMail() {
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'int10041n3@gmail.com',
-        pass: 'tinhoccoso'
-      }
-    });
-
-    let now = new Date;
+  async sendToAll() {
     _.forEach(this.contestants, (contestant: IContestant) => {
-      transporter.sendMail({
+      this.mailService.sendMail(<IMailer>{
         from: `'Themis administrator' <int10041n3@gmail.com>`,
         to: contestant.email,
-        subject: `Genearated key for submission mail${now.toString()}`,
+        subject: `Genearated key for submission mail${(new Date).toString()}`,
         text: `UUID generated key`,
-        html: `<b>${contestant.generateUUIDKey}</b>`
-      })
-    });
-  }
-
-  createFolder(folder: string) {
-    if (!folder) return;
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder);
-    }
-  }
-
-  createFile(absolutePath: string, content: string) {
-    fs.writeFile(absolutePath, content, (err: string) => {
-      if (err) return console.log(err);
+        html: `With exam ${contestant.examId}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
+      });
     });
   }
 
   searchContestant(name: string) {
     this.contestants = _.filter(this.originContestants, (contestant: IContestant) => {
-      return _.lowerCase(contestant.aliasName).indexOf(_.lowerCase(name)) > -1 || 
-              _.lowerCase(contestant.fullName).indexOf(_.lowerCase(name)) > -1;
+      return _.lowerCase(contestant.aliasName).indexOf(_.lowerCase(name)) > -1 ||
+        _.lowerCase(contestant.fullName).indexOf(_.lowerCase(name)) > -1;
     });
   }
 

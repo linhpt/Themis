@@ -28,3 +28,11 @@ export interface IContestantWithKey {
     id: number;
     generateUUIDKey: string;
 }
+
+export interface IMailer {
+    from: string;
+    to: string;
+    subject: string;
+    text: string;
+    html: string;
+}

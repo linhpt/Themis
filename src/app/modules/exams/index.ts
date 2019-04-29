@@ -11,6 +11,8 @@ import { DetailsContestantComponent } from './components/online-exam/details-con
 import { RankingsContestantComponent } from './components/online-exam/rankings-contestant/rankings-contestant.component';
 import { ExamComponent } from './components/exam/exam.component';
 import { ExamManagementComponent } from './components/exam-management/exam-management.component';
+import { DirectoryService } from './services/directory.service';
+import { MailService } from './services/mail.service';
 
 const routes: Routes = [
   {
@@ -53,6 +55,10 @@ const routes: Routes = [
     OnlineExamComponent,
     DetailsContestantComponent,
     RankingsContestantComponent
+  ],
+  providers: [
+    MailService,
+    DirectoryService
   ]
 })
 export class ExamsModule { }
