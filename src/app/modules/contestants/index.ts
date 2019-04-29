@@ -6,6 +6,7 @@ import { CreateContestantComponent } from './create-contestant/create-contestant
 import { EditContestantComponent } from './edit-contestant/edit-contestant.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CoreModule } from 'src/app/core/core.module';
 
 
 const routes: Routes = [
@@ -28,6 +29,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+    CoreModule,
     CommonModule,
     FormsModule,
     RouterModule.forChild(routes)

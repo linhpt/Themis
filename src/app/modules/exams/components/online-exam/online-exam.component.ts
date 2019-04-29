@@ -4,9 +4,8 @@ import { IExam, IContestant, ISubmission, ITask, } from 'src/app/core/interfaces
 import { Location } from '@angular/common';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 const path = (<any>window).require('path');
-const fs = (<any>window).require('fs');
+
 const chokidar = (<any>window).require('chokidar');
-const fsExtra = (<any>window).require('fs-extra');
 
 import * as _ from 'lodash';
 import { DetailsContestantComponent } from './details-contestant/details-contestant.component';
@@ -15,8 +14,9 @@ import { ContestantDatabase } from 'src/app/core/services/db-utils/contestant.se
 import { TaskDatabase } from 'src/app/core/services/db-utils/task.service';
 import { RankingsContestantComponent } from './rankings-contestant/rankings-contestant.component';
 import { SpreadsheetService } from 'src/app/core/services/sheet-utils/spreadsheet.service';
-import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA } from '../../models/item.models';
-import { ROOT, DRIVE, SUBMISSION } from '../exam-management/exam-management.component';
+import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA, ROOT, DRIVE, SUBMISSION } from '../../models/item.models';
+import { DirectoryService } from '../../services/directory.service';
+import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'online-exam',
@@ -30,14 +30,15 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
   exam: IExam = {};
   examId: number;
 
-  private _contestants: IContestantWithKey[];
+  private contestants: IContestantWithKey[];
 
   private driveEvent: any;
   private logsEvent: any;
-  private driveDir: string;
-  private submitDir: string;
-  private logsDir: string;
-  private root: string;
+
+  private driveDirectory: string;
+  private submitDirectory: string;
+  private logsDirectory: string;
+  private rootDirectory: string;
 
   contestantId: number;
   showPanel: boolean = false;
@@ -46,6 +47,8 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private cd: ChangeDetectorRef,
+    private fileService: FileService,
+    private directoryService: DirectoryService,
     private examDatabase: ExamDatabase,
     private contestantDatabase: ContestantDatabase,
     private submissionDatabase: SubmissionDatabase,
@@ -55,7 +58,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     this.route.params.subscribe(async (params: Params) => {
       this.examId = +params['id'];
       this.contestantDatabase.getByExamId(this.examId).then((contestants: IContestant[]) => {
-        this._contestants = _.map(contestants, (contestant: IContestant) => (<IContestantWithKey>{
+        this.contestants = _.map(contestants, (contestant: IContestant) => (<IContestantWithKey>{
           id: contestant.id,
           generateUUIDKey: contestant.generateUUIDKey
         }));
@@ -64,116 +67,118 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
 
-    this.root = localStorage.getItem(ROOT);
-    this.driveDir = localStorage.getItem(DRIVE);
+    this.rootDirectory = localStorage.getItem(ROOT);
+    this.driveDirectory = localStorage.getItem(DRIVE);
 
-    this.submitDir = `${this.root}\\${SUBMISSION}`
-    this.logsDir = `${this.submitDir}\\Logs`;
+    this.submitDirectory = `${this.rootDirectory}\\${SUBMISSION}`
+    this.logsDirectory = `${this.submitDirectory}\\Logs`;
 
-    fsExtra.emptyDirSync(this.driveDir);
-    fsExtra.emptyDirSync(this.submitDir);
-    fsExtra.emptyDirSync(this.logsDir);
+    this.directoryService.emptyDirectory(this.driveDirectory);
+    this.directoryService.emptyDirectory(this.submitDirectory);
+    this.directoryService.emptyDirectory(this.logsDirectory);
 
-    this.driveEvent = chokidar.watch(this.driveDir, { ignored: /(^|[\/\\])\../, persistent: true });
-    this.driveEvent.on('add', this.moveToSumission);
-
-    this.logsEvent = chokidar.watch(this.logsDir, { ignored: /(^|[\/\\])\../, persistent: true });
-    this.logsEvent.on('add', this.onCreateLogs);
-  }
-
-  private moveToSumission = (absolutePath: string) => {
-    const tokens = path.normalize(absolutePath).split('\\');
-    const fileName = tokens[tokens.length - 1];
-    let res = this.checkValid(fileName);
-    if (typeof res == 'boolean' && !res) {
-      fs.unlink(absolutePath, () => {
-        console.log('File name is invalid. Removed!');
-      }); 
-    } else if (typeof res == 'string') {
-      const dataPath = `${this.submitDir}\\${res}`;
-      fs.createReadStream(absolutePath).pipe(fs.createWriteStream(dataPath));  
-    }
-  }
-
-  private checkValid(fileName: string) {
-    console.log('fileName', fileName);
-    let [submitTime, privateKey, id, task, extention] = fileName.split(PATTERNS.FNAME_REGEX);
-    let valid = this.checkIdMatchUUID(+id, privateKey);
-    if (valid) {
-      return `${submitTime}[${id}][${task}]${extention}`;
-    } else {
-      return false;
-    }
-  }
-
-  private checkIdMatchUUID(id: number, uuid: string) {
-    return _.some(this._contestants, (contestant: IContestant) => contestant.id == id && contestant.generateUUIDKey == uuid);
-  }
-
-  private onCreateLogs = (absolutePath: string) => {
-    if (_.last(absolutePath.split('.')) == 'tmp') return;
-    fs.readFile(absolutePath, { encoding: 'utf-8' }, async (err: string, content: string) => {
-      if (err) return console.error('error while reading logs', err);
-
-      console.log('content', content);
-      //Success reading logs
-      const [firstLine] = content.split(SPECIAL_CHARS.NEWLINE);
-      const [aliasName, taskName, score] = firstLine.split(PATTERNS.COLONE_TRIANGLE_BULLET);
-
-      let now = new Date;
-
-      let tasks = await this.taskDatabase.getByExamId(this.examId);
-      if (!tasks || !tasks.length) return console.log('error: tasks is empty with examId', this.examId);
-
-      let task = _.find(tasks, (task: ITask) => task.name == taskName);
-      if (!task) return console.error('error: cannot find task with taskName', taskName);
-
-      let contestants = await this.contestantDatabase.getByExamId(this.examId);
-      let contestant = _.find(contestants, (contestant: IContestant) => contestant.id == +aliasName.trim());
-
-      if (!contestant) return console.error('error: cannot find contestant with aliasName', aliasName);
-
-      const submission = <ISubmission>{
-        contestantId: contestant.id,
-        examId: this.examId,
-        taskId: task.id,
-        score: score.trim(),
-        timeSubmission: now.toString()
+    this.driveEvent = chokidar.watch(this.driveDirectory, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.driveEvent.on('add', (absolutePath: string) => {
+      const tokens = path.normalize(absolutePath).split('\\');
+      const fileName = tokens[tokens.length - 1];
+      const [submitTime, privateKey, id, task, extension] = fileName.split(PATTERNS.FNAME_REGEX);
+      const valid = _.some(this.contestants, (contestant: IContestant) => contestant.id == id && contestant.generateUUIDKey == privateKey);
+      if (valid) {
+        const dataPath = `${this.submitDirectory}\\${submitTime}[${id}][${task}]${extension}`;
+        this.fileService.move(absolutePath, dataPath);
+      } else {
+        this.fileService.remove(absolutePath, 'File name is invalid. Removed!');
       }
-      let submit = _.cloneDeep(submission);
-      submit.id = await this.submissionDatabase.add(submission);
-      submit.contestantName = contestant.aliasName;
-      submit.taskName = task.name;
-      submit.examName = this.exam.name;
+    });
 
-      this.spreadsheetService.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
-      this.rankingsContestant.refresh();
-      if (this.showPanel) {
-        this.detailContestant.refresh();
+    this.logsEvent = chokidar.watch(this.logsDirectory, { ignored: /(^|[\/\\])\../, persistent: true });
+    this.logsEvent.on('add', (absolutePath: string) => {
+      if (!this.fileService.temporary(absolutePath)) {
+        this.fileService.read(absolutePath, (err: string, content: string) => {
+
+          if (!err) {
+            const [firstLine] = content.split(SPECIAL_CHARS.NEWLINE);
+            const [aliasName, taskName, score] = firstLine.split(PATTERNS.COLONE_TRIANGLE_BULLET);
+  
+            this.taskDatabase.getByExamId(this.examId).then((tasks: ITask[]) => {
+
+              if (tasks && tasks.length) {
+                let task = _.find(tasks, (task: ITask) => task.name == taskName);
+
+                if (task) {
+                  this.contestantDatabase.getByExamId(this.examId).then((contestants: IContestant[]) => {
+                    let contestant = _.find(contestants, (contestant: IContestant) => contestant.id == +aliasName.trim());
+
+                    if (contestant) {
+
+                      const submission = <ISubmission>{
+                        contestantId: contestant.id,
+                        examId: this.examId,
+                        taskId: task.id,
+                        score: score.trim(),
+                        timeSubmission: (new Date).toString()
+                      }
+                      let submit = _.cloneDeep(submission);
+                      this.submissionDatabase.add(submission).then((id: number) => {
+                        submit.id = id;
+                        submit.contestantName = contestant.aliasName;
+                        submit.taskName = task.name;
+                        submit.examName = this.exam.name;
+              
+                        this.spreadsheetService.appendNewSubmit(this.exam, _.at(submit, SUBMIT_SHEMA));
+                        this.rankingsContestant.refresh();
+                        if (this.showPanel) {
+                          this.detailContestant.refresh();
+                        }
+  
+                      });
+
+                    } else {
+                      console.log('error: cannot find contestant with aliasName', aliasName);
+                    }
+
+                  });
+      
+                } else {
+                  console.log('error: cannot find contestant with aliasName', aliasName);
+                }
+
+              } else {
+                console.log('error while retrieving tasks with examid', this.examId);
+              }
+              
+            });
+
+          } else {
+            console.error('error while reading logs', err);
+          }
+          
+        });
       }
     });
   }
 
   detailsContestant(contestantId: number) {
-    if (!this.showPanel) {
-      this.showPanel = true;
-      this.contestantId = contestantId;
-    } else {
+    if (this.showPanel) {
       if (this.contestantId == contestantId) {
         this.showPanel = false;
       } else {
         this.contestantId = contestantId;
       }
 
+    } else {
+      this.showPanel = true;
+      this.contestantId = contestantId;
     }
     this.cd.detectChanges();
     this.detailContestant.view();
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy() {
     this.driveEvent.unwatch();
+    this.logsEvent.unwatch();
   }
 
   back() {

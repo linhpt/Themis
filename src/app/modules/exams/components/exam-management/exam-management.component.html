@@ -15,6 +15,9 @@
         [routerLink]="['/tasks/create-task', exam.id]">
         Add task
       </a>
+      <button role="button" class="btn btn-primary text-white ml-1" (click)="clone()">
+        <i class="fa fa-copy"></i>
+      </button>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </button>

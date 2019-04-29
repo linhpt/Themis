@@ -6,6 +6,8 @@ import { Location } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import * as _ from 'lodash';
 import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { AlertDialogComponent } from 'src/app/core/alert-dialog/alert-dialog.component';
 const uuidv1 = (<any>window).require('uuid/v1');
 
 @Component({
@@ -19,6 +21,7 @@ export class TaskComponent implements OnInit {
   submitted: boolean = false;
   editMode = false;
   examStarted = true;
+  tasks: ITask[] = [];
   private examId: number;
   private taskId: number;
 
@@ -30,16 +33,27 @@ export class TaskComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private fb: FormBuilder,
+    private dialog: MatDialog,
     private examDatabase: ExamDatabase,
     private taskDatabase: TaskDatabase
-  ) { }
+  ) {
+
+
+  }
 
   ngOnInit() {
     this.route.params.subscribe((params: Params) => {
 
       const id = +params['id'];
-      this.action == 'create' ? this.examId = id : this.taskId = id;
 
+      if (this.action == 'create') {
+        this.examId = id;
+        this.taskDatabase.getByExamId(id).then((tasks: ITask[]) => {
+          this.tasks = tasks;
+        });
+      } else {
+        this.taskId = id;
+      }
       this.taskForm = this.fb.group({
         id: [''],
         name: ['', Validators.required],
@@ -60,9 +74,25 @@ export class TaskComponent implements OnInit {
   }
 
   save(task: ITask) {
-    this.action == 'create' ?
-      this.taskDatabase.add(task) :
+    if (this.action == 'create') {
+      if (_.some(this.tasks, (task1: ITask) => task1.name == task.name)) {
+        let message = {
+          title: `Task information`,
+          message: `Task with name is already existed. Please use another name.`
+        }
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = message;
+        this.dialog.open(AlertDialogComponent, dialogConfig);
+      } else {
+        this.taskDatabase.add(task);
+      }
+
+    } else {
       this.taskDatabase.update(task.id, task);
+    }
     this.back();
   }
 

@@ -9,6 +9,7 @@ import { MatDialogModule, MatButtonModule } from '@angular/material';
 import { SearchComponent } from './search/search.component';
 import { FormsModule } from '@angular/forms';
 import { DescriptionPipe } from './pipes/description.pipe';
+import { AlertDialogComponent } from './alert-dialog/alert-dialog.component';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { DescriptionPipe } from './pipes/description.pipe';
     DateFormatPipe,
     DescriptionPipe,
     SearchComponent,
+    AlertDialogComponent,
     ConfirmDialogComponent
   ],
   providers: [
@@ -30,14 +32,17 @@ import { DescriptionPipe } from './pipes/description.pipe';
     DateFormatPipe,
   ],
   declarations: [
-    HeaderComponent, 
-    FooterComponent, 
-    DateFormatPipe, 
+    HeaderComponent,
+    FooterComponent,
+    DateFormatPipe,
     DescriptionPipe,
-    ConfirmDialogComponent, 
-    SearchComponent],
+    ConfirmDialogComponent,
+    AlertDialogComponent,
+    SearchComponent
+  ],
   entryComponents: [
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    AlertDialogComponent
   ]
 })
 export class CoreModule { }

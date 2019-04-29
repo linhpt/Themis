@@ -13,6 +13,7 @@ import { ExamComponent } from './components/exam/exam.component';
 import { ExamManagementComponent } from './components/exam-management/exam-management.component';
 import { DirectoryService } from './services/directory.service';
 import { MailService } from './services/mail.service';
+import { FileService } from './services/file.service';
 
 const routes: Routes = [
   {
@@ -57,6 +58,7 @@ const routes: Routes = [
     RankingsContestantComponent
   ],
   providers: [
+    FileService,
     MailService,
     DirectoryService
   ]

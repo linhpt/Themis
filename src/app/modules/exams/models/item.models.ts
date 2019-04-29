@@ -6,6 +6,11 @@ export const SPECIAL_CHARS = {
     COLON: ':'
 }
 
+export const ROOT = 'root';
+export const SUBMISSION = 'Submission';
+export const THEMIS_CONTEST = 'ThemisContest';
+export const DRIVE = 'drive';
+
 export const PATTERNS = {
     COLONE_TRIANGLE_BULLET: /:|‣/,
     FNAME_REGEX: /[[\]]{1,2}/

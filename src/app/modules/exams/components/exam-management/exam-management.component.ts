@@ -12,14 +12,9 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 import * as _ from 'lodash';
 import { DirectoryService } from '../../services/directory.service';
 import { MailService } from '../../services/mail.service';
-import { IMailer } from '../../models/item.models';
+import { IMailer, ROOT, SUBMISSION, THEMIS_CONTEST } from '../../models/item.models';
 
 const uuid = (<any>window).require('uuid/v1');
-
-export const ROOT = 'root';
-export const SUBMISSION = 'Submission';
-export const THEMIS_CONTEST = 'ThemisContest';
-export const DRIVE = 'drive';
 
 @Component({
   selector: 'app-exam-management',
@@ -101,15 +96,15 @@ export class ExamManagementComponent implements OnInit {
   }
 
   start() {
-    const root = localStorage.getItem(ROOT);
-    const submissionDir = `${root}\\${SUBMISSION}`;
-    const themisDir = `${root}\\${THEMIS_CONTEST}`;
+    const rootDirectory = localStorage.getItem(ROOT);
+    const submissionDirectory = `${rootDirectory}\\${SUBMISSION}`;
+    const themisDirectory = `${rootDirectory}\\${THEMIS_CONTEST}`;
 
-    this.directoryService.createDirectory(themisDir);
-    this.directoryService.createDirectory(submissionDir);
-    this.directoryService.createDirectory(`${submissionDir}\\Logs`);
+    this.directoryService.createDirectory(themisDirectory);
+    this.directoryService.createDirectory(submissionDirectory);
+    this.directoryService.createDirectory(`${submissionDirectory}\\Logs`);
 
-    const examName = `${themisDir}\\${this.exam.name}`;
+    const examName = `${themisDirectory}\\${this.exam.name}`;
     const tasks = `${examName}\\Tasks`;
     const contestants = `${examName}\\Contestants`;
 
@@ -132,7 +127,7 @@ export class ExamManagementComponent implements OnInit {
     });
 
     _.forEach(this.contestants, (contestant: IContestant) => {
-      this.directoryService.createDirectory(`${themisDir}\\${this.exam.name}\\Contestants\\${contestant.id}`);
+      this.directoryService.createDirectory(`${themisDirectory}\\${this.exam.name}\\Contestants\\${contestant.id}`);
     });
 
     this.generateUUIDKeyForContestants().then(() => {
@@ -166,6 +161,10 @@ export class ExamManagementComponent implements OnInit {
         html: `With exam ${contestant.examId}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
       });
     });
+  }
+
+  clone() {
+    console.log('clone exam');
   }
 
   searchContestant(name: string) {

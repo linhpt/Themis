@@ -1,7 +1,7 @@
 <div class="container-fluid mt-3">
   <div class="row">
     <div class="col text-right">
-      <button role="button" class="btn btn-primary text-white" *ngIf="!editMode && !exam.started" (click)="edit()">
+      <button role="button" class="btn btn-primary text-white" *ngIf="action == 'edit' && !editMode && !exam.started" (click)="edit()">
         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
       </button>
       <button role="button" class="btn btn-primary text-white ml-1" (click)="back()">
@@ -21,7 +21,7 @@
           <label for="name">Name</label>
           <input type="text" class="form-control" name="name" [(ngModel)]="exam.name" #name="ngModel"
             [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required placeholder="Exam name"
-            [readonly]="!editMode" />
+            [readonly]="action == 'edit' && !editMode" />
           <div *ngIf="f.submitted && name.invalid" class="invalid-feedback">
             <div *ngIf="name.errors.required">Exam Name is required</div>
           </div>
@@ -31,7 +31,7 @@
           <label for="description">Description</label>
           <input type="text" class="form-control" name="description" [(ngModel)]="exam.description"
             #description="ngModel" [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
-            [readonly]="!editMode" placeholder="Description is required" />
+            [readonly]="action == 'edit' && !editMode" placeholder="Description is required" />
           <div *ngIf="f.submitted && description.invalid" class="invalid-feedback">
             <div *ngIf="description.errors.required">Description is required</div>
           </div>
