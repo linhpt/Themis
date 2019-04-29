@@ -13,7 +13,7 @@ import { ExamDatabase } from 'src/app/core/services/db-utils/exam.service';
 export class ContestantComponent implements OnInit {
 
   @Input() action: string;
-  examStarted = false;
+  examStarted = true;
   editMode = false;
   contestant: IContestant = {};
 

@@ -60,7 +60,8 @@
         </tr>
         <tr>
           <td *ngIf="contestants.length == 0" colspan="6" class="text-center">There is no contestants in this Exam</td>
-          <td *ngIf="contestants.length > 0" colspan="6" class="text-center">Total {{ contestants.length }} contestants in this Exam</td>
+          <td *ngIf="contestants.length > 0" colspan="6" class="text-center">Total {{ contestants.length }} contestants
+            in this Exam</td>
         </tr>
       </table>
     </div>
@@ -83,7 +84,7 @@
             <a role="button" class="btn btn-primary mr-1 text-white" [routerLink]="['/tasks/edit-task', task.id]">
               <i class="fa fa-eye" aria-hidden="true"></i>
             </a>
-            <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="remove(task.id, 'Task')">
+            <button role="button" class="btn btn-danger mr-1" *ngIf="!exam.started" (click)="removeTask(task.id)">
               <i class="fa fa-trash" aria-hidden="true"></i>
             </button>
           </td>

@@ -18,7 +18,7 @@ export class TaskComponent implements OnInit {
   taskForm: FormGroup;
   submitted: boolean = false;
   editMode = false;
-  examStarted = false;
+  examStarted = true;
   private examId: number;
   private taskId: number;
 

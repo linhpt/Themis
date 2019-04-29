@@ -14,7 +14,6 @@ import { DirectoryService } from '../../services/directory.service';
 import { MailService } from '../../services/mail.service';
 import { IMailer } from '../../models/item.models';
 
-const nodemailer = (<any>window).require("nodemailer");
 const uuid = (<any>window).require('uuid/v1');
 
 export const ROOT = 'root';
