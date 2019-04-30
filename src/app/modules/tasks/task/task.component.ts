@@ -74,26 +74,31 @@ export class TaskComponent implements OnInit {
   }
 
   save(task: ITask) {
-    if (this.action == 'create') {
-      if (_.some(this.tasks, (task1: ITask) => task1.name == task.name)) {
-        let message = {
-          title: `Task information`,
-          message: `Task with name is already existed. Please use another name.`
-        }
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.data = message;
-        this.dialog.open(AlertDialogComponent, dialogConfig);
-      } else {
-        this.taskDatabase.add(task);
+    if (_.some(this.tasks, (task1: ITask) => task1.name == task.name)) {
+      let message = {
+        title: `Task information`,
+        message: `Task with name is already existed. Please use another name.`
       }
 
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = true;
+      dialogConfig.autoFocus = true;
+      dialogConfig.data = message;
+      this.dialog.open(AlertDialogComponent, dialogConfig);
+
     } else {
-      this.taskDatabase.update(task.id, task);
+      if (this.action == 'create') {
+        this.taskDatabase.add(task).then(() => {
+          this.back();
+        });
+      } else {
+        this.taskDatabase.update(task.id, task).then(() => {
+          this.location.back();
+        });
+      }
     }
-    this.back();
+
   }
 
   patchValues() {
@@ -109,6 +114,10 @@ export class TaskComponent implements OnInit {
 
     } else if (this.action == 'edit') {
       this.taskDatabase.getById(this.taskId).then((task: ITask) => {
+
+        this.taskDatabase.getByExamId(task.examId).then((tasks: ITask[]) => {
+          this.tasks = tasks;
+        });
 
         this.taskForm.patchValue({
           id: task.id,

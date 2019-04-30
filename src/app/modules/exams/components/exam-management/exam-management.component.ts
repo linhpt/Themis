@@ -13,6 +13,7 @@ import * as _ from 'lodash';
 import { DirectoryService } from '../../services/directory.service';
 import { MailService } from '../../services/mail.service';
 import { IMailer, ROOT, SUBMISSION, THEMIS_CONTEST } from '../../models/item.models';
+import { AlertDialogComponent } from 'src/app/core/alert-dialog/alert-dialog.component';
 
 const uuid = (<any>window).require('uuid/v1');
 
@@ -87,7 +88,7 @@ export class ExamManagementComponent implements OnInit {
     dialogConfig.data = message;
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((agree: boolean) => {
-      if (agree) {        
+      if (agree) {
         this.taskDatabase.remove(id).then(() => {
           _.remove(this.tasks, (task: ITask) => task.id == id);
         });
@@ -130,7 +131,7 @@ export class ExamManagementComponent implements OnInit {
       this.directoryService.createDirectory(`${themisDirectory}\\${this.exam.name}\\Contestants\\${contestant.id}`);
     });
 
-    this.generateUUIDKeyForContestants().then(() => {
+    this.generatePrivateKeyForContestants().then(() => {
       this.sendToAll();
       this.spreadsheetService.createSpreadsheet(this.exam, () => {
         this.router.navigate(['/exams/online-exam', this.exam.id]);
@@ -141,7 +142,7 @@ export class ExamManagementComponent implements OnInit {
     this.examDatabase.update(this.exam.id, this.exam);
   }
 
-  async generateUUIDKeyForContestants() {
+  async generatePrivateKeyForContestants() {
     _.forEach(this.contestants, (contestant: IContestant) => {
       contestant.generateUUIDKey = uuid();
     });
@@ -164,7 +165,43 @@ export class ExamManagementComponent implements OnInit {
   }
 
   clone() {
-    console.log('clone exam');
+    let cloneExam: IExam = _.cloneDeep(this.exam);
+    cloneExam.name = cloneExam.name + `_Clone`;
+    cloneExam.started = false;
+    delete cloneExam.id;
+    delete cloneExam.sheetId;
+
+    this.examDatabase.add(cloneExam).then(async (id: number) => {
+
+      _.forEach(this.originTasks, async (task: ITask) => {
+        task.examId = id;
+        delete task.id;
+        await this.taskDatabase.add(task);
+      });
+
+      _.forEach(this.originContestants, async (contestant: IContestant) => {
+        contestant.examId = id;
+        delete contestant.id;
+        await this.contestantDatabase.add(contestant);
+      });
+
+    })
+      .then(() => {
+        let message = {
+          title: `Database information`,
+          message: `Clone Exam Success!`
+        }
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = message;
+        this.dialog.open(AlertDialogComponent, dialogConfig)
+          .afterClosed()
+          .subscribe(() => {
+            this.back();
+          });
+      });
   }
 
   searchContestant(name: string) {

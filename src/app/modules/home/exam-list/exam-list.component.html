@@ -15,7 +15,7 @@
       <th scope="col">Time Created</th>
       <th scope="col">Status</th>
       <th scope="col">Description</th>
-      <th scope="col">Action</th>
+      <th scope="col" [style.width.px]="160">Action</th>
     </tr>
     <tr *ngFor="let exam of exams">
       <th scope="row">{{ exam.id }}</th>
@@ -23,7 +23,7 @@
       <td>{{ exam.timeCreated | dateFormat }}</td>
       <td class="font-weight-bold text-success">{{ exam.started ? 'Started' : '' }}</td>
       <td>{{ exam.description | description: 30}}</td>
-      <td>
+      <td [style.width.px]="160">
         <a role="button" [routerLink]="['/exams/exam-management', exam.id]" class="btn btn-primary mr-1">
           <i class="fa fa-eye" aria-hidden="true"></i>
         </a>

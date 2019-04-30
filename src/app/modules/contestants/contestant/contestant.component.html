@@ -60,7 +60,7 @@
 
         <div class="form-group">
           <button class="btn btn-primary" *ngIf="action == 'create'">Create</button>
-          <button class="btn btn-primary" *ngIf="action == 'edit'">Save</button>
+          <button class="btn btn-primary" *ngIf="action == 'edit' && editMode">Save</button>
         </div>
       </form>
     </div>
