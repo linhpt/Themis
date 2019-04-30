@@ -23,7 +23,7 @@ export class MailService {
 
     }
 
-    sendMail(content: IMailer) {
-        this.transporter.sendMail(content);
+    async sendMail(content: IMailer) {
+        await this.transporter.sendMail(content);
     }
 }

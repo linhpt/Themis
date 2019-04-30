@@ -88,7 +88,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
       const fileName = tokens[tokens.length - 1];
       const [submitTime, privateKey, id, task, extension] = fileName.split(PATTERNS.FNAME_REGEX);
       const valid = _.some(this.contestants, (contestant: IContestant) => contestant.id == id && contestant.generateUUIDKey == privateKey);
-      console.log('filename', fileName);
+      console.log('contestants', this.contestants, 'fileName', fileName);
       if (valid) {
         const dataPath = `${this.submitDirectory}\\${submitTime}[${id}][${task}]${extension}`;
         this.fileService.move(absolutePath, dataPath);
@@ -202,7 +202,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe((agree: boolean) => {
       if (agree) {
-        this.back();
+        this.location.back();
       }
     });
   }

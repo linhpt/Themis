@@ -153,15 +153,15 @@ export class ExamManagementComponent implements OnInit {
   }
 
   async sendToAll() {
-    _.forEach(this.contestants, (contestant: IContestant) => {
-      this.mailService.sendMail(<IMailer>{
+    await Promise.all(_.forEach(this.contestants, async (contestant: IContestant) => {
+      await this.mailService.sendMail(<IMailer>{
         from: `'Themis administrator' <int10041n3@gmail.com>`,
         to: contestant.email,
         subject: `Genearated key for submission mail${(new Date).toString()}`,
         text: `UUID generated key`,
         html: `With exam ${this.exam.name}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
       });
-    });
+    }));
   }
 
   clone() {
