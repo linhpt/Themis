@@ -45,7 +45,7 @@ export class ContestantComponent implements OnInit {
           this.contestant = contestant;
           this.contestantDatabase.getByExamId(contestant.examId).then((contestants: IContestant[]) => {
             this.contestants = contestants;
-          });  
+          });
           this.examDatabase.getById(contestant.examId).then((exam: IExam) => {
             this.examStarted = exam.started;
           });
@@ -55,30 +55,30 @@ export class ContestantComponent implements OnInit {
   }
 
   onSubmit() {
-    if (_.some(this.contestants, (contestant: IContestant) => contestant.fullName == this.contestant.fullName)) {
-      let message = {
-        title: `Contestant information`,
-        message: `Contestant with name is already existed. Please use another name.`
-      }
 
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      dialogConfig.data = message;
-      this.dialog.open(AlertDialogComponent, dialogConfig);
-    } else {
-      if (this.action == 'create') {
+    if (this.action == 'create') {
+      if (_.some(this.contestants, (contestant: IContestant) => contestant.fullName == this.contestant.fullName)) {
+        let message = {
+          title: `Contestant information`,
+          message: `Contestant with name is already existed. Please use another name.`
+        }
+
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = message;
+        this.dialog.open(AlertDialogComponent, dialogConfig);
+      } else {
         this.contestant.joinDate = (new Date).toString();
         this.contestantDatabase.add(this.contestant).then(() => {
           this.back();
         });
-  
-      } else if (this.action == 'edit') {
-        this.contestantDatabase.update(this.contestant.id, this.contestant).then(() => {
-          this.back();
-        });
-  
       }
+
+    } else if (this.action == 'edit') {
+      this.contestantDatabase.update(this.contestant.id, this.contestant).then(() => {
+        this.back();
+      });
     }
   }
 

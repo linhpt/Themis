@@ -65,6 +65,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
           id: contestant.id,
           generateUUIDKey: contestant.generateUUIDKey
         }));
+        console.log('contestants: ', this.contestants);
       });
       this.exam = await this.examDatabase.getById(this.examId);
     });
@@ -84,6 +85,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
 
     this.driveEvent = chokidar.watch(this.driveDirectory, { ignored: /(^|[\/\\])\../, persistent: true });
     this.driveEvent.on('add', (absolutePath: string) => {
+      console.log('absolute path', absolutePath);
       const tokens = path.normalize(absolutePath).split('\\');
       const fileName = tokens[tokens.length - 1];
       const [submitTime, privateKey, id, task, extension] = fileName.split(PATTERNS.FNAME_REGEX);

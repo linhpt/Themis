@@ -75,28 +75,31 @@ export class TaskComponent implements OnInit {
 
   save(task: ITask) {
 
-    if (_.some(this.tasks, (task1: ITask) => task1.name == task.name)) {
-      let message = {
-        title: `Task information`,
-        message: `Task with name is already existed. Please use another name.`
-      }
+    if (this.action == 'create') {
+      if (_.some(this.tasks, (task1: ITask) => task1.name == task.name)) {
+        let message = {
+          title: `Task information`,
+          message: `Task with name is already existed. Please use another name.`
+        }
 
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.disableClose = true;
-      dialogConfig.autoFocus = true;
-      dialogConfig.data = message;
-      this.dialog.open(AlertDialogComponent, dialogConfig);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
+        dialogConfig.autoFocus = true;
+        dialogConfig.data = message;
+        this.dialog.open(AlertDialogComponent, dialogConfig);
 
-    } else {
-      if (this.action == 'create') {
+      } else {
         this.taskDatabase.add(task).then(() => {
           this.back();
         });
-      } else {
-        this.taskDatabase.update(task.id, task).then(() => {
-          this.location.back();
-        });
+
       }
+
+    } else if (this.action == 'edit') {
+
+      this.taskDatabase.update(task.id, task).then(() => {
+        this.location.back();
+      });
     }
 
   }

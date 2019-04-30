@@ -147,9 +147,9 @@ export class ExamManagementComponent implements OnInit {
       contestant.generateUUIDKey = uuid();
     });
 
-    await Promise.all(_.forEach(this.contestants, async (contestant: IContestant) => {
+    _.forEach(this.contestants, async (contestant: IContestant) => {
       await this.contestantDatabase.update(contestant.id, contestant);
-    }));
+    });
   }
 
   async sendToAll() {
@@ -157,9 +157,9 @@ export class ExamManagementComponent implements OnInit {
       await this.mailService.sendMail(<IMailer>{
         from: `'Themis administrator' <int10041n3@gmail.com>`,
         to: contestant.email,
-        subject: `Genearated key for submission mail${(new Date).toString()}`,
+        subject: `Genearated key for submission mail ${(new Date).toString()}`,
         text: `UUID generated key`,
-        html: `With exam ${this.exam.name}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
+        html: `[${this.exam.name}][${contestant.fullName}], Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
       });
     }));
   }
