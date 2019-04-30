@@ -17,6 +17,8 @@ import { SpreadsheetService } from 'src/app/core/services/sheet-utils/spreadshee
 import { IContestantWithKey, PATTERNS, SPECIAL_CHARS, SUBMIT_SHEMA, ROOT, DRIVE, SUBMISSION } from '../../models/item.models';
 import { DirectoryService } from '../../services/directory.service';
 import { FileService } from '../../services/file.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from 'src/app/core/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'online-exam',
@@ -47,6 +49,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private cd: ChangeDetectorRef,
+    private dialog: MatDialog,
     private fileService: FileService,
     private directoryService: DirectoryService,
     private examDatabase: ExamDatabase,
@@ -85,6 +88,7 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
       const fileName = tokens[tokens.length - 1];
       const [submitTime, privateKey, id, task, extension] = fileName.split(PATTERNS.FNAME_REGEX);
       const valid = _.some(this.contestants, (contestant: IContestant) => contestant.id == id && contestant.generateUUIDKey == privateKey);
+      console.log('filename', fileName);
       if (valid) {
         const dataPath = `${this.submitDirectory}\\${submitTime}[${id}][${task}]${extension}`;
         this.fileService.move(absolutePath, dataPath);
@@ -177,11 +181,29 @@ export class OnlineExamComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.driveEvent.unwatch();
-    this.logsEvent.unwatch();
+    if (this.driveEvent ) {
+      this.driveEvent.unwatch();
+    } 
+    if (this.logsEvent) {
+      this.logsEvent.unwatch();
+    }
   }
 
   back() {
-    this.location.back();
+    let message = {
+      title: `Exam Confirmation`,
+      message: `Are you sure you want to stop this exam ${this.exam.name}`
+    }
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.data = message;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe((agree: boolean) => {
+      if (agree) {
+        this.back();
+      }
+    });
   }
 }

@@ -159,7 +159,7 @@ export class ExamManagementComponent implements OnInit {
         to: contestant.email,
         subject: `Genearated key for submission mail${(new Date).toString()}`,
         text: `UUID generated key`,
-        html: `With exam ${contestant.examId}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
+        html: `With exam ${this.exam.name}, Your private key for submit is <b>${contestant.generateUUIDKey}</b>`
       });
     });
   }
